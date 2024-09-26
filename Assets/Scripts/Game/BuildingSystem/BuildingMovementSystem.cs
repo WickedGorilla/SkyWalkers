@@ -15,6 +15,7 @@ namespace Game.BuildingSystem
         private readonly PoolCollection<BuildingConnector> _poolSystem;
         private readonly LinkedList<BuildingConnector> _spawnedBuildings;
         private readonly AnimatorBackground _animatorBackground;
+        private readonly AnimatorBackground _animatorBackground1;
 
         private Action _onMove;
 
@@ -26,6 +27,7 @@ namespace Game.BuildingSystem
             _poolSystem = new PoolCollection<BuildingConnector>();
             _spawnedBuildings = new LinkedList<BuildingConnector>();
             _animatorBackground = new AnimatorBackground();
+            _animatorBackground1 = new AnimatorBackground();
         }
 
         private Transform Parent => _environmentHolder.Environment.BuildingRoot;
@@ -35,7 +37,8 @@ namespace Game.BuildingSystem
         public void Initialize()
         {
             SpawnFirst();
-            _animatorBackground.Initialize(Environment.DynamicLayer1);
+            _animatorBackground.Initialize(Environment.DynamicLayer1, true);
+            _animatorBackground1.Initialize(Environment.DynamicLayer2);
         }
 
         private void SpawnFirst()
@@ -84,6 +87,7 @@ namespace Game.BuildingSystem
         private void OnAnimateBackGround()
         {
             _animatorBackground.Animate(Environment.DynamicLayer1);
+            _animatorBackground1.Animate(Environment.DynamicLayer2);
         }
 
         private void DoHideLowerEnvironment()

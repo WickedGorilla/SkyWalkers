@@ -8,12 +8,14 @@ public class BuildingPositionOnTheScreen : MonoBehaviour
     private Vector2 _screenPosition;
     private Vector2Int _previousScreenSize;
     private int _frameIndex;
+    private float _zPosition;
 
     private void Start()
     {
         UpdateScreenSize();
         _screenPosition = GetScreenPosition();
         
+        _zPosition = transform.position.z;
         DoPositionOnScreen();
     }
 
@@ -36,7 +38,7 @@ public class BuildingPositionOnTheScreen : MonoBehaviour
     {
         Vector3 screenPosition = new Vector3(_screenPosition.x, _screenPosition.y, _camera.nearClipPlane);
         Vector3 worldPosition = _camera.ViewportToWorldPoint(screenPosition);
-        transform.position = worldPosition;
+        transform.position = new Vector3(worldPosition.x, worldPosition.y, _zPosition);
     }
 
     private void UpdateScreenSize() 
