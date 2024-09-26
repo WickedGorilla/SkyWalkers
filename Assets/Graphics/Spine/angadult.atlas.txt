@@ -1,0 +1,98 @@
+angadult.png
+size:2048,1024
+filter:Linear,Linear
+pma:true
+L Low leg
+bounds:403,142,137,407
+offsets:1275,297,2734,2050
+rotate:90
+L Up leg
+bounds:408,812,207,520
+offsets:1294,589,2734,2050
+rotate:90
+L hand
+bounds:403,281,381,345
+L laces
+bounds:1939,800,53,80
+R Laces
+bounds:1939,800,53,80
+L shoe
+bounds:1185,61,207,174
+rotate:90
+R shoe
+bounds:1185,61,207,174
+rotate:90
+R LOW leg
+bounds:1387,257,138,393
+offsets:1277,309,2734,2050
+rotate:90
+R UP leg
+bounds:930,809,210,505
+offsets:1288,590,2734,2050
+rotate:90
+R hand
+bounds:2,677,404,342
+ear
+bounds:312,41,77,104
+eye closed
+bounds:1861,613,53,50
+offsets:20,0,73,96
+eye opened
+bounds:1796,479,47,48
+offsets:3,0,50,54
+h1
+bounds:1437,738,142,500
+rotate:90
+h10
+bounds:1392,579,19,69
+h11
+bounds:786,302,19,37
+h12
+bounds:2002,955,29,64
+h13
+bounds:1417,529,134,442
+rotate:90
+h14
+bounds:915,514,134,475
+rotate:90
+h15 large
+bounds:2,141,211,534
+offsets:72,0,283,534
+h16
+bounds:1392,397,130,402
+rotate:90
+h2
+bounds:915,650,157,500
+rotate:90
+h3
+bounds:408,628,182,505
+rotate:90
+h4
+bounds:1437,882,137,563
+rotate:90
+h5
+bounds:2,2,137,308
+rotate:90
+h6
+bounds:215,147,186,528
+h7
+bounds:1417,665,71,500
+offsets:0,0,71,572
+rotate:90
+h8
+bounds:786,341,171,402
+rotate:90
+h9
+bounds:786,525,86,101
+hat
+bounds:1644,43,221,212
+offsets:0,0,443,234
+head
+bounds:1190,270,195,242
+skirt
+bounds:812,24,315,371
+rotate:90
+torso
+bounds:1361,76,179,281
+offsets:0,36,179,317
+rotate:90

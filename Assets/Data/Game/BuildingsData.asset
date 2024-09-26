@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b7154fda174fa28dc3087b5f85d7f0, type: 3}
+  m_Name: BuildingsData
+  m_EditorClassIdentifier: 
+  _speedBuildings: 3
+  _minimumPosition: -15
+  _startSpawnPosition: 15
+  _minLowerLevelPosition: -1
+  _moveLowerLevelSpeed: 0.5
+  _buildingsPrefabs:
+  - {fileID: 8528773744266903594, guid: 42d9f503afb35234ca412f4f5981966b, type: 3}
+  - {fileID: 5397608257143990586, guid: 0e7eb4521a9e54b4ebf60ab3a40f6087, type: 3}
+  - {fileID: 2438868707982638385, guid: 1d2aa9244142b3e459eeff689a2621dd, type: 3}
+  - {fileID: 1527350228438869179, guid: ba15969f987fbd84db75a71dec734fb1, type: 3}
+  - {fileID: 1205871812472759107, guid: 577cb33c07dd92b42a64d403c72a9b2b, type: 3}
