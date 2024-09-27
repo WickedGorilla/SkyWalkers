@@ -6,12 +6,11 @@ using UnityEngine.Networking;
 
 namespace Infrastructure.Network
 {
-    public class ServerRequestSender
+    public class ServerRequestSender : IServerRequestSender
     {
         private const string BaseUrl = "https://localhost:5128";
         
         private string _userId;
-        
         
         public async UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message, 
             string address,

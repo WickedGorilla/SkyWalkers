@@ -7,17 +7,17 @@ namespace Game.BuildingSystem
         private IDirection _currentDirection;
         private IDirection _nextDirection;
 
-        public void Initialize(Transform transform, bool isDownFirst = false)
+        public void Initialize(Transform transform, bool isDownFirst = false, float speed = 0.06f)
         {
             if (isDownFirst)
             {
-                _currentDirection = new DownDirection(transform.position.y -0.2f, 0.05f);
-                _nextDirection = new UpDirection(transform.position.y + 0.2f, 0.05f);
+                _currentDirection = new DownDirection(transform.position.y -0.2f, speed);
+                _nextDirection = new UpDirection(transform.position.y + 0.2f, speed);
             }
             else
             {
-                _currentDirection = new UpDirection(transform.position.y + 0.2f, 0.05f);
-                _nextDirection =  new DownDirection(transform.position.y -0.2f, 0.05f);
+                _currentDirection = new UpDirection(transform.position.y + 0.2f, speed);
+                _nextDirection =  new DownDirection(transform.position.y -0.2f, speed);
             }
         }
         

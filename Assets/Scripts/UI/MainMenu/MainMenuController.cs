@@ -20,7 +20,7 @@ namespace UI.MainMenu
         protected override void OnShow()
         {
             View.PlayButton.onClick.AddListener(OnClickPlay);
-            View.Initialize(_walletService.Coins.Value, "User001");
+            View.Initialize(_walletService.Coins, "User001");
         }
 
         protected override void OnHide()

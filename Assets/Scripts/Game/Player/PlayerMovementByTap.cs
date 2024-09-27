@@ -49,11 +49,23 @@ namespace Game.Player
         
         public void Tap(Vector2 tapPosition)
         {
+            if (!CheckAndTap())
+                return;
+            
             int count = _coinsCalculatorService.CalculateCoinsByTap();
             _clickCoinSpawner.SpawnCoinEffect(count, tapPosition);
             
-            _walletService.Coins.Collect(count);
+            _walletService.Coins.Add(count);
             _playerHolder.Player.AnimateByClick();
+        }
+
+        private bool CheckAndTap()
+        {
+            if (_walletService.Energy.Count <= 0)
+                return false;
+
+            _walletService.Energy.Add(-1);
+            return true;
         }
     }
 }

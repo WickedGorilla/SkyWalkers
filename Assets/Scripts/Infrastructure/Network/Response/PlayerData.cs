@@ -1,4 +1,5 @@
 using System;
+using Game.Wallet.Flash;
 
 namespace Infrastructure.Network.Response
 {
@@ -6,7 +7,16 @@ namespace Infrastructure.Network.Response
     public class PlayerData
     {
         public int Coins;
-        public int Energy;
+        public RangeValue Energy;
+        public int EnergyFlash;
         public int Boosts;
+
+        public PlayerData(int coins, RangeValue energy, int energyFlash, int boosts)
+        {
+            Coins = coins;
+            Energy = energy;
+            EnergyFlash = energyFlash;
+            Boosts = boosts;
+        }
     }
 }

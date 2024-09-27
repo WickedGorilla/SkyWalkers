@@ -1,16 +1,22 @@
+using Game.Wallet;
+using Game.Wallet.Flash;
+using Infrastructure.Network.Response;
+
 namespace Player
 {
     public class WalletService
     {
-        public readonly BalanceValue Coins = new();
-        public readonly BalanceValue Energy = new();
-        public readonly BalanceValue Boosts = new();
+        public IntValue Coins = new();
+        public IntRangeValue Energy = new(0, 0);
+        public IntValue Boosts = new();
+        public IntValue EnergyFlash = new();
 
-        public void Initialize(int coins, int energy, int boosts)
+        public void Initialize(PlayerData data)
         {
-            Coins.Initialize(coins);
-            Energy.Initialize(energy);
-            Boosts.Initialize(boosts);
+            Coins = new IntValue(data.Coins);
+            Energy = new IntRangeValue(data.Energy);
+            EnergyFlash = new IntValue(data.EnergyFlash);
+            Boosts = new IntValue(data.Boosts);
         }
     }
 }

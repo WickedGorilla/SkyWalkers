@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BuildingPositionOnTheScreen : MonoBehaviour
@@ -10,7 +11,7 @@ public class BuildingPositionOnTheScreen : MonoBehaviour
     private int _frameIndex;
     private float _zPosition;
 
-    private void Start()
+    private void Awake()
     {
         UpdateScreenSize();
         _screenPosition = GetScreenPosition();
@@ -18,7 +19,7 @@ public class BuildingPositionOnTheScreen : MonoBehaviour
         _zPosition = transform.position.z;
         DoPositionOnScreen();
     }
-
+    
     private void Update()
     {
         _frameIndex++;

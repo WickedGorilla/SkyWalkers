@@ -42,6 +42,6 @@ namespace UI.MainMenu
         }
 
         public void SetCoinsCount(int coins) 
-            => _coinsText.text = $"{_coinAtlasCode}{coins}";
+            => _coinsText.text = $"{_coinAtlasCode}{coins:N0}";
     }
 }

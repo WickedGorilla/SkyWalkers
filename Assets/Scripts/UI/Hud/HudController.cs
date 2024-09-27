@@ -21,18 +21,23 @@ namespace UI.Hud
         protected override void OnShow()
         {
             View.TouchArea.OnClicked += OnTap;
-            _walletService.Coins.OnValueChanged += View.SetCoinsCount;
+            _walletService.Coins.OnChangeValue += View.SetCoinsCount;
+            _walletService.Energy.OnChangeValue += SetEnergy;   
             
-            View.Initialize(_walletService.Coins.Value);
+            View.Initialize(_walletService.Coins, _walletService.Energy, _walletService.EnergyFlash);
         }
-
+        
         protected override void OnHide()
         {
             View.TouchArea.OnClicked -= OnTap;
-            _walletService.Coins.OnValueChanged -= View.SetCoinsCount;
+            _walletService.Coins.OnChangeValue -= View.SetCoinsCount;
+            _walletService.Energy.OnChangeValue -= SetEnergy;
         }
 
         private void OnTap(Vector2 position)
             => _playerMovementByTap.Tap(position);
+        
+        private void SetEnergy(int count) 
+            => View.FillEnergy(count, _walletService.Energy.Max, _walletService.EnergyFlash);
     }
 }

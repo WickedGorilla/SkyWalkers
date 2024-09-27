@@ -23,7 +23,7 @@ namespace Game.Infrastructure
         
         public void Enter()
         {
-            BindInfrastructureServices();
+            BindNetworkService();
             BindEnvironment();
             BindPlayer();
             
@@ -35,9 +35,14 @@ namespace Game.Infrastructure
             
         }
 
-        private void BindInfrastructureServices()
+        private void BindNetworkService()
         {
-            _container.Bind<ServerRequestSender>().AsSingle();
+#if TEST
+            _container.Bind<IServerRequestSender>().To<TestServerRequestSender>().AsSingle(); 
+#else
+            _container.Bind<IServerRequestSender>().To<ServerRequestSender>().AsSingle();
+#endif
+ 
         }
 
         private void BindPlayer()

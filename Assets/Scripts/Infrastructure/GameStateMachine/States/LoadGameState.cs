@@ -14,7 +14,7 @@ namespace Game.Infrastructure
     public class LoadGameState : IState
     {
         private readonly SceneLoader _sceneLoader;
-        private readonly ServerRequestSender _serverRequestSender;
+        private readonly IServerRequestSender _serverRequestSender;
         private readonly LoadingCurtain _loadingCurtain;
         private readonly IGameStateMachine _gameStateMachine;
         private readonly WalletService _balanceService;
@@ -27,14 +27,14 @@ namespace Game.Infrastructure
         private const string SceneName = "Game";
 
         public LoadGameState(SceneLoader sceneLoader,
-            ServerRequestSender serverRequestSender,
+            IServerRequestSender serverRequestSender,
             LoadingCurtain loadingCurtain,
             IGameStateMachine gameStateMachine,
             WalletService balanceService,
             ViewService viewService,
             EnvironmentHolder environmentHolder,
-            PlayerHolder playerHolder, 
-            PlayerMovementByTap playerMovementByTap, 
+            PlayerHolder playerHolder,
+            PlayerMovementByTap playerMovementByTap,
             BuildingMovementSystem buildingMovementSystem)
         {
             _sceneLoader = sceneLoader;
@@ -58,15 +58,15 @@ namespace Game.Infrastructure
 
             if (!response.Success)
             {
-                Debug.LogError("Failed to load game state");
-                // return;
+                Debug.LogError("Failed to load game state"); 
+                return;
             }
-            
-            // InitializeData(response.Data);
+
+            InitializeData(response.Data);
 
             InitializeScene();
             InitializePlayer();
-            
+
             _gameStateMachine.Enter<MainMenuState>();
         }
 
@@ -74,14 +74,14 @@ namespace Game.Infrastructure
             => _loadingCurtain.ShowStartButton();
 
         private void InitializeData(PlayerData data)
-            => _balanceService.Initialize(data.Coins, data.Energy, data.Boosts);
+            => _balanceService.Initialize(data);
 
         private void InitializeScene()
         {
             var environment = Object.FindObjectOfType<EnvironmentObjects>();
             _environmentHolder.Hold(environment);
             _playerHolder.Hold(environment.Player);
-            
+
             _viewService.CreateRoot();
             _buildingMovementSystem.Initialize();
         }
