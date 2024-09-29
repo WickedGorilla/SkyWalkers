@@ -23,16 +23,20 @@ namespace Game.Wallet
         }
 
         public int Max => _value.MaxCount;
-        
+        public bool IsMax => Count == Max;
+
         public int Add(int value)
         {
             Count += value;
 
-            if (Count < 0 || Count > _value.MaxCount)
+            if (Count < 0)
             {
                 Count = 0;
                 Debug.LogError("Error balance Value");
             }
+            
+            if (Count > _value.MaxCount)
+                Count = _value.MaxCount;
             
             OnChangeValue?.Invoke(Count);
             

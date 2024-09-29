@@ -53,6 +53,7 @@ namespace Game.Infrastructure
             _container.BindInterfacesAndSelfTo<PlayerHolder>().AsSingle();
             _container.BindInterfacesAndSelfTo<ClickCoinSpawner>().AsSingle();
             _container.BindInterfacesAndSelfTo<CoinsCalculatorService>().AsSingle();
+            _container.BindInterfacesAndSelfTo<BonusSystem>().AsSingle();
         }
         
         private void BindEnvironment()

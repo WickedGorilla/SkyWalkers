@@ -11,32 +11,44 @@ namespace UI.Hud
 {
     public class HudView : View
     {
-        [Header("Coins")] 
+        [Header("Coins")]
         [SerializeField] private TMP_Text _coinsText;
         [SerializeField] private string _coinAtlasCode = "<sprite name=\"Coin\">";
 
-        [Header("Energy")] 
+        [Header("Energy")]
         [SerializeField] private TMP_Text _energyCount;
         [SerializeField] private Image _energyFiller;
         [SerializeField] private Button _energyButton;
         [SerializeField] private float _energyFillerDuration = 0.3f;
 
-        [Header("Boost")] 
+        [Header("Boost")]
         [SerializeField] private TMP_Text _boostCountText;
         [SerializeField] private Button _boostButton;
 
         [SerializeField] private TouchArea _touchArea;
         [SerializeField] private Button _gearButton;
 
-        [Header("Animations")] [SerializeField]
-        private Transform _rocketFlashIcon;
-
+        [Header("Animations")] 
+        [SerializeField] private Transform _rocketFlashIcon;
         [SerializeField] private float _rocketFlashDuration = 3f;
 
+        [Header("Boost Mode")]
+        [SerializeField] private GameObject _defaultGroup;
+        [SerializeField] private GameObject _boostGroup;
+        [SerializeField] private TMP_Text _timerText;
+        [SerializeField] private Transform _lightEffectsIcon;
+        
         private Coroutine _energyFillerCoroutine;
 
         public TouchArea TouchArea => _touchArea;
         public Button GearButton => _gearButton;
+        public Button BoostButton => _boostButton;
+        public Button EnergyButton => _energyButton;
+
+        public override void OnShow()
+        {
+            AnimateRocketButton();
+        }
 
         public void Initialize(int coins, RangeValue rangeValue, int flashEnergy)
         {
@@ -60,9 +72,18 @@ namespace UI.Hud
         public void SetCoinsCount(int coins)
             => _coinsText.text = $"{_coinAtlasCode}{coins:N0}";
 
-        public override void OnShow()
+        public void EnableBoost(bool value)
         {
-            AnimateRocketButton();
+            _defaultGroup.SetActive(!value);
+            _boostGroup.SetActive(value);
+            BoostButton.interactable = !value;
+        }
+        
+        public void UpdateTimerText(int totalSeconds)
+        {
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+            _timerText.text = $"{minutes:D2}:{seconds:D2}";
         }
 
         private void AnimateRocketButton()
@@ -86,5 +107,7 @@ namespace UI.Hud
 
             _energyFiller.fillAmount = value;
         }
+        
+        
     }
 }

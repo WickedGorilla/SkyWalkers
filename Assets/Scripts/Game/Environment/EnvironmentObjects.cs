@@ -8,11 +8,13 @@ namespace Game.Environment
     {
         [SerializeField] private BuildingPositionOnTheScreen _sitBuilding;
         [SerializeField] private BuildingPositionOnTheScreen _buildingRoot;
+        [SerializeField] private ParticleSystem _coinsParticle;
         
         [SerializeField] private Transform _dynamicLayer1;
         [SerializeField] private Transform _dynamicLayer2;
         [SerializeField] private Transform _dynamicLayer3;
         [SerializeField] private Transform _lowerLevel;
+
 
         [SerializeField] private float _animationDuration = 1f;
 
@@ -20,14 +22,14 @@ namespace Game.Environment
         
         private Vector3 _defaultSitGroupPosition;
         private Vector3 _defaultClimbGroupPosition;
-
-
+        
         public PlayerAnimation Player => _player;
         public Transform BuildingRoot => _buildingRoot.transform;
         public Transform LowerLevel => _lowerLevel;
         public Transform DynamicLayer1 => _dynamicLayer1;
         public Transform DynamicLayer2 => _dynamicLayer2;
         public Transform DynamicLayer3 => _dynamicLayer3;
+        public ParticleSystem CoinsParticle => _coinsParticle;
 
         private void Start()
         {

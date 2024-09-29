@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Game.Wallet
 {
@@ -16,12 +17,27 @@ namespace Game.Wallet
         public int Add(int value)
         {
             Count += value;
-            OnChangeValue?.Invoke(Count);
 
+            if (Count < 0)
+            {
+                Count = 0;
+                Debug.LogError("Error balance Value");
+            }
+            
+            OnChangeValue?.Invoke(Count);
             return Count;
         }
 
         public static implicit operator IntValue(int value) => new(value);
         public static implicit operator int(IntValue addableInt) => addableInt.Count;
+
+        public bool Subtract(int count)
+        {
+            if (count > Count)
+                return false;
+
+            Add(-count);
+            return true;
+        }
     }
 }
