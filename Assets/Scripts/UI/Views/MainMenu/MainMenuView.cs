@@ -1,9 +1,9 @@
 using TMPro;
-using UI.ViewService;
+using UI.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.MainMenu
+namespace UI.Views
 {
     public class MainMenuView : View
     {
@@ -13,18 +13,10 @@ namespace UI.MainMenu
         
         [Header("Buttons")]
         [SerializeField] private Button _playButton;
-        [SerializeField] private Button _homeButton;
-        [SerializeField] private Button _inviteButton;
-        [SerializeField] private Button _questButton;
-        [SerializeField] private Button _shopButton;
-        [SerializeField] private Button _walletButton;
+
         
         public Button PlayButton => _playButton;
-        public Button HomeButton => _homeButton;
-        public Button InviteButton => _inviteButton;
-        public Button QuestButton => _questButton;
-        public Button ShopButton => _shopButton;
-        public Button WalletButton => _walletButton;
+
 
         public void Initialize(int coins, string nickname)
         {

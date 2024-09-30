@@ -6,7 +6,7 @@ using UnityEngine;
 using Zenject;
 using Object = UnityEngine.Object;
 
-namespace UI.ViewService
+namespace UI.Core
 {
     public class ViewFabric
     {
@@ -42,7 +42,7 @@ namespace UI.ViewService
             return viewController;
         }
 
-        public Canvas CreateRoot() 
+        public UIRoot CreateRoot() 
             => Object.Instantiate(_viewPrefabsData.Root);
     }
 }

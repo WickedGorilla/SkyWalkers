@@ -1,4 +1,4 @@
-namespace UI.ViewService
+namespace UI.Core
 {
     public interface IViewController
     {

@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 472c8e27fa984d71a495ad3a31a2fd2c, type: 3}
   m_Name: ViewPrefabsData
   m_EditorClassIdentifier: 
-  _root: {fileID: 8214022351923444305, guid: 4d920d93f415ee94b96e01cc1bfc759b, type: 3}
+  _root: {fileID: 8147740071684317255, guid: 4d920d93f415ee94b96e01cc1bfc759b, type: 3}
   _prefabs:
+  - {fileID: 1308173301673372092, guid: 9c0b9d02b0fc7774a91b2c529b2ab10a, type: 3}
   - {fileID: 572509544135315313, guid: 4c6794fd255d09f49b6f6f1b4dfc6362, type: 3}
   - {fileID: 6680111487379183280, guid: 17b1467f8f97abd48a7383df2ea97b31, type: 3}
+  - {fileID: 3041014007746885160, guid: 721aaa15193c9ad4a873f8051d0f69cd, type: 3}

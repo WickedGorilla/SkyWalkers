@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UI.ViewService
+namespace UI.Core
 {
     public abstract class View : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 using Game.Player;
 using Player;
-using UI.ViewService;
+using UI.Core;
 using UnityEngine;
 
 namespace UI.Hud

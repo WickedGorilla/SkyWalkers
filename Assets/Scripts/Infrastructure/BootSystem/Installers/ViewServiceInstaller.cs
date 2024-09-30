@@ -1,5 +1,5 @@
 using Infrastructure.Data;
-using UI.ViewService;
+using UI.Core;
 using UnityEngine;
 using Zenject;
 

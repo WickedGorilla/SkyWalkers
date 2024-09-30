@@ -1,7 +1,7 @@
 using Game.Environment;
 using Game.Player;
 using UI.Hud;
-using UI.ViewService;
+using UI.Core;
 
 namespace Game.Infrastructure
 {

@@ -3,7 +3,7 @@ using DG.Tweening;
 using Game.Wallet.Flash;
 using TMPro;
 using UI.CustomButtons;
-using UI.ViewService;
+using UI.Core;
 using UnityEngine;
 using UnityEngine.UI;
 

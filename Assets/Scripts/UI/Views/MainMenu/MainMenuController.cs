@@ -1,8 +1,8 @@
 using Game.Infrastructure;
 using Player;
-using UI.ViewService;
+using UI.Core;
 
-namespace UI.MainMenu
+namespace UI.Views
 {
     public class MainMenuController : ViewController<MainMenuView>
     {

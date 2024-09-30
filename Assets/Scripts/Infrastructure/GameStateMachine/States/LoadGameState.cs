@@ -6,7 +6,7 @@ using Infrastructure.Network.Request;
 using Infrastructure.Network.Response;
 using Infrastructure.SceneManagement;
 using Player;
-using UI.ViewService;
+using UI.Core;
 using UnityEngine;
 
 namespace Game.Infrastructure
