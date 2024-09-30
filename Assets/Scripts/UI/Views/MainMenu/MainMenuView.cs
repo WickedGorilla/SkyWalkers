@@ -13,11 +13,9 @@ namespace UI.Views
         
         [Header("Buttons")]
         [SerializeField] private Button _playButton;
-
         
         public Button PlayButton => _playButton;
-
-
+        
         public void Initialize(int coins, string nickname)
         {
             SetCoinsCount(coins);

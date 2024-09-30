@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Infrastructure.Disposables;
 using UnityEngine;
@@ -10,12 +11,25 @@ namespace UI.CustomButtons
     {
         [SerializeField] private SwitchButton[] _buttons;
         [SerializeField] private ButtonSelector _selectableLabel;
-
-        private IEnumerable<IDisposable> _disposables; 
         
+        private const float Speed = 0.3f;
+        
+        private IEnumerable<IDisposable> _disposables;
         private SwitchButton _currentClicked;
-        private bool _isMoved;
         
+        private bool _isMoved;
+
+        private async void Start()
+        {
+            await UniTask.NextFrame();
+            
+            var position = _selectableLabel.transform.position;
+            var firstButton = _buttons[0];
+            _selectableLabel.Rect.transform.position = new Vector3(firstButton.Rect.position.x, position.y);
+            _selectableLabel.Rect.sizeDelta = firstButton.Rect.sizeDelta;
+            _selectableLabel.Select(firstButton);
+        }
+
         private void OnEnable()
         {
             var disposables = new LinkedList<IDisposable>();
@@ -57,7 +71,7 @@ namespace UI.CustomButtons
         {
             _isMoved = true;
             
-            _selectableLabel.Rect.DOMoveX(button.Rect.position.x, 0.5f)
+            _selectableLabel.Rect.DOMoveX(button.Rect.position.x, Speed)
                 .SetEase(Ease.OutQuad)
                 .OnComplete(() => _isMoved = false);
             

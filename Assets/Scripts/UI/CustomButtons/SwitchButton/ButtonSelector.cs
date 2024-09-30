@@ -13,7 +13,9 @@ namespace UI.CustomButtons
         public void Select(SwitchButton switchButton)
         {
             _text.text = switchButton.Text;
-            _iconImage.sprite = switchButton.Icon;
+
+            if (_iconImage != null)
+                _iconImage.sprite = switchButton.Icon;
         }
     }
 }
