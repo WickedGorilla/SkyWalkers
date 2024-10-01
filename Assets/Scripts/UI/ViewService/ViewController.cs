@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace UI.Core
 {
     public abstract class ViewController<TView>  : IViewController where TView : View
@@ -14,6 +12,7 @@ namespace UI.Core
         public void Show()
         {
             View.OnShow();
+            View.gameObject.SetActive(true);
             OnShow();
         }
 
@@ -21,7 +20,7 @@ namespace UI.Core
         {
             OnHide();
             View.OnHide();
-            Object.Destroy(View.gameObject);
+            View.gameObject.SetActive(false);
         }
 
         protected virtual void OnHide()

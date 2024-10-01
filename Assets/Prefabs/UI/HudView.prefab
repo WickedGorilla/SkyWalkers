@@ -1959,19 +1959,22 @@ MonoBehaviour:
   _coinsText: {fileID: 5548297641516354886}
   _coinAtlasCode: <sprite name="Coin">
   _energyCount: {fileID: 5992700699101670128}
+  _energyFlashCount: {fileID: 6056234049448301127}
   _energyFiller: {fileID: 5109174524730448475}
   _energyButton: {fileID: 5878938116660213450}
   _energyFillerDuration: 0.3
   _boostCountText: {fileID: 5411752585527136218}
   _boostButton: {fileID: 2921273976352403787}
+  _boostLightingButton: {fileID: 4043669724341963122}
+  _boostTimerLabel: {fileID: 1407666384959938273}
   _touchArea: {fileID: 238838601994160413}
   _gearButton: {fileID: 5235874442558225575}
+  _backButton: {fileID: 8118565678393266666}
   _rocketFlashIcon: {fileID: 5974738604916194121}
   _rocketFlashDuration: 3
   _defaultGroup: {fileID: 8242629035909988194}
   _boostGroup: {fileID: 1856545038019964565}
   _timerText: {fileID: 4820393230318027082}
-  _lightEffectsIcon: {fileID: 4043669724341963122}
 --- !u!1 &7684905705917860701
 GameObject:
   m_ObjectHideFlags: 0

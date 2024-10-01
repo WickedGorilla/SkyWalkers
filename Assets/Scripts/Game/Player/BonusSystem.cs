@@ -45,8 +45,11 @@ namespace Game.Player
 
         private async void Boosting(Action<int> onTickSecond, Action onComplete)
         {
-            var coinsParticle = _environmentHolder.Environment.CoinsParticle;
+            var environment = _environmentHolder.Environment;
+            var coinsParticle = environment.CoinsParticle;
             coinsParticle.Play();
+            environment.ShowSun();
+            
             IsBoost = true;
             
             _coinsCalculatorService.UpdateInstruction(2);
@@ -61,6 +64,8 @@ namespace Game.Player
             onComplete();
             
             coinsParticle.Stop();
+            environment.HideSun();
+            
             _coinsCalculatorService.ResetInstruction();
             IsBoost = false;
         }

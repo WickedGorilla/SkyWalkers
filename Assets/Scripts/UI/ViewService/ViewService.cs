@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace UI.Core
@@ -6,6 +7,7 @@ namespace UI.Core
     {
         private readonly ViewFabric _viewFabric;
         private readonly LinkedList<IViewController> _permanentViews;
+        private readonly Dictionary<Type, IViewController> _createdViews;
         
         private IViewController _currentView;
         private UIRoot _root;
@@ -14,16 +16,25 @@ namespace UI.Core
         {
             _viewFabric = viewFabric;
             _permanentViews = new LinkedList<IViewController>();
+            _createdViews = new Dictionary<Type, IViewController>();
         }
 
         public TController Show<TView, TController>()
             where TView : View where TController : ViewController<TView>
         {
             _currentView?.Hide();
-            TController controller = _viewFabric.Create<TView, TController>(_root.Layer1);
+            var type = typeof(TView);
+            
+            if (!_createdViews.TryGetValue(type, out IViewController controller))
+            {
+                controller = _viewFabric.Create<TView, TController>(_root.Layer1);
+                _createdViews.Add(type, controller);
+            }
+            
             _currentView = controller;
             _currentView.Show();
-            return controller;
+            
+            return controller as TController;
         }
 
         public void HideCurrent()
@@ -38,10 +49,17 @@ namespace UI.Core
         public TController ShowPermanent<TView, TController>()
             where TView : View where TController : ViewController<TView>
         {
-            TController controller = _viewFabric.Create<TView, TController>(_root.Layer2);
+            var type = typeof(TView);
+            
+            if (!_createdViews.TryGetValue(type, out IViewController controller))
+            {
+                controller = _viewFabric.Create<TView, TController>(_root.Layer2);
+                _createdViews.Add(type, controller);
+            }
+            
             controller.Show();
             _permanentViews.AddLast(controller);
-            return controller;
+            return controller as TController;
         }
         
         public void HidePermanent<TController>(TController controller) where TController : IViewController

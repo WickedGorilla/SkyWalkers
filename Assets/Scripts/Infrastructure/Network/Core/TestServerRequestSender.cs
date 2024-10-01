@@ -14,7 +14,7 @@ namespace Infrastructure.Network
         {
             _fakeRequests = new Dictionary<Type, object>
             {
-                [typeof(PlayerData)] = new PlayerData(64050567, new RangeValue(100, 100), 3, 3),
+                [typeof(PlayerData)] = new PlayerData(UnityEngine.Random.Range(139402, 905945), new RangeValue(100, 100), 3, 3),
             };
         }
 

@@ -7,12 +7,10 @@ namespace UI.Views
 {
     public class ShopView : View
     {
-        [SerializeField] private Button _backButton;
         [SerializeField] private Button _shopButton;
         [SerializeField] private Button _boostersButton;
         [SerializeField] private BoosterContainer[] _boostersCards;
-
-        public Button BackButton => _backButton;
+        
         public Button ShopButton => _shopButton;
         public Button BoostersButton => _boostersButton;
         public BoosterContainer[] BoostersCards => _boostersCards;

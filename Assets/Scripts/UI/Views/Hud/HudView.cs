@@ -17,6 +17,7 @@ namespace UI.Hud
 
         [Header("Energy")]
         [SerializeField] private TMP_Text _energyCount;
+        [SerializeField] private TMP_Text _energyFlashCount;
         [SerializeField] private Image _energyFiller;
         [SerializeField] private Button _energyButton;
         [SerializeField] private float _energyFillerDuration = 0.3f;
@@ -24,43 +25,48 @@ namespace UI.Hud
         [Header("Boost")]
         [SerializeField] private TMP_Text _boostCountText;
         [SerializeField] private Button _boostButton;
+        [SerializeField] private RectTransform _boostLightingButton;
+        [SerializeField] private RectTransform _boostTimerLabel;
 
         [SerializeField] private TouchArea _touchArea;
         [SerializeField] private Button _gearButton;
+        [SerializeField] private Button _backButton;
 
         [Header("Animations")] 
-        [SerializeField] private Transform _rocketFlashIcon;
+        [SerializeField] private RectTransform _rocketFlashIcon;
         [SerializeField] private float _rocketFlashDuration = 3f;
 
         [Header("Boost Mode")]
         [SerializeField] private GameObject _defaultGroup;
         [SerializeField] private GameObject _boostGroup;
         [SerializeField] private TMP_Text _timerText;
-        [SerializeField] private Transform _lightEffectsIcon;
         
         private Coroutine _energyFillerCoroutine;
 
-        public TouchArea TouchArea => _touchArea;
+        public TouchArea TouchArea => _touchArea; 
         public Button GearButton => _gearButton;
         public Button BoostButton => _boostButton;
         public Button EnergyButton => _energyButton;
+        public Button BackButton => _backButton;
 
         public override void OnShow()
         {
             AnimateRocketButton();
         }
 
-        public void Initialize(int coins, RangeValue rangeValue, int flashEnergy)
+        public void Initialize(int coins, RangeValue rangeValue, int flashEnergy, int boosts)
         {
             SetCoinsCount(coins);
+            SetBoostCount(boosts);
             FillEnergy(rangeValue.CurrentCount, rangeValue.MaxCount, flashEnergy);
         }
 
-        public void FillEnergy(int current, int max, int flash)
+        public void FillEnergy(int current, int max, int flashEnergy)
         {
             _energyCount.text = $"{current}\n/{max}";
-            var allMax = flash * max + max;
-            var allCurrent = flash * max + current;
+            _energyFlashCount.text = $"{flashEnergy}";
+            var allMax = flashEnergy * max + max;
+            var allCurrent = flashEnergy * max + current;
 
             if (_energyFillerCoroutine != null)
                 StopCoroutine(_energyFillerCoroutine);
@@ -77,8 +83,22 @@ namespace UI.Hud
             _defaultGroup.SetActive(!value);
             _boostGroup.SetActive(value);
             BoostButton.interactable = !value;
+
+            if (value)
+            {
+                Sequence sequence = DOTween.Sequence();
+                sequence.Append(_boostTimerLabel.DOShakeAnchorPos(0.5f, 10f, 30, 90));
+                sequence.SetLoops(-1, LoopType.Restart);
+                sequence.SetDelay(3f);
+                sequence.Play();
+                
+                DoCycleRotateZ(_boostLightingButton);
+            }
         }
-        
+
+        public void SetBoostCount(int boosts) 
+            => _boostCountText.text = $"{boosts}";
+
         public void UpdateTimerText(int totalSeconds)
         {
             int minutes = totalSeconds / 60;
@@ -86,12 +106,8 @@ namespace UI.Hud
             _timerText.text = $"{minutes:D2}:{seconds:D2}";
         }
 
-        private void AnimateRocketButton()
-        {
-            _rocketFlashIcon.DORotate(new Vector3(0, 0, 360f), _rocketFlashDuration, RotateMode.FastBeyond360)
-                .SetEase(Ease.Linear)
-                .SetLoops(-1, LoopType.Restart);
-        }
+        private void AnimateRocketButton() 
+            => DoCycleRotateZ(_rocketFlashIcon);
 
         private IEnumerator AnimateEnergyLine(float value)
         {
@@ -107,7 +123,12 @@ namespace UI.Hud
 
             _energyFiller.fillAmount = value;
         }
-        
-        
+
+        private void DoCycleRotateZ(RectTransform transform)
+        {
+            transform.DORotate(new Vector3(0, 0, 360f), _rocketFlashDuration, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear)
+                .SetLoops(-1, LoopType.Restart);
+        }
     }
 }
