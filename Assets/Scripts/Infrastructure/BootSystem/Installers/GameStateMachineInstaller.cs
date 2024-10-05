@@ -9,7 +9,6 @@ namespace Infrastructure.BootSystem.Installers
     public class GameStateMachineInstaller : MonoInstaller
     {
         [SerializeField] private LoadingCurtain _loadingCurtain;
-        [SerializeField] private TelegramLauncher _telegramLauncher;
 
         public override void InstallBindings()
         {
@@ -17,7 +16,7 @@ namespace Infrastructure.BootSystem.Installers
             Container.Bind<SceneLoader>().AsSingle();
             
             Container.Bind<LoadingCurtain>().FromMethod(() => Instantiate(_loadingCurtain)).AsSingle();
-            Container.Bind<TelegramLauncher>().FromMethod(() => Instantiate(_telegramLauncher)).AsSingle();
+            Container.Bind<TelegramLauncher>().FromMethod(FindFirstObjectByType<TelegramLauncher>).AsSingle();
         }
     }
 }

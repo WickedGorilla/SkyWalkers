@@ -38,7 +38,7 @@ namespace Game.Infrastructure
             EnvironmentHolder environmentHolder,
             PlayerHolder playerHolder,
             PlayerMovementByTap playerMovementByTap,
-            BuildingMovementSystem buildingMovementSystem, 
+            BuildingMovementSystem buildingMovementSystem,
             TelegramLauncher telegramLauncher)
         {
             _sceneLoader = sceneLoader;

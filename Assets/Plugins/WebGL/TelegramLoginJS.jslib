@@ -7,9 +7,6 @@ mergeInto(LibraryManager.library, {
         const user = window.Telegram.WebApp.initDataUnsafe.user;
         const queryId = window.Telegram.WebApp.initDataUnsafe.query_id;
 
-      window.unityInstance.SendMessage('TelegramLauncher', 'SetTelegramId', 'kkkjjkjk');
-
-
         if (user) {
             const telegramData = {
                 id: user.id,
@@ -25,7 +22,7 @@ mergeInto(LibraryManager.library, {
 
             function sendMessageToUnity() {
                 if (window.unityInstance && window.unityInstance.SendMessage) {
-                    window.unityInstance.SendMessage('TelegramLauncher', 'SetTelegramId', 'kkkjjkjk');
+                    window.unityInstance.SendMessage('TelegramLauncher', 'SetTelegramId', telegramData);
                 } else {
  console.error("Unity не загружен.");
                     setTimeout(sendMessageToUnity, 1000);

@@ -24,5 +24,7 @@ namespace Game.Infrastructure
         {
             viewService.HidePermanent(_listBarController);
         }
+        
+
     }
 }

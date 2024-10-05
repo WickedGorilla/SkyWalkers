@@ -10,6 +10,7 @@ namespace UI.Views
         [SerializeField] private TMP_Text _coinsText;
         [SerializeField] private TMP_Text _nicknameText;
         [SerializeField] private string _coinAtlasCode = "<sprite name=\"Coin\">";
+        [SerializeField] private Image _userPicture;
         
         [Header("Buttons")]
         [SerializeField] private Button _playButton;
@@ -30,6 +31,9 @@ namespace UI.Views
         public override void OnHide()
         {
         }
+
+        public void SetPicture(Sprite sprite) 
+            => _userPicture.sprite = sprite;
 
         public void SetCoinsCount(int coins) 
             => _coinsText.text = $"{_coinAtlasCode}{coins:N0}";
