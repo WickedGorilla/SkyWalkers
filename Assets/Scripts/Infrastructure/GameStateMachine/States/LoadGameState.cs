@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Game.BuildingSystem;
 using Game.Environment;
 using Game.Player;
@@ -5,6 +6,7 @@ using Infrastructure.Network;
 using Infrastructure.Network.Request;
 using Infrastructure.Network.Response;
 using Infrastructure.SceneManagement;
+using Infrastructure.Telegram;
 using Player;
 using UI.Core;
 using UnityEngine;
@@ -23,6 +25,7 @@ namespace Game.Infrastructure
         private readonly PlayerHolder _playerHolder;
         private readonly PlayerMovementByTap _playerMovementByTap;
         private readonly BuildingMovementSystem _buildingMovementSystem;
+        private readonly TelegramLauncher _telegramLauncher;
 
         private const string SceneName = "Game";
 
@@ -35,7 +38,8 @@ namespace Game.Infrastructure
             EnvironmentHolder environmentHolder,
             PlayerHolder playerHolder,
             PlayerMovementByTap playerMovementByTap,
-            BuildingMovementSystem buildingMovementSystem)
+            BuildingMovementSystem buildingMovementSystem, 
+            TelegramLauncher telegramLauncher)
         {
             _sceneLoader = sceneLoader;
             _serverRequestSender = serverRequestSender;
@@ -47,12 +51,14 @@ namespace Game.Infrastructure
             _playerHolder = playerHolder;
             _playerMovementByTap = playerMovementByTap;
             _buildingMovementSystem = buildingMovementSystem;
+            _telegramLauncher = telegramLauncher;
         }
 
         public async void Enter()
         {
             await _sceneLoader.LoadSceneAsync(SceneName);
-
+            await LoadInfoFromTelegram();
+            
             var response = await _serverRequestSender.SendToServer<LoginRequest, PlayerData>(new LoginRequest("3212"),
                 ServerPath.Login);
 
@@ -76,6 +82,11 @@ namespace Game.Infrastructure
         private void InitializeData(PlayerData data)
             => _balanceService.Initialize(data);
 
+        private async UniTask LoadInfoFromTelegram()
+        {
+            await UniTask.WaitUntil(() => _telegramLauncher.IsInit);
+        }
+        
         private void InitializeScene()
         {
             var environment = Object.FindObjectOfType<EnvironmentObjects>();

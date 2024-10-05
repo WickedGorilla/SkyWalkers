@@ -5,7 +5,7 @@ using Zenject;
 public class GameStarter : MonoBehaviour
 {
     [SerializeField] private SceneContext _bootSceneContext;
-        
+    
     private void Start()
     {
         SceneContext bootContext = Instantiate(_bootSceneContext);
