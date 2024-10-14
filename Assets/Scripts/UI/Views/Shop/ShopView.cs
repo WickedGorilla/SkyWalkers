@@ -3,7 +3,6 @@ using Infrastructure.Data.Game.Shop;
 using UI.Core;
 using UI.Views.Shop.Boosters;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
 
@@ -19,6 +18,7 @@ namespace UI.Views
         [SerializeField] private UpgradeContainer[] _upgrades;
         [SerializeField] private UpgradePerkMenu _upgradesPerkMenu;
         [SerializeField] private BuyItemMenu _buyItemMenu;
+        [SerializeField] private ShopItemsMenu _itemsMenu;
 
         public Button ShopButton => _shopButton;
         public Button BoostersButton => _boostersButton;
@@ -26,6 +26,7 @@ namespace UI.Views
         public UpgradeContainer[] Upgrades => _upgrades;
         public UpgradePerkMenu UpgradesPerkMenu => _upgradesPerkMenu;
         public BuyItemMenu BuyItemMenu => _buyItemMenu;
+        public ShopItemsMenu ItemsMenu => _itemsMenu;
 
         public void ShowBoosters()
         {

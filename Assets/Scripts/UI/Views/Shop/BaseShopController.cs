@@ -5,6 +5,7 @@ using Infrastructure.Data.Game.Shop;
 using Infrastructure.Network;
 using Infrastructure.Network.Request;
 using Infrastructure.Network.Response;
+using Player;
 using SkyExtensions;
 using UI.Core;
 
@@ -14,6 +15,7 @@ namespace UI.Views
     {
         private readonly IServerRequestSender _serverRequestSender;
         private readonly PerksService _perksService;
+        private readonly WalletService _walletService;
 
         private readonly Dictionary<PerkType, PerkData> _perksData;
         private readonly Dictionary<ItemType, ItemData> _itemData;
@@ -23,11 +25,13 @@ namespace UI.Views
         protected BaseShopController(TShopView view,
             IServerRequestSender serverRequestSender, 
             PerksService perksService, 
-            ShopData shopData) : base(view)
+            ShopData shopData,
+            WalletService walletService) : base(view)
         {
             _serverRequestSender = serverRequestSender;
             _perksService = perksService;
-            
+            _walletService = walletService;
+
             _itemData = shopData.CreateItemsDictionary();
             _perksData = shopData.CreatePerksDictionary();
         }
@@ -68,7 +72,7 @@ namespace UI.Views
             var perk = _perksService.GetPerkByType(perkType);
 
             if (perk.CurrentLevel > 0)
-                View.UpgradesPerkMenu.Open(_perksData[perkType], perk);
+                View.UpgradesPerkMenu.Open(_perksData[perkType], perk, _walletService.Coins);
             else
                 View.BuyItemMenu.Open(_perksData[perkType], perk);
         }
@@ -104,8 +108,13 @@ namespace UI.Views
 
     public class ShopController : BaseShopController<ShopView>
     {
-        public ShopController(ShopView view, IServerRequestSender serverRequestSender, PerksService perksService, ShopData data) 
-            : base(view, serverRequestSender, perksService, data)
+
+        public ShopController(ShopView view,
+            IServerRequestSender serverRequestSender, 
+            PerksService perksService, 
+            ShopData data, 
+            WalletService walletService) 
+            : base(view, serverRequestSender, perksService, data, walletService)
         {
         }
     }
