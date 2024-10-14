@@ -1,7 +1,11 @@
 using System;
+using Infrastructure.Data.Game.Shop;
 using UI.Core;
+using UI.Views.Shop.Boosters;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Button = UnityEngine.UI.Button;
 
 namespace UI.Views
 {
@@ -9,25 +13,50 @@ namespace UI.Views
     {
         [SerializeField] private Button _shopButton;
         [SerializeField] private Button _boostersButton;
-        [SerializeField] private BoosterContainer[] _boostersCards;
-        
+        [SerializeField] private ScrollRect _boostersScrollView;
+        [SerializeField] private GameObject _shopView;
+        [SerializeField] private BoosterContainer[] _boosters;
+        [SerializeField] private UpgradeContainer[] _upgrades;
+        [SerializeField] private UpgradePerkMenu _upgradesPerkMenu;
+        [SerializeField] private BuyItemMenu _buyItemMenu;
+
         public Button ShopButton => _shopButton;
         public Button BoostersButton => _boostersButton;
-        public BoosterContainer[] BoostersCards => _boostersCards;
+        public BoosterContainer[] BoostersCards => _boosters;
+        public UpgradeContainer[] Upgrades => _upgrades;
+        public UpgradePerkMenu UpgradesPerkMenu => _upgradesPerkMenu;
+        public BuyItemMenu BuyItemMenu => _buyItemMenu;
+
+        public void ShowBoosters()
+        {
+            _shopView.SetActive(false);
+            _boostersScrollView.gameObject.SetActive(true);
+        }
+
+        public void ShowShopMenu()
+        {
+            _shopView.SetActive(true);
+            _boostersScrollView.gameObject.SetActive(false);
+        }
 
         [Serializable]
         public class BoosterContainer
         {
             [SerializeField] private Button _clickButton;
-            [SerializeField] private BoostersType _type;
+            [SerializeField] private ItemType _type;
+
+            public Button ClickButton => _clickButton;
+            public ItemType Type => _type;
         }
-        
-        public enum BoostersType
+
+        [Serializable]
+        public class UpgradeContainer
         {
-            EnergyLimit = 0,
-            Boost = 1,
-            MultiTap = 2,
-            PlayPass = 3,
+            [SerializeField] private Button _clickButton;
+            [SerializeField] private PerkType _type;
+
+            public Button ClickButton => _clickButton;
+            public PerkType Type => _type;
         }
     }
 }

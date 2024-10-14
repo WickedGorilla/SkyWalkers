@@ -5,6 +5,7 @@ using Game.Player;
 using Infrastructure.Network;
 using Infrastructure.Network.Request;
 using Infrastructure.Network.Response;
+using Infrastructure.Network.Response.Player;
 using Infrastructure.SceneManagement;
 using Infrastructure.Telegram;
 using Player;
@@ -58,13 +59,14 @@ namespace Game.Infrastructure
         {
             await _sceneLoader.LoadSceneAsync(SceneName);
             await LoadInfoFromTelegram();
-            
-            var response = await _serverRequestSender.SendToServer<LoginRequest, PlayerData>(new LoginRequest("3212"),
+
+
+            var response = await _serverRequestSender.SendToServer<LoginRequest, GameData>(GetLoginRequest(),
                 ServerPath.Login);
 
             if (!response.Success)
             {
-                Debug.LogError("Failed to load game state"); 
+                Debug.LogError("Failed to load game state");
                 return;
             }
 
@@ -79,14 +81,12 @@ namespace Game.Infrastructure
         public void Exit()
             => _loadingCurtain.ShowStartButton();
 
-        private void InitializeData(PlayerData data)
+        private void InitializeData(GameData data)
             => _balanceService.Initialize(data);
 
         private async UniTask LoadInfoFromTelegram()
-        {
-            await UniTask.WaitUntil(() => _telegramLauncher.IsInit);
-        }
-        
+            => await UniTask.WaitUntil(() => _telegramLauncher.IsInit);
+
         private void InitializeScene()
         {
             var environment = Object.FindObjectOfType<EnvironmentObjects>();
@@ -99,5 +99,16 @@ namespace Game.Infrastructure
 
         private void InitializePlayer()
             => _playerMovementByTap.Initialize();
+
+        private LoginRequest GetLoginRequest()
+        {
+            /*var loginRequest = new LoginRequest(_telegramLauncher.UserId,
+     _telegramLauncher.AuthDate,
+     _telegramLauncher.Hash);*/
+
+            return new LoginRequest(0,
+                0,
+                "SkySky");
+        }
     }
 }

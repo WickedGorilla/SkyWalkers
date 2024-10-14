@@ -1,21 +1,22 @@
 using System;
 using Game.Wallet.Flash;
 
-namespace Infrastructure.Network.Response
+namespace Infrastructure.Network.Response.Player
 {
     [Serializable]
-    public class PlayerData
+    public class GameData
     {
         public int Coins;
         public RangeValue Energy;
-        public int EnergyFlash;
+        public int PlayPass;
         public int Boosts;
+        public PerkInfo[] PerksInfo;
 
-        public PlayerData(int coins, RangeValue energy, int energyFlash, int boosts)
+        public GameData(int coins, RangeValue energy, int playPass, int boosts)
         {
             Coins = coins;
             Energy = energy;
-            EnergyFlash = energyFlash;
+            PlayPass = playPass;
             Boosts = boosts;
         }
     }

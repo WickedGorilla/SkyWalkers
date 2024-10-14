@@ -1,6 +1,5 @@
 using Game.BuildingSystem;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Infrastructure.Data.Game
 {

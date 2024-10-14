@@ -1,3 +1,6 @@
+using Game.Perks;
+using Infrastructure.Data.Game.Shop;
+using Infrastructure.Network;
 using UI.Core;
 using UI.Hud;
 
@@ -7,7 +10,8 @@ namespace UI.Views
     {
         private readonly ViewService _viewService;
 
-        public ShopInGameController(ShopInGameView view, ViewService viewService) : base(view)
+        public ShopInGameController(ShopInGameView view, ViewService viewService, IServerRequestSender serverRequestSender, PerksService perksService, ShopData shopData) 
+            : base(view, serverRequestSender, perksService, shopData)
         {
             _viewService = viewService;
         }

@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Wallet.Flash;
 using Infrastructure.Network.Response;
+using Infrastructure.Network.Response.Player;
 
 namespace Infrastructure.Network
 {
-    public class TestServerRequestSender : IServerRequestSender
+    public class FakeServerRequestSender : IServerRequestSender
     {
         private readonly Dictionary<Type, object> _fakeRequests;
 
-        public TestServerRequestSender()
+        public FakeServerRequestSender()
         {
             _fakeRequests = new Dictionary<Type, object>
             {
-                [typeof(PlayerData)] = new PlayerData(UnityEngine.Random.Range(139402, 905945), new RangeValue(100, 100), 3, 3),
+                [typeof(GameData)] = new GameData(UnityEngine.Random.Range(139402, 905945), new RangeValue(100, 100), 3, 3),
             };
         }
 
@@ -31,6 +32,11 @@ namespace Infrastructure.Network
             };
 
             return new UniTask<ServerResponse<TResponse>>(response);
+        }
+
+        public void SendToServer<TRequest, TResponse>(TRequest message, string address, Action<ServerResponse<TResponse>> onComplete, Action onError = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -18,11 +18,11 @@ mergeInto(LibraryManager.library, {
                 hash: window.Telegram.WebApp.initDataUnsafe.hash
             };
 
-            const telegramDataString = JSON.stringify(telegramData);
+            const jsonData = JSON.stringify(telegramData);
 
             function sendMessageToUnity() {
                 if (window.unityInstance && window.unityInstance.SendMessage) {
-                    window.unityInstance.SendMessage('TelegramLauncher', 'SetTelegramId', telegramData);
+                    window.unityInstance.SendMessage('TelegramLauncher', 'SetTelegramId', jsonData);
                 } else {
  console.error("Unity не загружен.");
                     setTimeout(sendMessageToUnity, 1000);

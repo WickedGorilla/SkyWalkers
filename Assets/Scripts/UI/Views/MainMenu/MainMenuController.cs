@@ -16,10 +16,12 @@ namespace UI.Views
         private readonly IEnvironmentHolder _environmentHolder;
         private readonly TelegramLauncher _telegramLauncher;
 
+        private bool _isLoadPicture;
+        
         public MainMenuController(MainMenuView view,
             IGameStateMachine gameStateMachine,
             WalletService walletService,
-            IEnvironmentHolder environmentHolder, 
+            IEnvironmentHolder environmentHolder,
             TelegramLauncher telegramLauncher) : base(view)
         {
             _gameStateMachine = gameStateMachine;
@@ -31,7 +33,13 @@ namespace UI.Views
         protected override void OnShow()
         {
             View.PlayButton.onClick.AddListener(OnClickPlay);
-            View.Initialize(_walletService.Coins, $"User{Random.Range(126, 999)}");
+            View.Initialize(_walletService.Coins, _telegramLauncher.UserName);
+
+            if (!_isLoadPicture)
+            {
+                _isLoadPicture = true;
+                LoadAndSetPicture();
+            }
         }
 
         protected override void OnHide()
@@ -49,6 +57,9 @@ namespace UI.Views
 
         private async void LoadAndSetPicture()
         {
+            if (string.IsNullOrEmpty(_telegramLauncher.PhotoUrl))
+                return;
+            
             var picture = await LoadPicture(_telegramLauncher.PhotoUrl);
             View.SetPicture(picture);
         }
@@ -58,8 +69,9 @@ namespace UI.Views
             using UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(url);
             var operation = uwr.SendWebRequest();
 
-            await operation.ToUniTask();
-
+            while (!operation.isDone) 
+                await UniTask.NextFrame();
+            
             if (uwr.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError($"Error load picture : {uwr.error}");
@@ -69,8 +81,7 @@ namespace UI.Views
             Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
             return ConvertTextureToSprite(texture);
         }
-
-
+        
         private Sprite ConvertTextureToSprite(Texture2D texture)
             => Sprite.Create(texture,
                 new Rect(0, 0, texture.width, texture.height),

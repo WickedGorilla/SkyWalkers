@@ -38,7 +38,7 @@ namespace Game.Infrastructure
         private void BindNetworkService()
         {
 #if TEST
-            _container.Bind<IServerRequestSender>().To<TestServerRequestSender>().AsSingle(); 
+            _container.Bind<IServerRequestSender>().To<FakeServerRequestSender>().AsSingle(); 
 #else
             _container.Bind<IServerRequestSender>().To<ServerRequestSender>().AsSingle();
 #endif
