@@ -4,7 +4,6 @@ using Game.Environment;
 using Game.Player;
 using Infrastructure.Network;
 using Infrastructure.Network.Request;
-using Infrastructure.Network.Response;
 using Infrastructure.Network.Response.Player;
 using Infrastructure.SceneManagement;
 using Infrastructure.Telegram;
@@ -59,9 +58,8 @@ namespace Game.Infrastructure
         {
             await _sceneLoader.LoadSceneAsync(SceneName);
             await LoadInfoFromTelegram();
-
-
-            var response = await _serverRequestSender.SendToServer<LoginRequest, GameData>(GetLoginRequest(),
+            
+            ServerResponse<GameData> response = await _serverRequestSender.SendToServer<LoginRequest, GameData>(GetLoginRequest(),
                 ServerPath.Login);
 
             if (!response.Success)

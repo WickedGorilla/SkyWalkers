@@ -17,23 +17,23 @@ namespace UI.Views.Shop.Boosters
         [SerializeField] private TMP_Text _tittleText;
         [SerializeField] private TMP_Text _descriptionText;
 
-        [SerializeField] private RectTransform _content;
-        [FormerlySerializedAs("_itemViewPrefab")] [SerializeField] private ItemCard itemCardPrefab;
+        [SerializeField] private RectTransform _content; 
+        [SerializeField] private ItemCard _itemCardPrefab;
 
         private LinkedList<ItemCard> _instantiatedItems = new();
         private IDisposable _disposable;
 
-        public void Open(ItemData itemData, ItemEntity[] itemsEntity)
+        public void Open(ItemData itemData)
         {
             _iconImage.sprite = itemData.Icon;
             _tittleText.text = itemData.Name;
             _descriptionText.text = itemData.Description;
 
-            foreach (var item in itemsEntity)
+            foreach (var item in itemData.InShopVariables)
             {
-                var instance = Instantiate(itemCardPrefab);
+                var instance = Instantiate(_itemCardPrefab);
                 _instantiatedItems.AddLast(instance);
-                instance.SetInfo(itemData, item.Amount, item.Price, item.isDonat);
+                instance.SetInfo(itemData.Icon, item);
             }
             
             gameObject.SetActive(true);

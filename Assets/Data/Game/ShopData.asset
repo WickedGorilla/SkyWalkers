@@ -15,14 +15,70 @@ MonoBehaviour:
   _items:
   - _key: 0
     _value:
-      _tittle: 
-      _description: 
-      _price: 0
-      _isDonat: 0
+      _icon: {fileID: 21300000, guid: 58375e65bed79ea4e9f4f4a0f501a98f, type: 3}
+      _tittle: energy limit
+      _name: boost
+      _description: 30 sec of 2x-5x multipliers
+      _shopVariables:
+      - _tittle: 1 boost
+        _description: 30 sec multiplier
+        _price: 25
+        _amount: 1
+        _isDonat: 1
+      - _tittle: 3 boosts
+        _description: Great price. 1 free!
+        _price: 50
+        _amount: 3
+        _isDonat: 1
+      - _tittle: 5 boosts
+        _description: Best deal. 2 free!
+        _price: 75
+        _amount: 5
+        _isDonat: 1
+  - _key: 1
+    _value:
+      _icon: {fileID: 21300000, guid: eefe1874f29a2114c81729618bc78d6f, type: 3}
+      _tittle: play pass
+      _name: play pass
+      _description: Get more daily plays to be ahead
+      _shopVariables:
+      - _tittle: play pass 3x
+        _description: A little extra
+        _price: 10
+        _amount: 3
+        _isDonat: 1
+      - _tittle: play pass 5x
+        _description: Great price. 1 free!
+        _price: 20
+        _amount: 5
+        _isDonat: 1
+      - _tittle: play pass 10x
+        _description: Best deal. 3 free!
+        _price: 30
+        _amount: 10
+        _isDonat: 1
   _perks:
   - _key: 0
     _value:
-      _tittle: 
-      _description: 
-      _price: 0
-      _isDonat: 1
+      _icon: {fileID: 21300000, guid: d8ba312235c2d9a48a71541b0fa91261, type: 3}
+      _prevIconText: X/
+      _lastIconText: 
+      _tittle: ENERGY LIMIT
+      _description: Increase your energy
+      _upgradeDescriptionText: Boost your energy limit to
+  - _key: 1
+    _value:
+      _icon: {fileID: 21300000, guid: b4c3a564811f3014d9601c7df76a6c80, type: 3}
+      _prevIconText: 
+      _lastIconText: coin
+      _tittle: MULTI-TAP
+      _description: More coins per tap
+      _upgradeDescriptionText: Earn coins per tap
+  - _key: 2
+    _value:
+      _icon: {fileID: 21300000, guid: a9fe436d41ecfeb4f8825f7558c11862, type: 3}
+      _prevIconText: 
+      _lastIconText: 
+      _tittle: auto tap
+      _description: Tap while away.
+      _upgradeDescriptionText: Tap while away. Must claim every 12 hours

@@ -79,7 +79,7 @@ namespace UI.Views
         
         private void OpenItemCard(ItemType itemType)
         {
-            
+            View.ItemsMenu.Open(_itemData[itemType]);
         }
         
         private void ShowLoader()

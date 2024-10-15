@@ -11,13 +11,13 @@ namespace UI.Views.Shop.Boosters
         [SerializeField] private TMP_Text _nameText;
         [SerializeField] private TMP_Text _descriptionText;
         [SerializeField] private TMP_Text _priceText;
-
-        public void SetInfo(ItemData itemData, int count, int price, bool isDonat)
+        
+        public void SetInfo(Sprite icon, ItemData.ShopVariable item)
         {
-            _image.sprite = itemData.Icon;
-            _nameText.text = $"{count} {itemData.Name}";
-            _descriptionText.text = $"{itemData.Description}";
-            _priceText.text = $"{SpritesAtlasCode.GetCurrentCurrencyCode(isDonat)} {price}";
+            _image.sprite = icon;
+            _nameText.text = item.Tittle;
+            _descriptionText.text = item.Description;
+            _priceText.text = $"{SpritesAtlasCode.GetCurrentCurrencyCode(item.IsDonat)} {item.Price}";
         }
     }
 }

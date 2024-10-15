@@ -3329,7 +3329,7 @@ MonoBehaviour:
   _tittleText: {fileID: 5968851569914088772}
   _descriptionText: {fileID: 5410188901883053599}
   _content: {fileID: 4641895637016285893}
-  itemCardPrefab: {fileID: 660272629720064344, guid: 8ab3450eaa0f3cf47b693c284db1548f, type: 3}
+  _itemCardPrefab: {fileID: 660272629720064344, guid: 8ab3450eaa0f3cf47b693c284db1548f, type: 3}
 --- !u!1 &4937713221323193396
 GameObject:
   m_ObjectHideFlags: 0

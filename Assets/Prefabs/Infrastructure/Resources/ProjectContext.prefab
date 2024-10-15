@@ -79,7 +79,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _loadingCurtain: {fileID: 8585592978554705551, guid: 82fa48be13f2b574f8e91095152cac9a, type: 3}
-  _telegramLauncher: {fileID: 5167899940707961118, guid: f61eaef7883beab4bbe9c1978090c0c7, type: 3}
 --- !u!114 &5958791947611814373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,3 +106,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _buildingsData: {fileID: 11400000, guid: 2b4bb60e286a35d41ac6be43c8fc1e51, type: 2}
   _coinsSpawnerData: {fileID: 11400000, guid: e5880df2664cad143a8b064fc8e8df72, type: 2}
+  _shopData: {fileID: 11400000, guid: bc7c4e7425c5f5f45b9328a3845686d7, type: 2}
