@@ -1,5 +1,6 @@
 using Game.BuildingSystem;
 using Game.Environment;
+using Game.Perks;
 using Game.Player;
 using Game.Wallet;
 using Infrastructure.Network;
@@ -38,11 +39,10 @@ namespace Game.Infrastructure
         private void BindNetworkService()
         {
 #if TEST
-            _container.Bind<IServerRequestSender>().To<FakeServerRequestSender>().AsSingle(); 
+            _container.Bind<IServerRequestSender>().To<FakeServerRequestSender>().AsSingle();
 #else
             _container.Bind<IServerRequestSender>().To<ServerRequestSender>().AsSingle();
 #endif
- 
         }
 
         private void BindPlayer()
@@ -50,6 +50,7 @@ namespace Game.Infrastructure
             _container.Bind<WalletService>().AsSingle();
             _container.Bind<BuildingMovementSystem>().AsSingle();
             _container.Bind<PlayerMovementByTap>().AsSingle();
+            _container.Bind<PerksService>().AsSingle();
             _container.BindInterfacesAndSelfTo<PlayerHolder>().AsSingle();
             _container.BindInterfacesAndSelfTo<ClickCoinSpawner>().AsSingle();
             _container.BindInterfacesAndSelfTo<CoinsCalculatorService>().AsSingle();

@@ -5,6 +5,7 @@ using Infrastructure.Data.Game.Shop;
 using SkyExtensions;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace UI.Views.Shop.Boosters
@@ -21,22 +22,26 @@ namespace UI.Views.Shop.Boosters
         
         private IDisposable _disposable;
 
-        public void Open(PerkData perkData, PerkEntity perk)
+        public void Open(PerkData perkData, PerkEntity perk, UnityAction buyAction)
         {
+            gameObject.SetActive(true);
             _iconImage.sprite = perkData.Icon;
             _titleText.text = perkData.Tittle;
             _descriptionText.text = perkData.UpgradeDescriptionText;
 
             SetPrice(perk.NextLevelPrice, perk.IsDonat);
+            _buyButton.onClick.AddListener(buyAction);
         }
 
-        public void Open(ItemData itemData, ItemEntity item)
+        public void Open(ItemData itemData, ItemEntity item, UnityAction buyAction)
         {
+            gameObject.SetActive(true);
             _iconImage.sprite = itemData.Icon;
             _titleText.text = itemData.Tittle;
             _descriptionText.text = itemData.Description;
             
             SetPrice(item.Price, item.IsDonat);
+            _buyButton.onClick.AddListener(buyAction);
         }
 
         private void SetPrice(int price, bool isDonat)
@@ -50,8 +55,9 @@ namespace UI.Views.Shop.Boosters
             => _disposable = _closeButton.AddListener(() => gameObject.SetActive(false));
 
         private void OnDisable()
-            => _disposable.Dispose();
-        
-
+        {
+            _buyButton.onClick.RemoveAllListeners();
+            _disposable.Dispose();
+        }
     }
 }

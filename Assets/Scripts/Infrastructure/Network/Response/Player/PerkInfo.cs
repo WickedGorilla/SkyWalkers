@@ -8,6 +8,13 @@ namespace Infrastructure.Network.Response.Player
         public PerkInfo EnergyLimit;
         public PerkInfo MultiTap;
         public PerkInfo AutoTap;
+
+        public PerksInfo()
+        {
+            EnergyLimit = new PerkInfo(100, 200, 1, 10, 300, true);
+            MultiTap = new PerkInfo(100, 200, 1, 10, 300, true);
+            AutoTap = new PerkInfo(100, 200, 1, 10, 300, true);
+        }
     }
 
     [Serializable]
@@ -19,5 +26,15 @@ namespace Infrastructure.Network.Response.Player
         public int MaxLevel;
         public int NextLevelPrice;
         public bool IsDonat;
+
+        public PerkInfo(int currentValue, int nextValue, int currentLevel, int maxLevel, int nextLevelPrice, bool isDonat)
+        {
+            CurrentValue = currentValue;
+            NextValue = nextValue;
+            CurrentLevel = currentLevel;
+            MaxLevel = maxLevel;
+            NextLevelPrice = nextLevelPrice;
+            IsDonat = isDonat;
+        }
     }
 }

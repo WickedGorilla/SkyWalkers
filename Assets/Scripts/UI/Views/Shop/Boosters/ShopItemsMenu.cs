@@ -5,7 +5,6 @@ using Infrastructure.Data.Game.Shop;
 using SkyExtensions;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI.Views.Shop.Boosters
@@ -21,9 +20,8 @@ namespace UI.Views.Shop.Boosters
         [SerializeField] private ItemCard _itemCardPrefab;
 
         private LinkedList<ItemCard> _instantiatedItems = new();
-        private IDisposable _disposable;
-
-        public void Open(ItemData itemData)
+ 
+        public void Open(ItemData itemData, ItemType itemType, Action<ItemEntity> onClickItem)
         {
             _iconImage.sprite = itemData.Icon;
             _tittleText.text = itemData.Name;
@@ -31,25 +29,28 @@ namespace UI.Views.Shop.Boosters
 
             foreach (var item in itemData.InShopVariables)
             {
-                var instance = Instantiate(_itemCardPrefab);
+                var instance = Instantiate(_itemCardPrefab, _content);
                 _instantiatedItems.AddLast(instance);
-                instance.SetInfo(itemData.Icon, item);
+                instance.SetInfo(itemData.Icon, item, () => onClickItem(new ItemEntity(itemType, item)));
             }
             
             gameObject.SetActive(true);
         }
 
-        private void OnEnable()
-        {
-           _disposable = _backButton.AddListener(() => gameObject.SetActive(false));
-        }
+        private void OnEnable() 
+            => _backButton.onClick.AddListener(Hide);
 
         private void OnDisable()
         {
-            _disposable.Dispose();
+            _backButton.onClick.RemoveListener(Hide);
             
             foreach (var item in _instantiatedItems)
                 Destroy(item.gameObject);
+            
+            _instantiatedItems.Clear();
         }
+
+        public void Hide() 
+            => gameObject.SetActive(false);
     }
 }

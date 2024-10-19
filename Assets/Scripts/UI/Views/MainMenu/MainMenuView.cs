@@ -9,7 +9,6 @@ namespace UI.Views
     {
         [SerializeField] private TMP_Text _coinsText;
         [SerializeField] private TMP_Text _nicknameText;
-        [SerializeField] private string _coinAtlasCode = "<sprite name=\"Coin\">";
         [SerializeField] private Image _userPicture;
         
         [Header("Buttons")]
@@ -36,6 +35,6 @@ namespace UI.Views
             => _userPicture.sprite = sprite;
 
         public void SetCoinsCount(int coins) 
-            => _coinsText.text = $"{_coinAtlasCode}{coins:N0}";
+            => _coinsText.text = $"{SpritesAtlasCode.Coin}{coins:N0}";
     }
 }

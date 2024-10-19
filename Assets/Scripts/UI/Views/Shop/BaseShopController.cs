@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Game.Items;
 using Game.Perks;
 using Infrastructure.Data.Game.Shop;
 using Infrastructure.Network;
@@ -8,6 +9,7 @@ using Infrastructure.Network.Response;
 using Player;
 using SkyExtensions;
 using UI.Core;
+using UnityEngine;
 
 namespace UI.Views
 {
@@ -19,12 +21,12 @@ namespace UI.Views
 
         private readonly Dictionary<PerkType, PerkData> _perksData;
         private readonly Dictionary<ItemType, ItemData> _itemData;
-        
+
         private readonly LinkedList<IDisposable> _disposables = new();
 
         protected BaseShopController(TShopView view,
-            IServerRequestSender serverRequestSender, 
-            PerksService perksService, 
+            IServerRequestSender serverRequestSender,
+            PerksService perksService,
             ShopData shopData,
             WalletService walletService) : base(view)
         {
@@ -35,7 +37,7 @@ namespace UI.Views
             _itemData = shopData.CreateItemsDictionary();
             _perksData = shopData.CreatePerksDictionary();
         }
-        
+
         protected override void OnShow()
         {
             View.ShopButton.onClick.AddListener(OnClickShopButton);
@@ -45,7 +47,7 @@ namespace UI.Views
             {
                 _disposables.AddLast(boostersCard.ClickButton.AddListener(OnClickItem));
 
-                void OnClickItem() 
+                void OnClickItem()
                     => OpenItemCard(boostersCard.Type);
             }
 
@@ -53,7 +55,7 @@ namespace UI.Views
             {
                 _disposables.AddLast(upgrade.ClickButton.AddListener(OnClickUpgrade));
 
-                void OnClickUpgrade() 
+                void OnClickUpgrade()
                     => OpenUpgradeCard(upgrade.Type);
             }
         }
@@ -63,7 +65,7 @@ namespace UI.Views
             View.ShopButton.onClick.RemoveListener(OnClickShopButton);
             View.BoostersButton.onClick.RemoveListener(OnClickBoostersButton);
 
-            foreach (var disposable in _disposables) 
+            foreach (var disposable in _disposables)
                 disposable.Dispose();
         }
 
@@ -74,29 +76,47 @@ namespace UI.Views
             if (perk.CurrentLevel > 0)
                 View.UpgradesPerkMenu.Open(_perksData[perkType], perk, _walletService.Coins);
             else
-                View.BuyItemMenu.Open(_perksData[perkType], perk);
+                View.BuyItemMenu.Open(_perksData[perkType], perk, () => OnClickBuyUpgrade(perk));
         }
-        
+
         private void OpenItemCard(ItemType itemType)
+            => View.ItemsMenu.Open(_itemData[itemType], itemType, OnClickItem);
+
+        private void OnClickItem(ItemEntity itemEntity) 
+            => View.BuyItemMenu.Open(_itemData[itemEntity.Type], itemEntity, () => OnClickBuyItem(itemEntity));
+
+        private async void OnClickBuyUpgrade(PerkEntity perkEntity)
         {
-            View.ItemsMenu.Open(_itemData[itemType]);
+            View.ShowLoader();
+
+            var request = new PaymentLinkPerkUpgradeRequest((int)perkEntity.PerkType, perkEntity.NextValue);
+            var response = await _serverRequestSender.SendToServer<PaymentLinkPerkUpgradeRequest, PaymentLinkResponse>(request, 
+                ServerPath.PaymentPerk);
+
+            if (!response.Success)
+            {
+                
+            }
+            
+            View.HideLoader();
+            Application.OpenURL(response.Data.Url);
         }
-        
-        private void ShowLoader()
+
+        private async void OnClickBuyItem(ItemEntity itemEntity)
         {
-            _serverRequestSender.SendToServer<PaymentLinkRequest, PaymentLinkResponse>(new PaymentLinkRequest(0, 0, 1),
-                ServerPath.Payment, OnComplete);
+            View.ShowLoader();
 
-            void OnComplete(ServerResponse<PaymentLinkResponse> response)
-                => HideLoader();
+            var request = new PaymentLinkItemRequest((int)itemEntity.Type, itemEntity.Amount);
+            var response = await _serverRequestSender.SendToServer<PaymentLinkItemRequest, PaymentLinkResponse>(request,
+                ServerPath.PaymentItem);
 
-            void OnError(string error)
-                => HideLoader();
-        }
-
-        private void HideLoader()
-        {
-            //View.ShowLoader(false);
+            if (!response.Success)
+            {
+                
+            }
+            
+            View.HideLoader();
+            Application.OpenURL(response.Data.Url);
         }
 
         private void OnClickShopButton()
@@ -104,18 +124,5 @@ namespace UI.Views
 
         private void OnClickBoostersButton()
             => View.ShowBoosters();
-    }
-
-    public class ShopController : BaseShopController<ShopView>
-    {
-
-        public ShopController(ShopView view,
-            IServerRequestSender serverRequestSender, 
-            PerksService perksService, 
-            ShopData data, 
-            WalletService walletService) 
-            : base(view, serverRequestSender, perksService, data, walletService)
-        {
-        }
     }
 }

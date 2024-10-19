@@ -4,6 +4,7 @@ using Game.Wallet.Flash;
 using TMPro;
 using UI.CustomButtons;
 using UI.Core;
+using UI.Views;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,6 @@ namespace UI.Hud
     {
         [Header("Coins")]
         [SerializeField] private TMP_Text _coinsText;
-        [SerializeField] private string _coinAtlasCode = "<sprite name=\"Coin\">";
 
         [Header("Energy")]
         [SerializeField] private TMP_Text _energyCount;
@@ -76,7 +76,7 @@ namespace UI.Hud
         }
 
         public void SetCoinsCount(int coins)
-            => _coinsText.text = $"{_coinAtlasCode}{coins:N0}";
+            => _coinsText.text = $"{SpritesAtlasCode.Coin}{coins:N0}";
 
         public void EnableBoost(bool value)
         {

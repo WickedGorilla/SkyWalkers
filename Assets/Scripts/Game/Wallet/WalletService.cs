@@ -1,5 +1,4 @@
 using Game.Wallet;
-using Infrastructure.Network.Response;
 using Infrastructure.Network.Response.Player;
 
 namespace Player
@@ -14,7 +13,7 @@ namespace Player
         public void Initialize(GameData data)
         {
             Coins = new IntValue(data.Coins);
-            Energy = new IntRangeValue(data.Energy);
+            Energy = new IntRangeValue(data.Energy, data.PerksInfo.EnergyLimit.CurrentValue);
             EnergyFlash = new IntValue(data.PlayPass);
             Boosts = new IntValue(data.Boosts);
         }

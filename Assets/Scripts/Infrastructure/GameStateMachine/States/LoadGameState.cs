@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Game.BuildingSystem;
 using Game.Environment;
+using Game.Perks;
 using Game.Player;
 using Infrastructure.Network;
 using Infrastructure.Network.Request;
@@ -26,6 +27,7 @@ namespace Game.Infrastructure
         private readonly PlayerMovementByTap _playerMovementByTap;
         private readonly BuildingMovementSystem _buildingMovementSystem;
         private readonly TelegramLauncher _telegramLauncher;
+        private readonly PerksService _perksService;
 
         private const string SceneName = "Game";
 
@@ -39,7 +41,8 @@ namespace Game.Infrastructure
             PlayerHolder playerHolder,
             PlayerMovementByTap playerMovementByTap,
             BuildingMovementSystem buildingMovementSystem,
-            TelegramLauncher telegramLauncher)
+            TelegramLauncher telegramLauncher,
+            PerksService perksService)
         {
             _sceneLoader = sceneLoader;
             _serverRequestSender = serverRequestSender;
@@ -52,14 +55,16 @@ namespace Game.Infrastructure
             _playerMovementByTap = playerMovementByTap;
             _buildingMovementSystem = buildingMovementSystem;
             _telegramLauncher = telegramLauncher;
+            _perksService = perksService;
         }
 
         public async void Enter()
         {
             await _sceneLoader.LoadSceneAsync(SceneName);
             await LoadInfoFromTelegram();
-            
-            ServerResponse<GameData> response = await _serverRequestSender.SendToServer<LoginRequest, GameData>(GetLoginRequest(),
+
+            ServerResponse<GameData> response = await _serverRequestSender.SendToServerBase<LoginRequest, GameData>(
+                GetLoginRequest(),
                 ServerPath.Login);
 
             if (!response.Success)
@@ -80,7 +85,11 @@ namespace Game.Infrastructure
             => _loadingCurtain.ShowStartButton();
 
         private void InitializeData(GameData data)
-            => _balanceService.Initialize(data);
+        {
+            _balanceService.Initialize(data);
+            _serverRequestSender.Initialize(_telegramLauncher.UserId, data.Token);
+            _perksService.Initialize(data.PerksInfo);
+        }
 
         private async UniTask LoadInfoFromTelegram()
             => await UniTask.WaitUntil(() => _telegramLauncher.IsInit);
@@ -100,13 +109,9 @@ namespace Game.Infrastructure
 
         private LoginRequest GetLoginRequest()
         {
-            /*var loginRequest = new LoginRequest(_telegramLauncher.UserId,
-     _telegramLauncher.AuthDate,
-     _telegramLauncher.Hash);*/
-
-            return new LoginRequest(0,
-                0,
-                "SkySky");
+            return new LoginRequest(_telegramLauncher.UserId,
+                _telegramLauncher.AuthDate,
+                _telegramLauncher.Hash);
         }
     }
 }

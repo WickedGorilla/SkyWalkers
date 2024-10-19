@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 448a24fbb03450b40bc8fbe63c00a4c8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 58375e65bed79ea4e9f4f4a0f501a98f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -592,7 +592,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 69.889, y: -0.1873}
-  m_SizeDelta: {x: 133.41, y: 163.1317}
+  m_SizeDelta: {x: 163.1317, y: 163.1317}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5188795815190757462
 CanvasRenderer:
@@ -622,7 +622,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e68af78c97b6e8943be80e8c90fdc32e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d8ba312235c2d9a48a71541b0fa91261, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1541,7 +1541,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 206.76776}
+  m_AnchoredPosition: {x: 0, y: 206.76758}
   m_SizeDelta: {x: 606.3639, y: 219.22272}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5111887755029892669
@@ -1617,7 +1617,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 23.89357, y: -56.112724}
+  m_AnchoredPosition: {x: 23.89357, y: -67}
   m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4542193046051755883
@@ -1957,7 +1957,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _coinsText: {fileID: 5548297641516354886}
-  _coinAtlasCode: <sprite name="Coin">
   _energyCount: {fileID: 5992700699101670128}
   _energyFlashCount: {fileID: 6056234049448301127}
   _energyFiller: {fileID: 5109174524730448475}
@@ -2165,7 +2164,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <sprite name="Coin">507,981
+  m_text: <sprite name="coin">507,981
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ca8f099dd5072443bda4e05703f4181, type: 2}
   m_sharedMaterial: {fileID: -6167540237833562052, guid: 3ca8f099dd5072443bda4e05703f4181, type: 2}
@@ -2184,7 +2183,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 11400000, guid: af6868446efae7f408ae27ba649e0b3f, type: 2}
+  m_spriteAsset: {fileID: 11400000, guid: 5d2479f1484f37b46ad2247b75a25c3d, type: 2}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
@@ -2270,7 +2269,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 126.27013, y: -144.00165}
+  m_AnchoredPosition: {x: 126.27014, y: -144.00146}
   m_SizeDelta: {x: 160.7437, y: 158.59003}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7849872005857239071

@@ -1,10 +1,20 @@
+using Infrastructure.Data.Game.Shop;
+
 namespace Game.Items
 {
-    public class ItemEntity
+    public struct ItemEntity
     {
-        public bool isDonat;
-        public int Price { get; set; }
-        public int Amount { get; set; }
-        public bool IsDonat { get; set; }
+        public ItemType Type { get; }
+        public int Price { get; }
+        public int Amount { get; }
+        public bool IsDonat { get; }
+        
+        public ItemEntity(ItemType type, ItemData.ShopVariable shopVariable)
+        {
+            Type = type;
+            Price = shopVariable.Price;
+            Amount = shopVariable.Amount;
+            IsDonat = shopVariable.IsDonat;
+        }
     }
 }

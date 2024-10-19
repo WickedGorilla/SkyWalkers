@@ -19,6 +19,7 @@ namespace UI.Views
         [SerializeField] private UpgradePerkMenu _upgradesPerkMenu;
         [SerializeField] private BuyItemMenu _buyItemMenu;
         [SerializeField] private ShopItemsMenu _itemsMenu;
+        [SerializeField] private GameObject _loader;
 
         public Button ShopButton => _shopButton;
         public Button BoostersButton => _boostersButton;
@@ -40,6 +41,12 @@ namespace UI.Views
             _boostersScrollView.gameObject.SetActive(false);
         }
 
+        public void ShowLoader() 
+            => _loader.SetActive(true);
+
+        public void HideLoader() 
+            => _loader.SetActive(false);
+        
         [Serializable]
         public class BoosterContainer
         {

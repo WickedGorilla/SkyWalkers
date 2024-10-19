@@ -11,9 +11,9 @@ namespace Game.Perks
 
         public void Initialize(PerksInfo perksInfo)
         {
-            EnergyLimit = new PerkEntity(perksInfo.EnergyLimit);
-            MultiTap = new PerkEntity(perksInfo.MultiTap);
-            AutoTap = new PerkEntity(perksInfo.AutoTap);
+            EnergyLimit = new PerkEntity(perksInfo.EnergyLimit, PerkType.EnergyLimit);
+            MultiTap = new PerkEntity(perksInfo.MultiTap, PerkType.MultiTap);
+            AutoTap = new PerkEntity(perksInfo.AutoTap, PerkType.AutoTap);
         }
 
         public PerkEntity GetPerkByType(PerkType perkType)
