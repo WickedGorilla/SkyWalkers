@@ -4,6 +4,7 @@ using Infrastructure.Data.Game.Shop;
 using SkyExtensions;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace UI.Views.Shop.Boosters
@@ -26,21 +27,31 @@ namespace UI.Views.Shop.Boosters
         
         private IDisposable _disposable;
 
+        public event Action<bool> OnShow;
+        
         private void OnEnable()
-            => _disposable = _backButton.AddListener(() => { gameObject.SetActive(false); });
+        {
+            _disposable = _backButton.AddListener(() => { gameObject.SetActive(false); });
+            OnShow?.Invoke(true);
+        }
 
-        private void OnDisable() 
-            => _disposable?.Dispose();
+        private void OnDisable()
+        {
+            _upgradeButton.onClick.RemoveAllListeners();
+            _disposable?.Dispose();
+            OnShow?.Invoke(false);
+        }
 
         public void SetCountText(int count)
         {
             _coinsCountText.text = $"{SpritesAtlasCode.Coin} {count.ToString()}" ;
         }
 
-        public void Open(PerkData data, PerkEntity perkEntity, int countCoins)
+        public void Open(PerkData data, PerkEntity perkEntity, int countCoins, UnityAction onUpgradeButton)
         {
             gameObject.gameObject.SetActive(true);
-
+            _upgradeButton.onClick.AddListener(onUpgradeButton);
+            
             if (perkEntity.CurrentLevel == perkEntity.MaxLevel)
             {
                 LockButton();

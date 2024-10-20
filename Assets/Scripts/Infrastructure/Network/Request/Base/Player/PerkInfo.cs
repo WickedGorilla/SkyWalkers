@@ -12,7 +12,7 @@ namespace Infrastructure.Network.Response.Player
         public PerksInfo()
         {
             EnergyLimit = new PerkInfo(100, 200, 1, 10, 300, true);
-            MultiTap = new PerkInfo(100, 200, 1, 10, 300, true);
+            MultiTap = new PerkInfo(10, 10, 10, 10, 300, true);
             AutoTap = new PerkInfo(100, 200, 1, 10, 300, true);
         }
     }

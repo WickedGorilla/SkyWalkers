@@ -5749,6 +5749,9 @@ MonoBehaviour:
   _descriptionText: {fileID: 4401561571156702284}
   _upgradeDescriptionText: {fileID: 4298258660675911144}
   _levelText: {fileID: 3658621172540546392}
+  _upgradeButton: {fileID: 6697535467988422288}
+  _upgradeButtonText: {fileID: 8554585542168604102}
+  _upgradeText: upgrade now
 --- !u!1 &8353245204389552636
 GameObject:
   m_ObjectHideFlags: 0

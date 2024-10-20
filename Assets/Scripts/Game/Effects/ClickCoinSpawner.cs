@@ -31,21 +31,23 @@ namespace UI.Hud
 
         public void SpawnCoinEffect(int coinAmount, Vector2 centerPosition)
         {
-            for (int i = 0; i < coinAmount; i++)
+            Vector2 spawnPosition = GetRandomPositionInsideArc(centerPosition);
+            Vector2 direction = (spawnPosition - centerPosition).normalized;
+            Vector2 target = spawnPosition + direction * _data.MoveDistance;
+            float rotation = Random.Range(-30f, 30f);
+
+            var spawnedCoin = _poolCoins.Get(_data.CoinPrefab, spawnPosition, rotation, _uiParent);
+            AnimateCoin(spawnedCoin, target);
+
+            var textPosition = spawnPosition + _data.TextOffset;
+            var spawnedText = _poolTextCount.Get(_data.TextPrefab, textPosition, 0f, _uiParent);
+            spawnedText.text = $"+{coinAmount}";
+            AnimateText(spawnedText, target);
+            
+            /*for (int i = 0; i < coinAmount; i++)
             {
-                Vector2 spawnPosition = GetRandomPositionInsideArc(centerPosition);
-                Vector2 direction = (spawnPosition - centerPosition).normalized;
-                Vector2 target = spawnPosition + direction * _data.MoveDistance;
-                float rotation = Random.Range(-30f, 30f);
-
-                var spawnedCoin = _poolCoins.Get(_data.CoinPrefab, spawnPosition, rotation, _uiParent);
-                AnimateCoin(spawnedCoin, target);
-
-                var textPosition = spawnPosition + _data.TextOffset;
-                var spawnedText = _poolTextCount.Get(_data.TextPrefab, textPosition, 0f, _uiParent);
-                spawnedText.text = $"+{coinAmount}";
-                AnimateText(spawnedText, target);
-            }
+                
+            }*/
         }
 
         private Vector3 GetRandomPositionInsideArc(Vector3 center)

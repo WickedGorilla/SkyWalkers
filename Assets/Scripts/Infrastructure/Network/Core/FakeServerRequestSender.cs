@@ -18,7 +18,6 @@ namespace Infrastructure.Network
             };
         }
 
-
         public UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message, string address, Action onError = null) where TRequest : NetworkRequest
         {
             throw new NotImplementedException();

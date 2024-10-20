@@ -36,7 +36,7 @@ namespace Game.Player
 
         public bool UseBoost(Action<int> onTickSecond, Action onComplete)
         {
-            if (!_walletService.Boosts.Subtract(1))
+            if (_walletService.Energy.Count == 0 || !_walletService.Boosts.Subtract(1))
                 return false;
 
             Boosting(onTickSecond, onComplete);
@@ -52,7 +52,7 @@ namespace Game.Player
             
             IsBoost = true;
             
-            _coinsCalculatorService.UpdateInstruction(2);
+            _coinsCalculatorService.UpdateInstruction(3);
             
             for (int i = BoostingTime; i > 0; i--)
             {

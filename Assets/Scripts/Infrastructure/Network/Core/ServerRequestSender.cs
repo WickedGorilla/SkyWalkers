@@ -17,6 +17,8 @@ namespace Infrastructure.Network
 
         public void Initialize(long userId, string token)
         {
+            _userId = userId;
+            _token = token;
         }
 
         public async UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,

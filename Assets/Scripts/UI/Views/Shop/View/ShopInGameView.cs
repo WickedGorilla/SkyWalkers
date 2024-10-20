@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace UI.Views
 {
-    public class ShopInGameView : ShopView
+    public class ShopInGameView : ShopViewBase
     {
         [SerializeField] private Button _backButton;
         

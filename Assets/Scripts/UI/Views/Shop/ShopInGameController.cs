@@ -1,4 +1,5 @@
 using Game.Perks;
+using Infrastructure;
 using Infrastructure.Data.Game.Shop;
 using Infrastructure.Network;
 using Player;
@@ -16,8 +17,8 @@ namespace UI.Views
             IServerRequestSender serverRequestSender, 
             PerksService perksService, 
             ShopData shopData,
-            WalletService walletService) 
-            : base(view, serverRequestSender, perksService, shopData, walletService)
+            WalletService walletService, OnGameFocusEvent onGameFocusEvent) 
+            : base(view, serverRequestSender, perksService, shopData, walletService, onGameFocusEvent)
         {
             _viewService = viewService;
         }

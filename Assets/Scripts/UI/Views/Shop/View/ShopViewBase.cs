@@ -8,7 +8,7 @@ using Button = UnityEngine.UI.Button;
 
 namespace UI.Views
 {
-    public class ShopView : View
+    public abstract class ShopViewBase : View
     {
         [SerializeField] private Button _shopButton;
         [SerializeField] private Button _boostersButton;
@@ -20,7 +20,7 @@ namespace UI.Views
         [SerializeField] private BuyItemMenu _buyItemMenu;
         [SerializeField] private ShopItemsMenu _itemsMenu;
         [SerializeField] private GameObject _loader;
-
+        
         public Button ShopButton => _shopButton;
         public Button BoostersButton => _boostersButton;
         public BoosterContainer[] BoostersCards => _boosters;
@@ -46,6 +46,7 @@ namespace UI.Views
 
         public void HideLoader() 
             => _loader.SetActive(false);
+        
         
         [Serializable]
         public class BoosterContainer

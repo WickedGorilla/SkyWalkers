@@ -10,10 +10,10 @@ namespace Player
         public IntValue EnergyFlash = new();
         public IntValue Boosts = new();
 
-        public void Initialize(GameData data)
+        public void Update(BalanceData data, PerksInfo perksInfo)
         {
             Coins = new IntValue(data.Coins);
-            Energy = new IntRangeValue(data.Energy, data.PerksInfo.EnergyLimit.CurrentValue);
+            Energy = new IntRangeValue(data.Energy, perksInfo.EnergyLimit.CurrentValue);
             EnergyFlash = new IntValue(data.PlayPass);
             Boosts = new IntValue(data.Boosts);
         }

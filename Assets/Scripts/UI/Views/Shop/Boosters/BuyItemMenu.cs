@@ -22,6 +22,8 @@ namespace UI.Views.Shop.Boosters
         
         private IDisposable _disposable;
 
+        public event Action<bool> OnShow;
+        
         public void Open(PerkData perkData, PerkEntity perk, UnityAction buyAction)
         {
             gameObject.SetActive(true);
@@ -51,13 +53,17 @@ namespace UI.Views.Shop.Boosters
             _buttonText.text = $"{currency} buy now";
         }
         
-        private void OnEnable() 
-            => _disposable = _closeButton.AddListener(() => gameObject.SetActive(false));
+        private void OnEnable()
+        {
+            _disposable = _closeButton.AddListener(() => gameObject.SetActive(false));
+            OnShow?.Invoke(true);
+        }
 
         private void OnDisable()
         {
             _buyButton.onClick.RemoveAllListeners();
             _disposable.Dispose();
+            OnShow?.Invoke(false);
         }
     }
 }

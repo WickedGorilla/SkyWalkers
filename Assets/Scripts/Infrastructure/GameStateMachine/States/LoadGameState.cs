@@ -86,7 +86,7 @@ namespace Game.Infrastructure
 
         private void InitializeData(GameData data)
         {
-            _balanceService.Initialize(data);
+            _balanceService.Update(data.BalanceData, data.PerksInfo);
             _serverRequestSender.Initialize(_telegramLauncher.UserId, data.Token);
             _perksService.Initialize(data.PerksInfo);
         }

@@ -5,26 +5,22 @@ namespace Game.Infrastructure
 {
     public class MainMenuState : IState
     {
-        private readonly ViewService viewService;
-
-        private MenuListBarController _listBarController;
+        private readonly ViewService _viewService;
 
         public MainMenuState(ViewService viewService)
         {
-            this.viewService = viewService;
+            _viewService = viewService;
         }
 
         public void Enter()
         {
-            viewService.Show<MainMenuView, MainMenuController>();
-            _listBarController = viewService.ShowPermanent<MenuListBar, MenuListBarController>();
+            _viewService.Show<MainMenuView, MainMenuController>();
+            _viewService.ShowPermanent<MenuListBar, MenuListBarController>();
         }
 
         public void Exit()
         {
-            viewService.HidePermanent(_listBarController);
+            _viewService.HidePermanent<MenuListBarController>();
         }
-        
-
     }
 }

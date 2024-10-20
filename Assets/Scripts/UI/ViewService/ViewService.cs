@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace UI.Core
 {
@@ -62,9 +64,16 @@ namespace UI.Core
             return controller as TController;
         }
         
-        public void HidePermanent<TController>(TController controller) where TController : IViewController
+        public void HidePermanent<TController>() where TController : IViewController
         {
-            var view = _permanentViews.Find(controller)?.Value;
+            var view = _permanentViews.FirstOrDefault(x => x.GetType() == typeof(TController));
+
+            if (view == null)
+            {
+                Debug.LogError($"permanent view is null by type {typeof(TController)}");
+                return;
+            }
+            
             view.Hide();
             _permanentViews.Remove(view);
         }

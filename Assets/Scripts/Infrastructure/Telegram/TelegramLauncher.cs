@@ -23,7 +23,7 @@ namespace Infrastructure.Telegram
         
         private void Awake()
             => DontDestroyOnLoad(gameObject);
-
+        
         private void Start()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR

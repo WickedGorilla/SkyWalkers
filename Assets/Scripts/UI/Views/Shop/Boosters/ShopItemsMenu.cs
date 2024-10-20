@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Game.Items;
 using Infrastructure.Data.Game.Shop;
-using SkyExtensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +20,8 @@ namespace UI.Views.Shop.Boosters
 
         private LinkedList<ItemCard> _instantiatedItems = new();
  
+        public event Action<bool> OnShow;
+        
         public void Open(ItemData itemData, ItemType itemType, Action<ItemEntity> onClickItem)
         {
             _iconImage.sprite = itemData.Icon;
@@ -37,8 +38,11 @@ namespace UI.Views.Shop.Boosters
             gameObject.SetActive(true);
         }
 
-        private void OnEnable() 
-            => _backButton.onClick.AddListener(Hide);
+        private void OnEnable()
+        {
+            _backButton.onClick.AddListener(Hide);
+            OnShow?.Invoke(true);
+        }
 
         private void OnDisable()
         {
@@ -48,6 +52,7 @@ namespace UI.Views.Shop.Boosters
                 Destroy(item.gameObject);
             
             _instantiatedItems.Clear();
+            OnShow?.Invoke(false);
         }
 
         public void Hide() 

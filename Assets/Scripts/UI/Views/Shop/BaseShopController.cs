@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Game.Items;
 using Game.Perks;
+using Infrastructure;
 using Infrastructure.Data.Game.Shop;
 using Infrastructure.Network;
 using Infrastructure.Network.Request;
+using Infrastructure.Network.Request.ValidationPayment;
 using Infrastructure.Network.Response;
 using Player;
 using SkyExtensions;
@@ -13,11 +16,12 @@ using UnityEngine;
 
 namespace UI.Views
 {
-    public abstract class BaseShopController<TShopView> : ViewController<TShopView> where TShopView : ShopView
+    public abstract class BaseShopController<TShopView> : ViewController<TShopView> where TShopView : ShopViewBase
     {
         private readonly IServerRequestSender _serverRequestSender;
         private readonly PerksService _perksService;
         private readonly WalletService _walletService;
+        private readonly OnGameFocusEvent _onGameFocusEvent;
 
         private readonly Dictionary<PerkType, PerkData> _perksData;
         private readonly Dictionary<ItemType, ItemData> _itemData;
@@ -28,11 +32,13 @@ namespace UI.Views
             IServerRequestSender serverRequestSender,
             PerksService perksService,
             ShopData shopData,
-            WalletService walletService) : base(view)
+            WalletService walletService,
+            OnGameFocusEvent onGameFocusEvent) : base(view)
         {
             _serverRequestSender = serverRequestSender;
             _perksService = perksService;
             _walletService = walletService;
+            _onGameFocusEvent = onGameFocusEvent;
 
             _itemData = shopData.CreateItemsDictionary();
             _perksData = shopData.CreatePerksDictionary();
@@ -45,9 +51,9 @@ namespace UI.Views
 
             foreach (var boostersCard in View.BoostersCards)
             {
-                _disposables.AddLast(boostersCard.ClickButton.AddListener(OnClickItem));
+                _disposables.AddLast(boostersCard.ClickButton.AddListener(OnClickCard));
 
-                void OnClickItem()
+                void OnClickCard()
                     => OpenItemCard(boostersCard.Type);
             }
 
@@ -74,7 +80,8 @@ namespace UI.Views
             var perk = _perksService.GetPerkByType(perkType);
 
             if (perk.CurrentLevel > 0)
-                View.UpgradesPerkMenu.Open(_perksData[perkType], perk, _walletService.Coins);
+                View.UpgradesPerkMenu.Open(_perksData[perkType], perk, _walletService.Coins,
+                    () => OnClickBuyUpgrade(perk));
             else
                 View.BuyItemMenu.Open(_perksData[perkType], perk, () => OnClickBuyUpgrade(perk));
         }
@@ -82,7 +89,7 @@ namespace UI.Views
         private void OpenItemCard(ItemType itemType)
             => View.ItemsMenu.Open(_itemData[itemType], itemType, OnClickItem);
 
-        private void OnClickItem(ItemEntity itemEntity) 
+        private void OnClickItem(ItemEntity itemEntity)
             => View.BuyItemMenu.Open(_itemData[itemEntity.Type], itemEntity, () => OnClickBuyItem(itemEntity));
 
         private async void OnClickBuyUpgrade(PerkEntity perkEntity)
@@ -90,15 +97,17 @@ namespace UI.Views
             View.ShowLoader();
 
             var request = new PaymentLinkPerkUpgradeRequest((int)perkEntity.PerkType, perkEntity.NextValue);
-            var response = await _serverRequestSender.SendToServer<PaymentLinkPerkUpgradeRequest, PaymentLinkResponse>(request, 
+            var response = await _serverRequestSender.SendToServer<PaymentLinkPerkUpgradeRequest, PaymentLinkResponse>(
+                request,
                 ServerPath.PaymentPerk);
 
             if (!response.Success)
             {
-                
+                View.HideLoader();
+                return;
             }
-            
-            View.HideLoader();
+
+            _onGameFocusEvent.AddOnFocusEvent(SendValidationPayment);
             Application.OpenURL(response.Data.Url);
         }
 
@@ -112,10 +121,11 @@ namespace UI.Views
 
             if (!response.Success)
             {
-                
+                View.HideLoader();
+                return;
             }
-            
-            View.HideLoader();
+
+            _onGameFocusEvent.AddOnFocusEvent(SendValidationPayment);
             Application.OpenURL(response.Data.Url);
         }
 
@@ -124,5 +134,25 @@ namespace UI.Views
 
         private void OnClickBoostersButton()
             => View.ShowBoosters();
+
+        private async void SendValidationPayment()
+        {
+            var response = await _serverRequestSender.SendToServer<ValidationPaymentRequest, ValidationPaymentResponse>(
+                new ValidationPaymentRequest(),
+                ServerPath.PaymentValidation);
+            
+            while (!response.Data.IsUpdated)
+            {
+                await UniTask.WaitForSeconds(2f);
+                response = await _serverRequestSender.SendToServer<ValidationPaymentRequest, ValidationPaymentResponse>(
+                    new ValidationPaymentRequest(),
+                    ServerPath.PaymentValidation);
+            }
+
+            var data = response.Data;
+            
+            _walletService.Update(data.BalanceData, data.PerksInfo);
+            View.HideLoader();
+        }
     }
 }
