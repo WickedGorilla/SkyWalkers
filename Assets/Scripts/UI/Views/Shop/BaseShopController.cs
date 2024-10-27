@@ -92,12 +92,36 @@ namespace UI.Views
         private void OnClickItem(ItemEntity itemEntity)
             => View.BuyItemMenu.Open(_itemData[itemEntity.Type], itemEntity, () => OnClickBuyItem(itemEntity));
 
+        private async void OnClickBuyItem(ItemEntity itemEntity)
+        {
+            View.ShowLoader();
+
+            var request = new PaymentLinkItemRequest((int)itemEntity.Type, itemEntity.Amount);
+            var response = await _serverRequestSender.SendToServer<PaymentLinkItemRequest, PaymentItemResult>(request,
+                ServerPath.PaymentItem);
+
+            if (!response.Success)
+            {
+                View.HideLoader();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(response.Data.PaymentUrl))
+            {
+                View.HideLoader();
+                return;
+            }
+            
+            _onGameFocusEvent.AddOnFocusEvent(SendValidationPayment);
+            Application.OpenURL(response.Data.PaymentUrl);
+        }
+
         private async void OnClickBuyUpgrade(PerkEntity perkEntity)
         {
             View.ShowLoader();
 
             var request = new PaymentLinkPerkUpgradeRequest((int)perkEntity.PerkType, perkEntity.NextValue);
-            var response = await _serverRequestSender.SendToServer<PaymentLinkPerkUpgradeRequest, PaymentLinkResponse>(
+            var response = await _serverRequestSender.SendToServerAndHandle<PaymentLinkPerkUpgradeRequest, PaymentUpgradePerkResult>(
                 request,
                 ServerPath.PaymentPerk);
 
@@ -107,26 +131,14 @@ namespace UI.Views
                 return;
             }
 
-            _onGameFocusEvent.AddOnFocusEvent(SendValidationPayment);
-            Application.OpenURL(response.Data.Url);
-        }
-
-        private async void OnClickBuyItem(ItemEntity itemEntity)
-        {
-            View.ShowLoader();
-
-            var request = new PaymentLinkItemRequest((int)itemEntity.Type, itemEntity.Amount);
-            var response = await _serverRequestSender.SendToServer<PaymentLinkItemRequest, PaymentLinkResponse>(request,
-                ServerPath.PaymentItem);
-
-            if (!response.Success)
+            if (string.IsNullOrEmpty(response.Data.PaymentUrl))
             {
                 View.HideLoader();
                 return;
             }
-
+            
             _onGameFocusEvent.AddOnFocusEvent(SendValidationPayment);
-            Application.OpenURL(response.Data.Url);
+            Application.OpenURL(response.Data.PaymentUrl);
         }
 
         private void OnClickShopButton()
@@ -137,21 +149,18 @@ namespace UI.Views
 
         private async void SendValidationPayment()
         {
-            var response = await _serverRequestSender.SendToServer<ValidationPaymentRequest, ValidationPaymentResponse>(
+            var response = await _serverRequestSender.SendToServerAndHandle<ValidationPaymentRequest, ValidationPaymentResponse>(
                 new ValidationPaymentRequest(),
                 ServerPath.PaymentValidation);
             
             while (!response.Data.IsUpdated)
             {
                 await UniTask.WaitForSeconds(2f);
-                response = await _serverRequestSender.SendToServer<ValidationPaymentRequest, ValidationPaymentResponse>(
+                response = await _serverRequestSender.SendToServerAndHandle<ValidationPaymentRequest, ValidationPaymentResponse>(
                     new ValidationPaymentRequest(),
                     ServerPath.PaymentValidation);
             }
-
-            var data = response.Data;
             
-            _walletService.Update(data.BalanceData, data.PerksInfo);
             View.HideLoader();
         }
     }

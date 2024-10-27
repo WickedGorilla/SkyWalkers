@@ -1,10 +1,30 @@
-using System;
+using Infrastructure.Network.Response.Player;
 
 namespace Infrastructure.Network.Response
 {
-    [Serializable]
-    public class PaymentLinkResponse
+    public class PaymentItemResult
     {
-        public string Url;
+        public BalanceUpdate BalanceUpdate;
+        public string PaymentUrl;
+
+        public PaymentItemResult(BalanceUpdate balanceUpdate, string paymentUrl = "")
+        {
+            BalanceUpdate = balanceUpdate;
+            PaymentUrl = paymentUrl;
+        }
+    }
+
+    public class PaymentUpgradePerkResult
+    {
+        public PerkInfo PerkInfo;
+        public BalanceUpdate BalanceUpdate;
+        public string PaymentUrl;
+    
+        public PaymentUpgradePerkResult(PerkInfo perkInfo, BalanceUpdate balanceUpdate, string paymentUrl = "")
+        {
+            PerkInfo = perkInfo;
+            BalanceUpdate = balanceUpdate;
+            PaymentUrl = paymentUrl;
+        }
     }
 }

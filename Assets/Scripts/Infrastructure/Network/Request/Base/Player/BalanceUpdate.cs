@@ -3,7 +3,7 @@ using System;
 namespace Infrastructure.Network.Response.Player
 {
     [Serializable]
-    public class BalanceData
+    public struct BalanceUpdate
     {
         public int Coins;
         public int Energy;

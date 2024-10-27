@@ -2,6 +2,8 @@ using System;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using Infrastructure.Network.Request.Base;
+using Infrastructure.Network.RequestHandler;
+using Infrastructure.Network.Response.Player;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -15,11 +17,20 @@ namespace Infrastructure.Network
         private long _userId;
         private string _token;
 
+        private readonly ResponsesHandler _responsesHandler = new();
+      
         public void Initialize(long userId, string token)
         {
             _userId = userId;
             _token = token;
         }
+        
+        
+        public void AddHandler<T>(params IRequestHandler<T>[] handlers) 
+            => _responsesHandler.AddHandlers(handlers);
+
+        public void RemoveHandler<T>(params IRequestHandler<T>[] handlers) 
+            => _responsesHandler.RemoveHandlers(handlers);
 
         public async UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
             string address,
@@ -29,6 +40,18 @@ namespace Infrastructure.Network
             message.Token = _token;
 
             return await SendToServerBase<TRequest, TResponse>(message, address, onError);
+        }
+
+        public async UniTask<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>
+            (TRequest message, string address, Action onError = null) where TRequest : NetworkRequest
+        {
+             var result = await SendToServer<TRequest, TResponse>(message, address, onError);
+
+             if (!result.Success)
+                 return result;
+             
+             _responsesHandler.GetHolder<TResponse>()?.Handle(result.Data);
+             return result;
         }
 
         public async void SendToServer<TRequest, TResponse>(TRequest message, string address,

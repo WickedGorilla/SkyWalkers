@@ -1,21 +1,37 @@
 using Game.Wallet;
+using Infrastructure.Network.Request.ValidationPayment;
+using Infrastructure.Network.RequestHandler;
 using Infrastructure.Network.Response.Player;
 
 namespace Player
 {
-    public class WalletService
+    public class WalletService : IRequestHandler<GameData>, IRequestHandler<ValidationPaymentResponse>
     {
         public IntValue Coins = new();
         public IntRangeValue Energy = new(0, 0);
         public IntValue EnergyFlash = new();
         public IntValue Boosts = new();
 
-        public void Update(BalanceData data, PerksInfo perksInfo)
+        public void Handle(GameData response)
         {
-            Coins = new IntValue(data.Coins);
-            Energy = new IntRangeValue(data.Energy, perksInfo.EnergyLimit.CurrentValue);
-            EnergyFlash = new IntValue(data.PlayPass);
-            Boosts = new IntValue(data.Boosts);
+            var update = response.BalanceUpdate;
+            
+            Coins = new IntValue(update.Coins);
+            Energy = new IntRangeValue(update.Energy, response.PerksInfo.EnergyLimit.CurrentValue);
+            EnergyFlash = new IntValue(update.PlayPass);
+            Boosts = new IntValue(update.Boosts);
+        }
+
+        public void Handle(ValidationPaymentResponse response)
+        {
+            if (!response.IsUpdated)
+                return;
+            
+            var update = response.BalanceUpdate;
+            Coins = new IntValue(update.Coins);
+            Energy = new IntRangeValue(update.Energy, response.PerksInfo.EnergyLimit.CurrentValue);
+            EnergyFlash = new IntValue(update.PlayPass);
+            Boosts = new IntValue(update.Boosts);
         }
     }
 }

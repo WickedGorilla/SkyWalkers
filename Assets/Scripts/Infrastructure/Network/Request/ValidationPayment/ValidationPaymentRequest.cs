@@ -6,6 +6,6 @@ namespace Infrastructure.Network.Request.ValidationPayment
     [Serializable]
     public class ValidationPaymentRequest : NetworkRequest
     {
-        
+        public string OrderCode;
     }
 }
