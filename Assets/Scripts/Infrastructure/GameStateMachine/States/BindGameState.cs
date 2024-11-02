@@ -38,11 +38,10 @@ namespace Game.Infrastructure
 
         private void BindNetworkService()
         {
-#if TEST
+/*#if TEST
             _container.Bind<IServerRequestSender>().To<FakeServerRequestSender>().AsSingle();
-#else
+#else*/
             _container.Bind<IServerRequestSender>().To<ServerRequestSender>().AsSingle();
-#endif
         }
 
         private void BindPlayer()
@@ -51,6 +50,7 @@ namespace Game.Infrastructure
             _container.Bind<BuildingMovementSystem>().AsSingle();
             _container.Bind<PlayerMovementByTap>().AsSingle();
             _container.Bind<PerksService>().AsSingle();
+            
             _container.BindInterfacesAndSelfTo<PlayerHolder>().AsSingle();
             _container.BindInterfacesAndSelfTo<ClickCoinSpawner>().AsSingle();
             _container.BindInterfacesAndSelfTo<CoinsCalculatorService>().AsSingle();

@@ -1,7 +1,9 @@
+using System;
 using Infrastructure.Data.Game.Shop;
 using Infrastructure.Network.Request.ValidationPayment;
 using Infrastructure.Network.RequestHandler;
 using Infrastructure.Network.Response.Player;
+using UnityEngine;
 
 namespace Game.Perks
 {
@@ -15,11 +17,11 @@ namespace Game.Perks
         {
             switch (perkType)
             {
-                case PerkType.AutoTap:
-                    return AutoTap;
-
                 case PerkType.EnergyLimit:
                     return EnergyLimit;
+                
+                case PerkType.AutoTap:
+                    return AutoTap;
 
                 case PerkType.MultiTap:
                     return MultiTap;
@@ -28,23 +30,49 @@ namespace Game.Perks
             return null;
         }
 
+        private void SetPerkByType(PerkType perkType, PerkInfo perkInfo)
+        {
+            switch (perkType)
+            {
+                case PerkType.EnergyLimit:
+                    EnergyLimit = new PerkEntity(perkInfo, perkType);
+                    return;
+                
+                case PerkType.AutoTap:
+                    AutoTap = new PerkEntity(perkInfo, perkType);
+                    return;
+
+                case PerkType.MultiTap:
+                    MultiTap = new PerkEntity(perkInfo, perkType);
+                    return;
+            }
+
+        }
+        
         public void Handle(GameData response)
         {
-            var perksInfo = response.PerksInfo;
-            EnergyLimit = new PerkEntity(perksInfo.EnergyLimit, PerkType.EnergyLimit);
-            MultiTap = new PerkEntity(perksInfo.MultiTap, PerkType.MultiTap);
-            AutoTap = new PerkEntity(perksInfo.AutoTap, PerkType.AutoTap);
-        }
-
-        public void Handle(ValidationPaymentResponse response)
-        {
-            if (!response.IsUpdated)
+            if (response.Perks.Perks.Length == 0)
                 return;
 
-            var perksInfo = response.PerksInfo;
-            EnergyLimit = new PerkEntity(perksInfo.EnergyLimit, PerkType.EnergyLimit);
-            MultiTap = new PerkEntity(perksInfo.MultiTap, PerkType.MultiTap);
-            AutoTap = new PerkEntity(perksInfo.AutoTap, PerkType.AutoTap);
+            HandlePerk(response.Perks);
+        }
+
+        public void Handle(ValidationPaymentResponse response) 
+            => HandlePerk(response.Perks);
+
+        private void HandlePerk(PerksResponse perks)
+        {
+            foreach (PerkInfo perkInfo in perks.Perks)
+            {
+                if (!Enum.IsDefined(typeof(PerkType), perkInfo.Id))
+                {
+                    Debug.LogError("The integer does not correspond to a defined enum value.");
+                    return;
+                }
+                
+                PerkType enumValue = (PerkType)perkInfo.Id;
+                SetPerkByType(enumValue, perkInfo);
+            }
         }
     }
 }

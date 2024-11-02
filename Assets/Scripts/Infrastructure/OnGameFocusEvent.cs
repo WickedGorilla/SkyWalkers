@@ -10,18 +10,16 @@ namespace Infrastructure
         
         private void OnApplicationFocus(bool hasFocus)
         {
-            if (hasFocus)
-            {
-                foreach (var focusEvent in _onFocusEvents)
-                    focusEvent();
-            }
-               
+            if (!hasFocus) 
+                return;
+            
+            foreach (var focusEvent in _onFocusEvents)
+                focusEvent();
+                
             _onFocusEvents.Clear();
         }
 
         public void AddOnFocusEvent(Action onFocus)
-        {
-            _onFocusEvents.AddLast(onFocus);
-        }
+            => _onFocusEvents.AddLast(onFocus);
     }
 }

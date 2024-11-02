@@ -20,20 +20,20 @@ MonoBehaviour:
       _name: boost
       _description: 30 sec of 2x-5x multipliers
       _shopVariables:
-      - _tittle: 1 boost
+      - _tittle: 3 boosts
         _description: 30 sec multiplier
         _price: 25
-        _amount: 1
-        _isDonat: 1
-      - _tittle: 3 boosts
-        _description: Great price. 1 free!
-        _price: 50
         _amount: 3
         _isDonat: 1
       - _tittle: 5 boosts
-        _description: Best deal. 2 free!
-        _price: 75
+        _description: Great price. 1 free!
+        _price: 35
         _amount: 5
+        _isDonat: 1
+      - _tittle: 10 boosts
+        _description: Best deal. 2 free!
+        _price: 50
+        _amount: 10
         _isDonat: 1
   - _key: 1
     _value:

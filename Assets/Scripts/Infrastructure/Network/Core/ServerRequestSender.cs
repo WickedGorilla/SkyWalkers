@@ -3,7 +3,6 @@ using System.Text;
 using Cysharp.Threading.Tasks;
 using Infrastructure.Network.Request.Base;
 using Infrastructure.Network.RequestHandler;
-using Infrastructure.Network.Response.Player;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -12,19 +11,22 @@ namespace Infrastructure.Network
 {
     public class ServerRequestSender : IServerRequestSender
     {
-        private const string BaseUrl = "https://localhost:5128";
+        private const string BaseUrl = "http://localhost:5120/";
 
         private long _userId;
         private string _token;
 
         private readonly ResponsesHandler _responsesHandler = new();
       
-        public void Initialize(long userId, string token)
+        public void Initialize(long userId)
         {
             _userId = userId;
+        }
+
+        public void UpdateToken(string token)
+        {
             _token = token;
         }
-        
         
         public void AddHandler<T>(params IRequestHandler<T>[] handlers) 
             => _responsesHandler.AddHandlers(handlers);
@@ -67,8 +69,10 @@ namespace Infrastructure.Network
             Action onError = null)
         {
             string jsonData = JsonConvert.SerializeObject(message);
-            string authUrl = $"{BaseUrl}/{address}";
+            string authUrl = $"{BaseUrl}{address}";
 
+            Debug.Log($"Send: {jsonData}");
+            
             var request = new UnityWebRequest(authUrl, "POST");
             request.SetRequestHeader("Content-Type", "application/json");
 

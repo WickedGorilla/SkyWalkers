@@ -64,21 +64,23 @@ namespace Game.Infrastructure
         {
             await _sceneLoader.LoadSceneAsync(SceneName);
             await LoadInfoFromTelegram();
-            
+
             RegisterEvents();
+
+            _serverRequestSender.Initialize(_telegramLauncher.UserId);
             
-            ServerResponse<GameData> response = await _serverRequestSender.SendToServerBase<LoginRequest, GameData>(
+            ServerResponse<GameData> response = await _serverRequestSender.SendToServerAndHandle<LoginRequest, GameData>(
                 GetLoginRequest(),
                 ServerPath.Login);
 
-            _serverRequestSender.Initialize(_telegramLauncher.UserId, response.Data.Token);
-            
             if (!response.Success)
             {
                 Debug.LogError("Failed to load game state");
                 return;
             }
-            
+
+            _serverRequestSender.UpdateToken(response.Data.Token);
+
             InitializeScene();
             InitializePlayer();
 
@@ -88,7 +90,7 @@ namespace Game.Infrastructure
         public void Exit()
             => _loadingCurtain.ShowStartButton();
 
-        private async UniTask LoadInfoFromTelegram() 
+        private async UniTask LoadInfoFromTelegram()
             => await UniTask.WaitUntil(() => _telegramLauncher.IsInit);
 
         private void InitializeScene()
@@ -106,11 +108,17 @@ namespace Game.Infrastructure
 
         private LoginRequest GetLoginRequest()
         {
-            return new LoginRequest(_telegramLauncher.UserId,
-                _telegramLauncher.AuthDate,
+#if UNITY_EDITOR
+            return new LoginRequest(
+                "",
+                "lol");
+#endif
+
+            return new LoginRequest(
+                _telegramLauncher.AuthDate.ToString(),
                 _telegramLauncher.Hash);
         }
-        
+
         private void RegisterEvents()
         {
             _serverRequestSender.AddHandler(new IRequestHandler<GameData>[]
@@ -118,10 +126,11 @@ namespace Game.Infrastructure
                 _balanceService,
                 _perksService,
             });
-            
+
             _serverRequestSender.AddHandler(new IRequestHandler<ValidationPaymentResponse>[]
             {
                 _balanceService,
+                _perksService,
             });
         }
     }

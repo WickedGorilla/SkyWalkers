@@ -1,6 +1,5 @@
 using System;
 using Infrastructure.Network.Request.Base;
-using UnityEngine.Serialization;
 
 namespace Infrastructure.Network.Request
 {

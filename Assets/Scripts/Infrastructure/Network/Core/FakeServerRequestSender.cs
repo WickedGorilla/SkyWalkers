@@ -1,7 +1,8 @@
-using System;
+/*using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Infrastructure.Network.Request.Base;
+using Infrastructure.Network.RequestHandler;
 using Infrastructure.Network.Response.Player;
 
 namespace Infrastructure.Network
@@ -18,14 +19,24 @@ namespace Infrastructure.Network
             };
         }
 
+        public void RemoveHandler<T>(params IRequestHandler<T>[] handlers)
+        {
+
+        }
+
         public UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message, string address, Action onError = null) where TRequest : NetworkRequest
         {
-            throw new NotImplementedException();
+
+        }
+
+        public UniTask<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>(TRequest message, string address, Action onError = null) where TRequest : NetworkRequest
+        {
+
         }
 
         public void SendToServer<TRequest, TResponse>(TRequest message, string address, Action<ServerResponse<TResponse>> onComplete, Action onError = null) where TRequest : NetworkRequest
         {
-            throw new NotImplementedException();
+
         }
 
         public UniTask<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(TRequest message, string address, Action onError = null)
@@ -46,5 +57,10 @@ namespace Infrastructure.Network
         {
             
         }
+
+        public void AddHandler<T>(params IRequestHandler<T>[] handlers)
+        {
+            
+        }
     }
-}
+}*/

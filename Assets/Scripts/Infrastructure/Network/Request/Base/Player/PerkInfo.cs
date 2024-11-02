@@ -3,23 +3,15 @@ using System;
 namespace Infrastructure.Network.Response.Player
 {
     [Serializable]
-    public class PerksInfo
+    public class PerksResponse
     {
-        public PerkInfo EnergyLimit;
-        public PerkInfo MultiTap;
-        public PerkInfo AutoTap;
-
-        public PerksInfo()
-        {
-            EnergyLimit = new PerkInfo(100, 200, 1, 10, 300, true);
-            MultiTap = new PerkInfo(10, 10, 10, 10, 300, true);
-            AutoTap = new PerkInfo(100, 200, 1, 10, 300, true);
-        }
+        public PerkInfo[] Perks;
     }
 
     [Serializable]
     public class PerkInfo
     {
+        public int Id;
         public int CurrentValue;
         public int NextValue;
         public int CurrentLevel;

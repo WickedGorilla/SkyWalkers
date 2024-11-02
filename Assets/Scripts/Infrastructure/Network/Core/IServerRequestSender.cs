@@ -7,7 +7,8 @@ namespace Infrastructure.Network
 {
     public interface IServerRequestSender
     {
-        void Initialize(long userId, string token);
+        void Initialize(long userId);
+        void UpdateToken(string token);
         
         public void AddHandler<T>(params IRequestHandler<T>[] handlers);
         public void RemoveHandler<T>(params IRequestHandler<T>[] handlers);

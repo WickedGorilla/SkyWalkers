@@ -1,4 +1,6 @@
+using System.Linq;
 using Game.Wallet;
+using Infrastructure.Data.Game.Shop;
 using Infrastructure.Network.Request.ValidationPayment;
 using Infrastructure.Network.RequestHandler;
 using Infrastructure.Network.Response.Player;
@@ -14,24 +16,21 @@ namespace Player
 
         public void Handle(GameData response)
         {
-            var update = response.BalanceUpdate;
-            
-            Coins = new IntValue(update.Coins);
-            Energy = new IntRangeValue(update.Energy, response.PerksInfo.EnergyLimit.CurrentValue);
-            EnergyFlash = new IntValue(update.PlayPass);
-            Boosts = new IntValue(update.Boosts);
+            UpdateValues(response.BalanceUpdate, response.Perks);
         }
 
-        public void Handle(ValidationPaymentResponse response)
+        public void Handle(ValidationPaymentResponse response) 
+            => UpdateValues(response.BalanceUpdate, response.Perks);
+
+        private void UpdateValues(BalanceUpdate update, PerksResponse perks)
         {
-            if (!response.IsUpdated)
-                return;
-            
-            var update = response.BalanceUpdate;
             Coins = new IntValue(update.Coins);
-            Energy = new IntRangeValue(update.Energy, response.PerksInfo.EnergyLimit.CurrentValue);
             EnergyFlash = new IntValue(update.PlayPass);
             Boosts = new IntValue(update.Boosts);
+            
+            var energyPerk = perks.Perks.FirstOrDefault(x => x.Id == (int)PerkType.EnergyLimit);
+            var maxEnergy = energyPerk?.CurrentValue ?? 0;
+            Energy = new IntRangeValue(update.Energy, maxEnergy);
         }
     }
 }

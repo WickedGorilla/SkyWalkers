@@ -1,5 +1,4 @@
 using System;
-using UnityEngine.Serialization;
 
 namespace Infrastructure.Network.Response.Player
 {
@@ -7,9 +6,8 @@ namespace Infrastructure.Network.Response.Player
     public class GameData
     {
         public string Token;
-        
         public BalanceUpdate BalanceUpdate;
-        public PerksInfo PerksInfo;
+        public PerksResponse Perks;
 
         public GameData(int coins, int energy, int playPass, int boosts)
         {
@@ -20,8 +18,8 @@ namespace Infrastructure.Network.Response.Player
                 PlayPass = playPass,
                 Boosts = boosts
             };
-            
-            PerksInfo = new PerksInfo();
+
+            Perks = new PerksResponse();
         }
     }
 }

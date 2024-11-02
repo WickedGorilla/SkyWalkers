@@ -7,5 +7,8 @@ namespace Infrastructure.Network.Request.ValidationPayment
     public class ValidationPaymentRequest : NetworkRequest
     {
         public string OrderCode;
+
+        public ValidationPaymentRequest(string orderCode) 
+            => OrderCode = orderCode;
     }
 }

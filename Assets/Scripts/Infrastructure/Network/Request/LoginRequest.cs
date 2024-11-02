@@ -1,19 +1,26 @@
 using System;
+using Infrastructure.Network.Request.Base;
 
 namespace Infrastructure.Network.Request
 {
     [Serializable]
-    public class LoginRequest
+    public class LoginRequest : NetworkRequest
     {
-        public long UserId;
-        public long AuthDate;
-        public string Hash;
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string UserName { get; set; }
+        public string PhotoUrl { get; set; }
+        public string AuthDate { get; set; }
+        public string Hash { get; set; }
         
-        public LoginRequest(long userId, long authDate, string hash)
+        public LoginRequest(string authDate, string hash)
         {
-            UserId = userId;
             AuthDate = authDate;
             Hash = hash;
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            UserName = string.Empty;
+            PhotoUrl = string.Empty;
         }
     }
 }

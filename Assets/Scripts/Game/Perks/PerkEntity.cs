@@ -26,7 +26,7 @@ namespace Game.Perks
         public bool IsDonat { get; private set; }
 
         public int NextLevel
-            => CurrentLevel == MaxLevel ? MaxLevel : CurrentLevel++;
+            => CurrentLevel == MaxLevel ? MaxLevel : CurrentLevel + 1;
 
         public PerkType PerkType { get; set; }
 

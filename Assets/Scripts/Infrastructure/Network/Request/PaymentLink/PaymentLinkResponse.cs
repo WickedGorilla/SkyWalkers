@@ -6,6 +6,7 @@ namespace Infrastructure.Network.Response
     {
         public BalanceUpdate BalanceUpdate;
         public string PaymentUrl;
+        public string OrderCode;
 
         public PaymentItemResult(BalanceUpdate balanceUpdate, string paymentUrl = "")
         {
@@ -19,6 +20,7 @@ namespace Infrastructure.Network.Response
         public PerkInfo PerkInfo;
         public BalanceUpdate BalanceUpdate;
         public string PaymentUrl;
+        public string OrderCode;
     
         public PaymentUpgradePerkResult(PerkInfo perkInfo, BalanceUpdate balanceUpdate, string paymentUrl = "")
         {

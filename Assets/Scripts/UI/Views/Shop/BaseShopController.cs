@@ -80,17 +80,22 @@ namespace UI.Views
             var perk = _perksService.GetPerkByType(perkType);
 
             if (perk.CurrentLevel > 0)
-                View.UpgradesPerkMenu.Open(_perksData[perkType], perk, _walletService.Coins,
+            {
+                View.UpgradesPerkMenu.Open(_perksData[perkType], _walletService.Coins, perk, 
                     () => OnClickBuyUpgrade(perk));
+            }
             else
-                View.BuyItemMenu.Open(_perksData[perkType], perk, () => OnClickBuyUpgrade(perk));
+            {
+                View.BuyItemMenu.Open(_perksData[perkType], _walletService.Coins, perk, 
+                    () => OnClickBuyUpgrade(perk));
+            }
         }
 
         private void OpenItemCard(ItemType itemType)
             => View.ItemsMenu.Open(_itemData[itemType], itemType, OnClickItem);
 
         private void OnClickItem(ItemEntity itemEntity)
-            => View.BuyItemMenu.Open(_itemData[itemEntity.Type], itemEntity, () => OnClickBuyItem(itemEntity));
+            => View.BuyItemMenu.Open(_itemData[itemEntity.Type], _walletService.Coins, itemEntity, () => OnClickBuyItem(itemEntity));
 
         private async void OnClickBuyItem(ItemEntity itemEntity)
         {
@@ -99,31 +104,32 @@ namespace UI.Views
             var request = new PaymentLinkItemRequest((int)itemEntity.Type, itemEntity.Amount);
             var response = await _serverRequestSender.SendToServer<PaymentLinkItemRequest, PaymentItemResult>(request,
                 ServerPath.PaymentItem);
-
+            
             if (!response.Success)
             {
                 View.HideLoader();
                 return;
             }
 
-            if (string.IsNullOrEmpty(response.Data.PaymentUrl))
+            var data = response.Data;
+            
+            if (string.IsNullOrEmpty(data.PaymentUrl))
             {
                 View.HideLoader();
                 return;
             }
             
-            _onGameFocusEvent.AddOnFocusEvent(SendValidationPayment);
-            Application.OpenURL(response.Data.PaymentUrl);
+            _onGameFocusEvent.AddOnFocusEvent(() => SendValidationPayment(data.OrderCode));
+            Application.OpenURL(data.PaymentUrl);
         }
 
         private async void OnClickBuyUpgrade(PerkEntity perkEntity)
         {
             View.ShowLoader();
 
-            var request = new PaymentLinkPerkUpgradeRequest((int)perkEntity.PerkType, perkEntity.NextValue);
-            var response = await _serverRequestSender.SendToServerAndHandle<PaymentLinkPerkUpgradeRequest, PaymentUpgradePerkResult>(
-                request,
-                ServerPath.PaymentPerk);
+            var request = new PaymentLinkPerkUpgradeRequest((int)perkEntity.PerkType, perkEntity.NextLevel);
+            var response = await _serverRequestSender.SendToServerAndHandle<PaymentLinkPerkUpgradeRequest, 
+                PaymentUpgradePerkResult>(request, ServerPath.PaymentPerk);
 
             if (!response.Success)
             {
@@ -131,14 +137,16 @@ namespace UI.Views
                 return;
             }
 
-            if (string.IsNullOrEmpty(response.Data.PaymentUrl))
+            var data = response.Data;
+            
+            if (string.IsNullOrEmpty(data.PaymentUrl))
             {
                 View.HideLoader();
                 return;
             }
             
-            _onGameFocusEvent.AddOnFocusEvent(SendValidationPayment);
-            Application.OpenURL(response.Data.PaymentUrl);
+            _onGameFocusEvent.AddOnFocusEvent(() => SendValidationPayment(data.OrderCode));
+            Application.OpenURL(data.PaymentUrl);
         }
 
         private void OnClickShopButton()
@@ -147,19 +155,13 @@ namespace UI.Views
         private void OnClickBoostersButton()
             => View.ShowBoosters();
 
-        private async void SendValidationPayment()
+        private async void SendValidationPayment(string orderCode)
         {
-            var response = await _serverRequestSender.SendToServerAndHandle<ValidationPaymentRequest, ValidationPaymentResponse>(
-                new ValidationPaymentRequest(),
-                ServerPath.PaymentValidation);
+            await UniTask.WaitForSeconds(1.7f);
             
-            while (!response.Data.IsUpdated)
-            {
-                await UniTask.WaitForSeconds(2f);
-                response = await _serverRequestSender.SendToServerAndHandle<ValidationPaymentRequest, ValidationPaymentResponse>(
-                    new ValidationPaymentRequest(),
-                    ServerPath.PaymentValidation);
-            }
+            await _serverRequestSender.SendToServerAndHandle<ValidationPaymentRequest, ValidationPaymentResponse>(
+                new ValidationPaymentRequest(orderCode),
+                ServerPath.PaymentValidation);
             
             View.HideLoader();
         }

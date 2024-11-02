@@ -14,16 +14,16 @@ namespace Infrastructure.Telegram
                 ? $"{_tgData.first_name} {_tgData.last_name}"
                 : _tgData.username;
 
-        public int UserId
+        public long UserId
             => _tgData.id;
-        
+
         public string PhotoUrl => _tgData.photo_url;
         public long AuthDate => _tgData.auth_date;
         public string Hash => _tgData.hash;
-        
+
         private void Awake()
             => DontDestroyOnLoad(gameObject);
-        
+
         private void Start()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -35,7 +35,7 @@ namespace Infrastructure.Telegram
                 username = "Balagun",
                 photo_url =
                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS22mp7-FVbNvrh9ZM8bHX_9VKmr7zMay3-6g&s",
-                id = 700
+                id = 101
             };
 
             SetTelegramId(JsonUtility.ToJson(data));
@@ -47,13 +47,11 @@ namespace Infrastructure.Telegram
         {
             _tgData = JsonUtility.FromJson<TelegramData>(jsonData);
 
-            if (_tgData != null)
-                return;
-
-            Debug.Log("TG data is null:");
+            if (_tgData == null)
+                Debug.LogError("TG data is null");
         }
-        
-        
+
+
         [DllImport("__Internal")]
         private static extern void OnUnityReady();
     }

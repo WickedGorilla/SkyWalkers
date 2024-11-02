@@ -19,16 +19,17 @@ namespace UI.Views.Shop.Boosters
         [SerializeField] private TMP_Text _descriptionText;
         [SerializeField] private TMP_Text _upgradeDescriptionText;
         [SerializeField] private TMP_Text _levelText;
-        
+
         [Header("Upgrade Button")]
         [SerializeField] private Button _upgradeButton;
+
         [SerializeField] private TMP_Text _upgradeButtonText;
         [SerializeField] private string _upgradeText = "upgrade now";
-        
+
         private IDisposable _disposable;
 
         public event Action<bool> OnShow;
-        
+
         private void OnEnable()
         {
             _disposable = _backButton.AddListener(() => { gameObject.SetActive(false); });
@@ -44,29 +45,31 @@ namespace UI.Views.Shop.Boosters
 
         public void SetCountText(int count)
         {
-            _coinsCountText.text = $"{SpritesAtlasCode.Coin} {count.ToString()}" ;
+            _coinsCountText.text = $"{SpritesAtlasCode.Coin} {count.ToString()}";
         }
 
-        public void Open(PerkData data, PerkEntity perkEntity, int countCoins, UnityAction onUpgradeButton)
+        public void Open(PerkData data,  int countCoins, PerkEntity perkEntity, UnityAction onUpgradeButton)
         {
             gameObject.gameObject.SetActive(true);
             _upgradeButton.onClick.AddListener(onUpgradeButton);
-            
-            if (perkEntity.CurrentLevel == perkEntity.MaxLevel)
-            {
-                LockButton();
-                return;
-            }
             
             _iconImage.sprite = data.Icon;
             _iconText.text = data.GetIconText(perkEntity.CurrentValue);
             _tittleText.text = data.Tittle;
             _descriptionText.text = data.Description;
             _upgradeDescriptionText.text = data.UpgradeDescriptionText;
-            _levelText.text = $"{perkEntity.NextLevel} LVL • {GetCurrentCurrencyCode(perkEntity.IsDonat)} {perkEntity.NextLevelPrice}";
-
-            UnlockButton();
+            _levelText.text =
+                $"{perkEntity.NextLevel} LVL • {GetCurrentCurrencyCode(perkEntity.IsDonat)} {perkEntity.NextLevelPrice}";
+            
+            if (perkEntity.CurrentLevel == perkEntity.MaxLevel || !CheckBalance())
+                LockButton();
+            else   
+                UnlockButton();
+            
             SetCountText(countCoins);
+
+            bool CheckBalance()
+                => perkEntity.IsDonat || perkEntity.NextLevelPrice <= countCoins;
         }
 
         private void LockButton()
@@ -80,8 +83,8 @@ namespace UI.Views.Shop.Boosters
             _upgradeButtonText.text = $"{SpritesAtlasCode.Magic} {_upgradeText}";
             _upgradeButton.interactable = true;
         }
-        
-        private string GetCurrentCurrencyCode(bool isDonat) 
+
+        private string GetCurrentCurrencyCode(bool isDonat)
             => isDonat ? SpritesAtlasCode.Star : SpritesAtlasCode.Coin;
     }
 }
