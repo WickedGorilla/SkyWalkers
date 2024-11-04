@@ -44,7 +44,7 @@ namespace UI.Hud
             _walletService.Coins.OnChangeValue += View.SetCoinsCount;
             _walletService.Energy.OnChangeValue += SetEnergy;
 
-            View.Initialize(_walletService.Coins, _walletService.Energy, _walletService.EnergyFlash, _walletService.Boosts);
+            View.Initialize(_walletService.Coins, _walletService.Energy, _walletService.PlayPass, _walletService.Boosts);
         }
 
         protected override void OnHide()
@@ -63,7 +63,7 @@ namespace UI.Hud
             => _playerMovementByTap.Tap(position);
 
         private void SetEnergy(int count)
-            => View.FillEnergy(count, _walletService.Energy.Max, _walletService.EnergyFlash);
+            => View.FillEnergy(count, _walletService.Energy.Max, _walletService.PlayPass);
 
         private void OnClickEnergy()
         {

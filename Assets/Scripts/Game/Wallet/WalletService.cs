@@ -11,7 +11,7 @@ namespace Player
     {
         public IntValue Coins = new();
         public IntRangeValue Energy = new(0, 0);
-        public IntValue EnergyFlash = new();
+        public IntValue PlayPass = new();
         public IntValue Boosts = new();
 
         public void Handle(GameData response)
@@ -20,12 +20,12 @@ namespace Player
         }
 
         public void Handle(ValidationPaymentResponse response) 
-            => UpdateValues(response.BalanceUpdate, response.Perks);
+            => UpdateValues(response.Balance, response.Perks);
 
         private void UpdateValues(BalanceUpdate update, PerksResponse perks)
         {
             Coins = new IntValue(update.Coins);
-            EnergyFlash = new IntValue(update.PlayPass);
+            PlayPass = new IntValue(update.PlayPass);
             Boosts = new IntValue(update.Boosts);
             
             var energyPerk = perks.Perks.FirstOrDefault(x => x.Id == (int)PerkType.EnergyLimit);

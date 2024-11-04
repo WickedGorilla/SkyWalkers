@@ -82,12 +82,12 @@ namespace UI.Views
             if (perk.CurrentLevel > 0)
             {
                 View.UpgradesPerkMenu.Open(_perksData[perkType], _walletService.Coins, perk, 
-                    () => OnClickBuyUpgrade(perk));
+                    () => OnClickBuyUpgrade(perk,  View.UpgradesPerkMenu));
             }
             else
             {
                 View.BuyItemMenu.Open(_perksData[perkType], _walletService.Coins, perk, 
-                    () => OnClickBuyUpgrade(perk));
+                    () => OnClickBuyUpgrade(perk,  View.UpgradesPerkMenu));
             }
         }
 
@@ -95,9 +95,12 @@ namespace UI.Views
             => View.ItemsMenu.Open(_itemData[itemType], itemType, OnClickItem);
 
         private void OnClickItem(ItemEntity itemEntity)
-            => View.BuyItemMenu.Open(_itemData[itemEntity.Type], _walletService.Coins, itemEntity, () => OnClickBuyItem(itemEntity));
+        {
+            View.BuyItemMenu.Open(_itemData[itemEntity.Type], _walletService.Coins, itemEntity,
+                () => OnClickBuyItem(itemEntity, View.BuyItemMenu));
+        }
 
-        private async void OnClickBuyItem(ItemEntity itemEntity)
+        private async void OnClickBuyItem(ItemEntity itemEntity, MonoBehaviour openedView)
         {
             View.ShowLoader();
 
@@ -119,11 +122,11 @@ namespace UI.Views
                 return;
             }
             
-            _onGameFocusEvent.AddOnFocusEvent(() => SendValidationPayment(data.OrderCode));
+            _onGameFocusEvent.AddOnFocusEvent(() => SendValidationPayment(data.OrderCode, openedView));
             Application.OpenURL(data.PaymentUrl);
         }
 
-        private async void OnClickBuyUpgrade(PerkEntity perkEntity)
+        private async void OnClickBuyUpgrade(PerkEntity perkEntity, MonoBehaviour openedView)
         {
             View.ShowLoader();
 
@@ -145,7 +148,7 @@ namespace UI.Views
                 return;
             }
             
-            _onGameFocusEvent.AddOnFocusEvent(() => SendValidationPayment(data.OrderCode));
+            _onGameFocusEvent.AddOnFocusEvent(() => SendValidationPayment(data.OrderCode, openedView));
             Application.OpenURL(data.PaymentUrl);
         }
 
@@ -155,7 +158,7 @@ namespace UI.Views
         private void OnClickBoostersButton()
             => View.ShowBoosters();
 
-        private async void SendValidationPayment(string orderCode)
+        private async void SendValidationPayment(string orderCode, MonoBehaviour openedView)
         {
             await UniTask.WaitForSeconds(1.7f);
             
@@ -163,6 +166,7 @@ namespace UI.Views
                 new ValidationPaymentRequest(orderCode),
                 ServerPath.PaymentValidation);
             
+            openedView.gameObject.SetActive(false);
             View.HideLoader();
         }
     }

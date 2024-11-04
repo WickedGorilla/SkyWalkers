@@ -27,7 +27,7 @@ namespace Game.Player
 
         public bool UseEnergy()
         {
-            if (_walletService.Energy.IsMax || !_walletService.EnergyFlash.Subtract(1))
+            if (_walletService.Energy.IsMax || !_walletService.PlayPass.Subtract(1))
                 return false;
 
             _walletService.Energy.Add(_walletService.Energy.Max);
