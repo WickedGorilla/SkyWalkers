@@ -36,7 +36,7 @@ namespace Infrastructure.Network
 
         public async UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
             string address,
-            Action onError = null) where TRequest : NetworkRequest
+            Action onError = null) where TRequest : ServerRequest
         {
             message.UserId = _userId;
             message.Token = _token;
@@ -45,7 +45,7 @@ namespace Infrastructure.Network
         }
 
         public async UniTask<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>
-            (TRequest message, string address, Action onError = null) where TRequest : NetworkRequest
+            (TRequest message, string address, Action onError = null) where TRequest : ServerRequest
         {
              var result = await SendToServer<TRequest, TResponse>(message, address, onError);
 
@@ -57,7 +57,7 @@ namespace Infrastructure.Network
         }
 
         public async void SendToServer<TRequest, TResponse>(TRequest message, string address,
-            Action<ServerResponse<TResponse>> onComplete, Action onError = null) where TRequest : NetworkRequest
+            Action<ServerResponse<TResponse>> onComplete, Action onError = null) where TRequest : ServerRequest
         {
             var response = await SendToServer<TRequest, TResponse>(message, address, onError);
             onComplete(response);

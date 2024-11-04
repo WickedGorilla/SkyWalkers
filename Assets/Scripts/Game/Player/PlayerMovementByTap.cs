@@ -14,7 +14,7 @@ namespace Game.Player
         private readonly WalletService _walletService;
         private readonly CoinsCalculatorService _coinsCalculatorService;
         private readonly ClickCoinSpawner _clickCoinSpawner;
-        private readonly BonusSystem _bonusSystem;
+        private readonly BoostSystem _boostSystem;
 
         private IDisposable _buildingMovement;
 
@@ -23,14 +23,14 @@ namespace Game.Player
             WalletService walletService,
             CoinsCalculatorService coinsCalculatorService,
             ClickCoinSpawner clickCoinSpawner, 
-            BonusSystem bonusSystem)
+            BoostSystem boostSystem)
         {
             _playerHolder = playerHolder;
             _buildingMovementSystem = buildingMovementSystem;
             _walletService = walletService; 
             _coinsCalculatorService = coinsCalculatorService;
             _clickCoinSpawner = clickCoinSpawner;
-            _bonusSystem = bonusSystem;
+            _boostSystem = boostSystem;
         }
 
         public void Initialize()
@@ -64,7 +64,7 @@ namespace Game.Player
 
         private bool CheckAndTap()
         {
-            if (_bonusSystem.IsBoost)
+            if (_boostSystem.IsBoost)
                 return true;
             
             if (_walletService.Energy.Count <= 0)

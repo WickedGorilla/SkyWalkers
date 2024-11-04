@@ -3,7 +3,7 @@ using System;
 namespace Infrastructure.Network.Request.Base
 {
     [Serializable]
-    public class NetworkRequest
+    public class ServerRequest
     {
         public long UserId;
         public string Token;

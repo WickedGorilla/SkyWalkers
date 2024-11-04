@@ -12,7 +12,7 @@ namespace UI.Hud
     {
         private readonly PlayerMovementByTap _playerMovementByTap;
         private readonly WalletService _walletService;
-        private readonly BonusSystem _bonusSystem;
+        private readonly BoostSystem _boostSystem;
         private readonly IGameStateMachine _gameStateMachine;
         private readonly ViewService _viewService;
         private readonly IEnvironmentHolder _environmentHolder;
@@ -20,14 +20,14 @@ namespace UI.Hud
         public HudController(HudView view,
             PlayerMovementByTap playerMovementByTap,
             WalletService walletService,
-            BonusSystem bonusSystem,
+            BoostSystem boostSystem,
             IGameStateMachine gameStateMachine,
             ViewService viewService,
             IEnvironmentHolder environmentHolder) : base(view)
         {
             _playerMovementByTap = playerMovementByTap;
             _walletService = walletService;
-            _bonusSystem = bonusSystem;
+            _boostSystem = boostSystem;
             _gameStateMachine = gameStateMachine;
             _viewService = viewService;
             _environmentHolder = environmentHolder;
@@ -67,13 +67,13 @@ namespace UI.Hud
 
         private void OnClickEnergy()
         {
-            if (!_bonusSystem.UseEnergy())
+            if (!_boostSystem.UsePlayPass())
                 return;
         }
 
         private void OnClickBoost()
         {
-            if (!_bonusSystem.UseBoost(View.UpdateTimerText, OnComplete))
+            if (!_boostSystem.UseBoost(View.UpdateTimerText, OnComplete))
                 return;
             
             View.EnableBoost(true);

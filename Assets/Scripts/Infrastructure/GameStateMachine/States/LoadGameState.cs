@@ -71,7 +71,7 @@ namespace Game.Infrastructure
             
             ServerResponse<GameData> response = await _serverRequestSender.SendToServerAndHandle<LoginRequest, GameData>(
                 GetLoginRequest(),
-                ServerPath.Login);
+                ServerAddress.Login);
 
             if (!response.Success)
             {

@@ -15,15 +15,15 @@ namespace Infrastructure.Network
 
         UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
             string address,
-            Action onError = null) where TRequest : NetworkRequest;
+            Action onError = null) where TRequest : ServerRequest;
 
         UniTask<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>(TRequest message,
             string address,
-            Action onError = null) where TRequest : NetworkRequest;
+            Action onError = null) where TRequest : ServerRequest;
 
         void SendToServer<TRequest, TResponse>(TRequest message,
             string address,
-            Action<ServerResponse<TResponse>> onComplete, Action onError = null) where TRequest : NetworkRequest;
+            Action<ServerResponse<TResponse>> onComplete, Action onError = null) where TRequest : ServerRequest;
 
         UniTask<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(TRequest message,
             string address, Action onError = null);

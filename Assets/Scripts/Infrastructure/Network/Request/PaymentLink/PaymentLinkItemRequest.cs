@@ -4,7 +4,7 @@ using Infrastructure.Network.Request.Base;
 namespace Infrastructure.Network.Request
 {
     [Serializable]
-    public class PaymentLinkItemRequest : NetworkRequest
+    public class PaymentLinkItemRequest : ServerRequest
     {
         public int ItemId;
         public int Amount;
@@ -17,7 +17,7 @@ namespace Infrastructure.Network.Request
     }
 
     [Serializable]
-    public class PaymentLinkPerkUpgradeRequest : NetworkRequest
+    public class PaymentLinkPerkUpgradeRequest : ServerRequest
     {
         public int PerkId;
         public int Level;

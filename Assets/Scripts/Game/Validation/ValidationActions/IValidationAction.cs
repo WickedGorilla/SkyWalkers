@@ -7,8 +7,10 @@ namespace Game.Validation.ValidationActions
     
     public enum ValidationType
     {
-        TapCoins,
-        ActivatePlayPass,
-        ActivateBoost
+        TapCoins = 0,
+        ActivatePlayPass = 1,
+        ActivateBoost = 2,
+        EndBoost = 3,
+        TapCoinsWithBoost = 4
     }
 }

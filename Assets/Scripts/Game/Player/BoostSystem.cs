@@ -6,15 +6,15 @@ using Player;
 
 namespace Game.Player
 {
-    public class BonusSystem
+    public class BoostSystem
     {
         private readonly WalletService _walletService;
         private readonly IEnvironmentHolder _environmentHolder;
         private readonly CoinsCalculatorService _coinsCalculatorService;
 
-        private const int BoostingTime = 30;
+        private const int BoostingTime = 15;
         
-        public BonusSystem(WalletService walletService, 
+        public BoostSystem(WalletService walletService, 
             IEnvironmentHolder environmentHolder, 
             CoinsCalculatorService coinsCalculatorService)
         {
@@ -23,14 +23,19 @@ namespace Game.Player
             _coinsCalculatorService = coinsCalculatorService;
         }
 
+        public event Action OnUseBoost;
+        public event Action OnEndBoost;
+        public event Action OnUsePlayPass;
+        
         public bool IsBoost { get; private set; }
 
-        public bool UseEnergy()
+        public bool UsePlayPass()
         {
             if (_walletService.Energy.IsMax || !_walletService.PlayPass.Subtract(1))
                 return false;
 
             _walletService.Energy.Add(_walletService.Energy.Max);
+            OnUsePlayPass?.Invoke();
             return true;
         }
 
@@ -38,13 +43,14 @@ namespace Game.Player
         {
             if (_walletService.Energy.Count == 0 || !_walletService.Boosts.Subtract(1))
                 return false;
-
+            
             Boosting(onTickSecond, onComplete);
             return true;
         }
 
         private async void Boosting(Action<int> onTickSecond, Action onComplete)
         {
+            OnUseBoost?.Invoke();
             var environment = _environmentHolder.Environment;
             var coinsParticle = environment.CoinsParticle;
             coinsParticle.Play();
@@ -68,6 +74,7 @@ namespace Game.Player
             
             _coinsCalculatorService.ResetInstruction();
             IsBoost = false;
+            OnEndBoost?.Invoke();
         }
         
     }

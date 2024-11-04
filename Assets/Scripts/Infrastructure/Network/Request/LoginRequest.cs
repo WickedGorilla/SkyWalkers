@@ -4,7 +4,7 @@ using Infrastructure.Network.Request.Base;
 namespace Infrastructure.Network.Request
 {
     [Serializable]
-    public class LoginRequest : NetworkRequest
+    public class LoginRequest : ServerRequest
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
