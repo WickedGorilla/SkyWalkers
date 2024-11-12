@@ -1,10 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using Game.Player;
-using Game.Validation.ValidationActions;
 using Infrastructure.Network;
+using Infrastructure.Network.Response.Player;
+using Newtonsoft.Json;
 using Player;
 using UnityEngine;
+using static System.String;
 
 namespace Game.Validation
 {
@@ -13,12 +17,15 @@ namespace Game.Validation
         private readonly WalletService _walletService;
         private readonly IServerRequestSender _serverRequestSender;
         private readonly BoostSystem _boostSystem;
-        private readonly LinkedList<IValidationAction> _stackActions = new();
+        private readonly LinkedList<IPlayerActionData> _stackActions = new();
 
         private float _nextTimeUpdate;
         private bool _boostState;
 
         private const float TimeIntervalUpdate = 10f;
+        private const long ConflictErrorCode = 409;
+
+        private CancellationTokenSource _cancellationTokenSource;
         
         public CoinValidationService(WalletService walletService, 
             IServerRequestSender serverRequestSender, 
@@ -45,19 +52,32 @@ namespace Game.Validation
             _boostSystem.OnUsePlayPass -= OnPlayPassActivated;
         }
 
+        private async void SendTask()
+        {
+            while (true)
+            {
+                await UniTask.NextFrame();
+                
+                if (Time.unscaledTime < _nextTimeUpdate || _stackActions.Count == 0)
+                    return;
+
+                _nextTimeUpdate = Time.unscaledTime + TimeIntervalUpdate;
+            }
+        }
+        
         private void OnChangeCoins(int coins)
         {
             if (_boostSystem.IsBoost)
             {
-                AddToStack(new CoinValidationAction(coins, _walletService.Energy.Count));
+                AddToStack(new CoinPlayerActionData(coins, _walletService.Energy.Count));
             }
             else
             {
-                AddToStack(new CoinWithBoostAction(coins));
+                AddToStack(new CoinWithBoostActionData(coins));
             }
         }
         
-        private void AddToStack<TCoinValidation>(TCoinValidation action) where TCoinValidation : ICoinValidationAction
+        private void AddToStack<TCoinValidation>(TCoinValidation action) where TCoinValidation : ICoinPlayerActionData
         {
             if (_stackActions.Count == 0 || _stackActions.Last.Value is not TCoinValidation)
             {
@@ -69,37 +89,43 @@ namespace Game.Validation
         
         private void OnPlayPassActivated()
         {
-            var action = new ActivatePlayPassAction();
+            var action = new ActivatePlayPassActionData();
             _stackActions.AddLast(action);
         }
 
         private void OnBoostActivated()
         {
-            var action = new ActivateBoostAction();
+            var action = new ActivateBoostActionData();
             _stackActions.AddLast(action);
         }
 
         private void OnBoostEnd()
         {
-            var action = new BoostEndAction();
+            var action = new BoostEndActionData();
             _stackActions.AddLast(action);
         }
         
         private void SendValidationRequest()
         {
-            if (Time.time < _nextTimeUpdate || _stackActions.Count == 0)
-                return;
-
-            _nextTimeUpdate = Time.time + TimeIntervalUpdate;
-
-
             var message = new ValidationCoinsRequest(_stackActions.ToArray());
-            _serverRequestSender
-                .SendToServerAndHandle<ValidationCoinsRequest, ValidationCoinsResponse>(message, ServerAddress.TapCoinsValidation);
-
+            _serverRequestSender.SendToServerAndHandle<ValidationCoinsRequest, ValidationCoinsResponse>(message, ServerAddress.TapCoinsValidation, OnValidationError);
             _stackActions.Clear();
         }
 
+        private void OnValidationError(long code, string data)
+        {
+            Debug.LogError($"Response with error: {code}");
 
+            if (data == Empty)
+                return;
+            
+            switch (code)
+            {
+                case ConflictErrorCode:
+                    _walletService.UpdateValues(JsonConvert.DeserializeObject<BalanceUpdate>(data));
+                    _stackActions.Clear();
+                    return;
+            }
+        }
     }
 }

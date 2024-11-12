@@ -21,6 +21,14 @@ namespace Player
 
         public void Handle(ValidationPaymentResponse response) 
             => UpdateValues(response.Balance, response.Perks);
+        
+        public void UpdateValues(BalanceUpdate update)
+        {
+            Coins = new IntValue(update.Coins);
+            PlayPass = new IntValue(update.PlayPass);
+            Boosts = new IntValue(update.Boosts);
+            Energy = new IntRangeValue(update.Energy, Energy.Max);
+        }
 
         private void UpdateValues(BalanceUpdate update, PerksResponse perks)
         {

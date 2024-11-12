@@ -17,7 +17,7 @@ namespace Infrastructure.Network
         private string _token;
 
         private readonly ResponsesHandler _responsesHandler = new();
-      
+
         public void Initialize(long userId)
         {
             _userId = userId;
@@ -27,16 +27,16 @@ namespace Infrastructure.Network
         {
             _token = token;
         }
-        
-        public void AddHandler<T>(params IRequestHandler<T>[] handlers) 
+
+        public void AddHandler<T>(params IRequestHandler<T>[] handlers)
             => _responsesHandler.AddHandlers(handlers);
 
-        public void RemoveHandler<T>(params IRequestHandler<T>[] handlers) 
+        public void RemoveHandler<T>(params IRequestHandler<T>[] handlers)
             => _responsesHandler.RemoveHandlers(handlers);
 
         public async UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
             string address,
-            Action onError = null) where TRequest : ServerRequest
+            Action<long, string> onError = null) where TRequest : ServerRequest
         {
             message.UserId = _userId;
             message.Token = _token;
@@ -45,19 +45,21 @@ namespace Infrastructure.Network
         }
 
         public async UniTask<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>
-            (TRequest message, string address, Action onError = null) where TRequest : ServerRequest
+            (TRequest message, string address, Action<long, string> onError = null) where TRequest : ServerRequest
         {
-             var result = await SendToServer<TRequest, TResponse>(message, address, onError);
+            var result = await SendToServer<TRequest, TResponse>(message, address, onError);
 
-             if (!result.Success)
-                 return result;
-             
-             _responsesHandler.GetHolder<TResponse>()?.Handle(result.Data);
-             return result;
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            _responsesHandler.GetHolder<TResponse>()?.Handle(result.Data);
+            return result;
         }
 
         public async void SendToServer<TRequest, TResponse>(TRequest message, string address,
-            Action<ServerResponse<TResponse>> onComplete, Action onError = null) where TRequest : ServerRequest
+            Action<ServerResponse<TResponse>> onComplete, Action<long, string> onError = null) where TRequest : ServerRequest
         {
             var response = await SendToServer<TRequest, TResponse>(message, address, onError);
             onComplete(response);
@@ -66,13 +68,13 @@ namespace Infrastructure.Network
         public async UniTask<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(
             TRequest message,
             string address,
-            Action onError = null)
+            Action<long, string> onError = null)
         {
             string jsonData = JsonConvert.SerializeObject(message);
             string authUrl = $"{BaseUrl}{address}";
 
             Debug.Log($"Send: {jsonData}");
-            
+
             var request = new UnityWebRequest(authUrl, "POST");
             request.SetRequestHeader("Content-Type", "application/json");
 
@@ -95,12 +97,12 @@ namespace Infrastructure.Network
                 if (result == null)
                 {
                     Debug.LogError("Failed to deserialize response: Result is null");
-                    onError?.Invoke();
+                    onError?.Invoke(request.responseCode, string.Empty);
                 }
             }
             else
             {
-                onError?.Invoke();
+                onError?.Invoke(request.responseCode, request.downloadHandler.text);
                 Debug.LogError($"Response Failed: {request.error}");
             }
 

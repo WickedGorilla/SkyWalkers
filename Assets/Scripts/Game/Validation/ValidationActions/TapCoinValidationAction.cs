@@ -1,33 +1,38 @@
-namespace Game.Validation.ValidationActions
+namespace Game.Validation
 {
-    public struct CoinValidationAction : ICoinValidationAction
+    public struct CoinPlayerActionData : ICoinPlayerActionData
     {
         public int CoinsCount;
         public int EnergyCount;
 
-        public CoinValidationAction(int coinsCount, int energyCount)
+        public CoinPlayerActionData(int coinsCount, int energyCount)
         {
             CoinsCount = coinsCount;
             EnergyCount = energyCount;
         }
-        
-        public ValidationType ActionType => ValidationType.TapCoins;
+
+        public ValidationAction.ValidationType ActionType => ValidationAction.ValidationType.TapCoins;
+
+        public object GetObjectForJson() 
+            => new { CoinsCount, EnergyCount };
     }
 
-    public struct CoinWithBoostAction : ICoinValidationAction
+    public struct CoinWithBoostActionData : ICoinPlayerActionData
     {
         public int CoinsCount;
-        
-        public CoinWithBoostAction(int coinsCount)
+
+        public CoinWithBoostActionData(int coinsCount)
         {
             CoinsCount = coinsCount;
         }
+
+        public ValidationAction.ValidationType ActionType => ValidationAction.ValidationType.TapCoinsWithBoost;
         
-        public ValidationType ActionType => ValidationType.TapCoinsWithBoost;
+        public object GetObjectForJson() 
+            => new { CoinsCount };
     }
 
-    public interface ICoinValidationAction : IValidationAction
+    public interface ICoinPlayerActionData : IPlayerActionData
     {
-        
     }
 }
