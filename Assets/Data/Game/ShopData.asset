@@ -18,20 +18,20 @@ MonoBehaviour:
       _icon: {fileID: 21300000, guid: 58375e65bed79ea4e9f4f4a0f501a98f, type: 3}
       _tittle: energy limit
       _name: boost
-      _description: 30 sec of 2x-5x multipliers
+      _description: 15 sec of 3x multipliers
       _shopVariables:
       - _tittle: 3 boosts
-        _description: 30 sec multiplier
+        _description: 15 sec multiplier
         _price: 25
         _amount: 3
         _isDonat: 1
       - _tittle: 5 boosts
-        _description: Great price. 1 free!
+        _description: Great price.
         _price: 35
         _amount: 5
         _isDonat: 1
       - _tittle: 10 boosts
-        _description: Best deal. 2 free!
+        _description: Best deal.
         _price: 50
         _amount: 10
         _isDonat: 1
@@ -40,22 +40,22 @@ MonoBehaviour:
       _icon: {fileID: 21300000, guid: eefe1874f29a2114c81729618bc78d6f, type: 3}
       _tittle: play pass
       _name: play pass
-      _description: Get more daily plays to be ahead
+      _description: Get more daily passes to be ahead of other players
       _shopVariables:
       - _tittle: play pass 3x
         _description: A little extra
-        _price: 10
+        _price: 25
         _amount: 3
         _isDonat: 1
       - _tittle: play pass 5x
-        _description: Great price. 1 free!
-        _price: 20
+        _description: Great price.
+        _price: 35
         _amount: 5
         _isDonat: 1
       - _tittle: play pass 10x
-        _description: Best deal. 3 free!
+        _description: Best deal.
         _price: 30
-        _amount: 10
+        _amount: 50
         _isDonat: 1
   _perks:
   - _key: 0

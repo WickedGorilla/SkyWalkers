@@ -60,7 +60,7 @@ namespace UI.Views.Shop.Boosters
 
         private void OnEnable()
         {
-            _disposable = _closeButton.AddListener(() => gameObject.SetActive(false));
+            _disposable = _closeButton.SubscribeListener(() => gameObject.SetActive(false));
             OnShow?.Invoke(true);
         }
 

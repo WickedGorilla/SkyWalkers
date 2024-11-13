@@ -11,11 +11,13 @@ namespace Game.Wallet
     {
         private readonly PerksService _perksService;
 
+        public const int DefaultTapValue = 1;
+        
         public DefaultCalculatorInstruction(PerksService perksService) 
             => _perksService = perksService;
 
-        public int Calculate() 
-            => _perksService.MultiTap.CurrentValue;
+        public int Calculate()
+            =>  _perksService.MultiTap.CurrentLevel == 0 ? DefaultTapValue : _perksService.MultiTap.CurrentValue;
     }
 
     public class BoostMultiplierInstruction : ICalculatorInstruction
@@ -29,7 +31,13 @@ namespace Game.Wallet
             _boostMultiplier = boostMultiplier;
         }
         
-        public int Calculate() 
-            => _perksService.MultiTap.CurrentValue * _boostMultiplier;
+        public int Calculate()
+        {
+            var value = _perksService.MultiTap.CurrentLevel == 0
+                ? DefaultCalculatorInstruction.DefaultTapValue
+                : _perksService.MultiTap.CurrentValue;
+            
+            return value * _boostMultiplier;
+        }
     }
 }

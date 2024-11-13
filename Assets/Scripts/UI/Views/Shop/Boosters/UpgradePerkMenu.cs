@@ -32,7 +32,7 @@ namespace UI.Views.Shop.Boosters
 
         private void OnEnable()
         {
-            _disposable = _backButton.AddListener(() => { gameObject.SetActive(false); });
+            _disposable = _backButton.SubscribeListener(() => { gameObject.SetActive(false); });
             OnShow?.Invoke(true);
         }
 

@@ -14,10 +14,8 @@ namespace Player
         public IntValue PlayPass = new();
         public IntValue Boosts = new();
 
-        public void Handle(GameData response)
-        {
-            UpdateValues(response.BalanceUpdate, response.Perks);
-        }
+        public void Handle(GameData response) 
+            => UpdateValues(response.BalanceUpdate, response.Perks);
 
         public void Handle(ValidationPaymentResponse response) 
             => UpdateValues(response.Balance, response.Perks);

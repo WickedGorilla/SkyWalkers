@@ -80,11 +80,14 @@ namespace Game.Infrastructure
             }
 
             _serverRequestSender.UpdateToken(response.Data.Token);
-
+            
             InitializeScene();
             InitializePlayer();
-
+            
             _gameStateMachine.Enter<MainMenuState>();
+            
+            if (response.Data.BalanceUpdate.Coins <= 100)
+                ShowStartsScreen();
         }
 
         public void Exit()
@@ -133,5 +136,8 @@ namespace Game.Infrastructure
                 _perksService,
             });
         }
+
+        private void ShowStartsScreen() 
+            => _viewService.ShowPermanent<StartScreenView, StartScreenViewController>();
     }
 }

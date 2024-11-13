@@ -51,7 +51,7 @@ namespace UI.Views
 
             foreach (var boostersCard in View.BoostersCards)
             {
-                _disposables.AddLast(boostersCard.ClickButton.AddListener(OnClickCard));
+                _disposables.AddLast(boostersCard.ClickButton.SubscribeListener(OnClickCard));
 
                 void OnClickCard()
                     => OpenItemCard(boostersCard.Type);
@@ -59,7 +59,7 @@ namespace UI.Views
 
             foreach (var upgrade in View.Upgrades)
             {
-                _disposables.AddLast(upgrade.ClickButton.AddListener(OnClickUpgrade));
+                _disposables.AddLast(upgrade.ClickButton.SubscribeListener(OnClickUpgrade));
 
                 void OnClickUpgrade()
                     => OpenUpgradeCard(upgrade.Type);
