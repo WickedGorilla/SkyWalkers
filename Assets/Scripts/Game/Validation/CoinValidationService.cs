@@ -20,6 +20,8 @@ namespace Game.Validation
         private readonly LinkedList<IPlayerActionData> _stackActions = new();
 
         private float _nextTimeUpdate;
+        private float _lastTimeUpdate;
+        private int _lastUpdateBalance;
         private bool _boostState;
 
         private const float TimeIntervalUpdate = 10f;
@@ -42,6 +44,9 @@ namespace Game.Validation
             _boostSystem.OnUseBoost += OnBoostActivated;
             _boostSystem.OnEndBoost += OnBoostEnd;
             _boostSystem.OnUsePlayPass += OnPlayPassActivated;
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            SendTask(_cancellationTokenSource.Token);
         }
 
         public void Stop()
@@ -50,30 +55,42 @@ namespace Game.Validation
             _boostSystem.OnUseBoost -= OnBoostActivated;
             _boostSystem.OnEndBoost -= OnBoostEnd;
             _boostSystem.OnUsePlayPass -= OnPlayPassActivated;
+            
+            _cancellationTokenSource.Cancel();
+            SendValidationRequest();
         }
 
-        private async void SendTask()
+        private async void SendTask(CancellationToken token)
         {
+            _nextTimeUpdate =  Time.time + TimeIntervalUpdate;
+            _lastUpdateBalance = _walletService.Coins.Count;
+            
             while (true)
             {
-                await UniTask.NextFrame();
-                
-                if (Time.unscaledTime < _nextTimeUpdate || _stackActions.Count == 0)
-                    return;
+                await UniTask.NextFrame(token);
 
-                _nextTimeUpdate = Time.unscaledTime + TimeIntervalUpdate;
+                if (token.IsCancellationRequested)
+                    break;
+                
+                if (Time.time < _nextTimeUpdate || _stackActions.Count == 0)
+                    continue;
+                
+                SendValidationRequest();
+                _nextTimeUpdate =  Time.time + TimeIntervalUpdate;
             }
         }
         
         private void OnChangeCoins(int coins)
         {
-            if (_boostSystem.IsBoost)
+            var tapedCoins = coins - _lastUpdateBalance;
+            
+            if (!_boostSystem.IsBoost)
             {
-                AddToStack(new CoinPlayerActionData(coins, _walletService.Energy.Count));
+                AddToStack(new CoinPlayerActionData(tapedCoins, _walletService.Energy.Count));
             }
             else
             {
-                AddToStack(new CoinWithBoostActionData(coins));
+                AddToStack(new CoinWithBoostActionData(tapedCoins));
             }
         }
         
@@ -107,6 +124,13 @@ namespace Game.Validation
         
         private void SendValidationRequest()
         {
+            if (_stackActions.Count == 0 || _lastTimeUpdate + TimeIntervalUpdate / 3 > Time.time)
+                return;
+
+            _lastTimeUpdate = Time.time;
+            _lastUpdateBalance = _walletService.Coins.Count;
+            
+            Debug.Log("Sending validation request");
             var message = new ValidationCoinsRequest(_stackActions.ToArray());
             _serverRequestSender.SendToServerAndHandle<ValidationCoinsRequest, ValidationCoinsResponse>(message, ServerAddress.TapCoinsValidation, OnValidationError);
             _stackActions.Clear();

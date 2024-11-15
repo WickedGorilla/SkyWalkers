@@ -79,15 +79,19 @@ namespace Game.Infrastructure
                 return;
             }
 
-            _serverRequestSender.UpdateToken(response.Data.Token);
+            var data = response.Data;
+            _serverRequestSender.UpdateToken(data.Token);
             
             InitializeScene();
             InitializePlayer();
             
             _gameStateMachine.Enter<MainMenuState>();
             
-            if (response.Data.BalanceUpdate.Coins <= 100)
+            if (data.BalanceUpdate.Coins <= 100)
                 ShowStartsScreen();
+
+            if (data.AutoTapCoins > 0)
+                ShowAutoTapClaimScreen();
         }
 
         public void Exit()
@@ -138,6 +142,9 @@ namespace Game.Infrastructure
         }
 
         private void ShowStartsScreen() 
+            => _viewService.ShowPermanent<StartScreenView, StartScreenViewController>();
+        
+        private void ShowAutoTapClaimScreen()
             => _viewService.ShowPermanent<StartScreenView, StartScreenViewController>();
     }
 }

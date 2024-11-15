@@ -8,6 +8,7 @@ namespace Infrastructure.Network.Response.Player
         public string Token;
         public BalanceUpdate BalanceUpdate;
         public PerksResponse Perks;
+        public int AutoTapCoins;
 
         public GameData(int coins, int energy, int playPass, int boosts)
         {
