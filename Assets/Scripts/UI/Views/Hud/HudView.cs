@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Globalization;
 using DG.Tweening;
 using Game.Wallet.Flash;
 using TMPro;
@@ -76,7 +77,7 @@ namespace UI.Hud
         }
 
         public void SetCoinsCount(int coins)
-            => _coinsText.text = $"{SpritesAtlasCode.Coin}{coins:N0}";
+            => _coinsText.text = NumbersFormatter.GetCoinsCountVariant(coins);
 
         public void EnableBoost(bool value)
         {

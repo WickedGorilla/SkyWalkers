@@ -29,11 +29,9 @@ public class AutoTapClaimView : View
     public void FillWithParameter(int countHours, int coinsClaim)
     {
         _descriptionText.text = $"{_firstDescription} {GetParameterTextWithColor(countHours)} hours {_secondDescription}";
-        _coinsClaimText.text = $"{SpritesAtlasCode.Coin} {coinsClaim}";
+        _coinsClaimText.text = NumbersFormatter.GetCoinsCountVariant(coinsClaim);;
     }
     
     private string GetParameterTextWithColor(int parameter)
         => $"<color=#FF39FF>{parameter}</color>";
-    
-    
 }

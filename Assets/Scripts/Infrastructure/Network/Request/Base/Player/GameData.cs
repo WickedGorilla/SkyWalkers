@@ -9,6 +9,7 @@ namespace Infrastructure.Network.Response.Player
         public BalanceUpdate BalanceUpdate;
         public PerksResponse Perks;
         public int AutoTapCoins;
+        public string ReferralLink;
 
         public GameData(int coins, int energy, int playPass, int boosts)
         {

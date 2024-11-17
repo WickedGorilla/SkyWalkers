@@ -91,7 +91,7 @@ namespace Game.Infrastructure
                 ShowStartsScreen();
 
             if (data.AutoTapCoins > 0)
-                ShowAutoTapClaimScreen();
+                ShowAutoTapClaimScreen(data.AutoTapCoins);
         }
 
         public void Exit()
@@ -131,20 +131,20 @@ namespace Game.Infrastructure
             _serverRequestSender.AddHandler(new IRequestHandler<GameData>[]
             {
                 _balanceService,
-                _perksService,
+                _perksService
             });
 
             _serverRequestSender.AddHandler(new IRequestHandler<ValidationPaymentResponse>[]
             {
                 _balanceService,
-                _perksService,
+                _perksService
             });
         }
 
         private void ShowStartsScreen() 
             => _viewService.ShowPermanent<StartScreenView, StartScreenViewController>();
         
-        private void ShowAutoTapClaimScreen()
-            => _viewService.ShowPermanent<StartScreenView, StartScreenViewController>();
+        private void ShowAutoTapClaimScreen(int claimCoins)
+            => _viewService.ShowPermanent<AutoTapClaimView, AutoTapClaimViewController>().SetInfo(claimCoins);
     }
 }

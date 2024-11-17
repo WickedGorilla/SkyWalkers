@@ -532,9 +532,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _coinsText: {fileID: 4589282885717711470}
   _nicknameText: {fileID: 8048619782185384352}
-  _coinAtlasCode: <sprite name="Coin">
   _userPicture: {fileID: 5950420702794178584}
   _playButton: {fileID: 579005122579136127}
+  pulseFontSize: 152
+  pulseDuration: 2
+  increaseDuration: 2
 --- !u!1 &3684168355247731329
 GameObject:
   m_ObjectHideFlags: 0
