@@ -1,6 +1,7 @@
 using System.Linq;
 using Game.Wallet;
 using Infrastructure.Data.Game.Shop;
+using Infrastructure.Network.Request.Base.Player;
 using Infrastructure.Network.Request.ValidationPayment;
 using Infrastructure.Network.RequestHandler;
 using Infrastructure.Network.Response.Player;

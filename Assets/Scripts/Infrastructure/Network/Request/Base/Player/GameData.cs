@@ -1,6 +1,7 @@
 using System;
+using Infrastructure.Network.Response.Player;
 
-namespace Infrastructure.Network.Response.Player
+namespace Infrastructure.Network.Request.Base.Player
 {
     [Serializable]
     public class GameData
@@ -9,7 +10,7 @@ namespace Infrastructure.Network.Response.Player
         public BalanceUpdate BalanceUpdate;
         public PerksResponse Perks;
         public int AutoTapCoins;
-        public string ReferralLink;
+        public ReferralInfo ReferralInfo;
 
         public GameData(int coins, int energy, int playPass, int boosts)
         {
@@ -23,5 +24,14 @@ namespace Infrastructure.Network.Response.Player
 
             Perks = new PerksResponse();
         }
+    }
+    
+    [Serializable]
+    public struct ReferralInfo
+    {
+        public string ReferralLink;
+        public int NewAddedValue;
+        public int TotalCoins;
+        public int CountReferrals;
     }
 }
