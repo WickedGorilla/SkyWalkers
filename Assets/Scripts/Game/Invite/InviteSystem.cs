@@ -1,4 +1,6 @@
 
+using Infrastructure.Network.Request.Base.Player;
+
 namespace Game.Invite
 {
     public class InviteSystem
@@ -8,11 +10,11 @@ namespace Game.Invite
         public int Score { get; private set;  }
         public string InviteText { get; set; }
 
-        public void Initialize(string link, int referralCount, int score)
+        public void Initialize(ReferralInfo referralInfo)
         {
-            InviteLink = link;
-            ReferralCount = referralCount;
-            Score = score;
+            InviteLink = referralInfo.ReferralLink;
+            ReferralCount = referralInfo.CountReferrals;
+            Score = referralInfo.TotalCoins;
             InviteText = CreateInviteText(InviteLink);
         }
 

@@ -21,6 +21,9 @@ namespace Infrastructure.Telegram
         public long AuthDate => _tgData.auth_date;
         public string Hash => _tgData.hash;
 
+        public bool IsLaunchedFromReferralUrl { get; private set; }
+        public string ReferralCode { get; private set; }
+
         private void Awake()
             => DontDestroyOnLoad(gameObject);
 
@@ -43,7 +46,7 @@ namespace Infrastructure.Telegram
         }
 
         // Call from Telegram .jsLib
-        public void SetTelegramId(string jsonData)
+        private void SetTelegramId(string jsonData)
         {
             _tgData = JsonUtility.FromJson<TelegramData>(jsonData);
 
@@ -51,6 +54,12 @@ namespace Infrastructure.Telegram
                 Debug.LogError("TG data is null");
         }
 
+        // Call from Telegram .jsLib
+        private void SetReferralCode(string code)
+        {
+            IsLaunchedFromReferralUrl = true;
+            ReferralCode = code;
+        }
 
         [DllImport("__Internal")]
         private static extern void OnUnityReady();

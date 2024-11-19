@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Game.BuildingSystem;
 using Game.Environment;
+using Game.Invite;
 using Game.Perks;
 using Game.Player;
 using Infrastructure.Network;
@@ -8,7 +9,6 @@ using Infrastructure.Network.Request;
 using Infrastructure.Network.Request.Base.Player;
 using Infrastructure.Network.Request.ValidationPayment;
 using Infrastructure.Network.RequestHandler;
-using Infrastructure.Network.Response.Player;
 using Infrastructure.SceneManagement;
 using Infrastructure.Telegram;
 using Player;
@@ -31,6 +31,7 @@ namespace Game.Infrastructure
         private readonly BuildingMovementSystem _buildingMovementSystem;
         private readonly TelegramLauncher _telegramLauncher;
         private readonly PerksService _perksService;
+        private readonly InviteSystem _inviteSystem;
 
         private const string SceneName = "Game";
 
@@ -45,7 +46,8 @@ namespace Game.Infrastructure
             PlayerMovementByTap playerMovementByTap,
             BuildingMovementSystem buildingMovementSystem,
             TelegramLauncher telegramLauncher,
-            PerksService perksService)
+            PerksService perksService, 
+            InviteSystem inviteSystem)
         {
             _sceneLoader = sceneLoader;
             _serverRequestSender = serverRequestSender;
@@ -59,6 +61,7 @@ namespace Game.Infrastructure
             _buildingMovementSystem = buildingMovementSystem;
             _telegramLauncher = telegramLauncher;
             _perksService = perksService;
+            _inviteSystem = inviteSystem;
         }
 
         public async void Enter()
@@ -85,6 +88,7 @@ namespace Game.Infrastructure
             
             InitializeScene();
             InitializePlayer();
+            _inviteSystem.Initialize(data.ReferralInfo);
             
             _gameStateMachine.Enter<MainMenuState>();
             

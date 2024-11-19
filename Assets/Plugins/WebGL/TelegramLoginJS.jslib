@@ -1,7 +1,6 @@
 mergeInto(LibraryManager.library, {
     OnUnityReady: function () {
 
-
         window.Telegram.WebApp.ready();
 
         const user = window.Telegram.WebApp.initDataUnsafe.user;
@@ -24,7 +23,7 @@ mergeInto(LibraryManager.library, {
                 if (window.unityInstance && window.unityInstance.SendMessage) {
                     window.unityInstance.SendMessage('TelegramLauncher', 'SetTelegramId', jsonData);
                 } else {
- console.error("Unity не загружен.");
+ console.error("Engine dont load.");
                     setTimeout(sendMessageToUnity, 1000);
                 }
             }
