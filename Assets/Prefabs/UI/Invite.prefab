@@ -2234,6 +2234,8 @@ MonoBehaviour:
   _countReferralText: {fileID: 5285748681274322573}
   _scoreReferralText: {fileID: 7696896468051107679}
   _referralLinkText: {fileID: 4313509279342562592}
+  _copyLinkButton: {fileID: 5299066773601251628}
+  _shareLinkButton: {fileID: 3979044834550751764}
 --- !u!1 &6506146904463939706
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,7 +14,7 @@ namespace UI.Views
         protected override void OnShow()
         {
             View.HomeButton.onClick.AddListener(Show<MainMenuView, MainMenuController>);
-            View.InviteButton.onClick.AddListener(Show<InviteView, InviteController>);
+            View.InviteButton.onClick.AddListener(Show<InviteView, InviteViewController>);
             View.QuestButton.onClick.AddListener(Show<QuestView, QuestController>);
             View.ShopButton.onClick.AddListener(Show<ShopView, ShopController>);
             View.WalletButton.onClick.AddListener(Show<WalletView, WalletController>);
@@ -23,7 +23,7 @@ namespace UI.Views
         protected override void OnHide()
         {
             View.HomeButton.onClick.RemoveListener(Show<MainMenuView, MainMenuController>);
-            View.InviteButton.onClick.RemoveListener(Show<InviteView, InviteController>);
+            View.InviteButton.onClick.RemoveListener(Show<InviteView, InviteViewController>);
             View.QuestButton.onClick.RemoveListener(Show<QuestView, QuestController>);
             View.ShopButton.onClick.RemoveListener(Show<ShopView, ShopController>);
             View.WalletButton.onClick.RemoveListener(Show<WalletView, WalletController>);
