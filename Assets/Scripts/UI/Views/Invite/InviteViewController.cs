@@ -1,6 +1,7 @@
 using Game.Invite;
 using SkyExtensions;
 using UI.Core;
+using UnityEngine;
 
 namespace UI.Views
 {
@@ -27,14 +28,10 @@ namespace UI.Views
             View.ShareLinkButton.RemoveClickAction(OnClickShare);
         }
 
-        private void OnClickShare()
-        {
-           
-        }
+        private void OnClickShare() 
+            => Application.OpenURL(_inviteSystem.InviteShareLink);
 
-        private void OnClickCopyLink()
-        {
-            WebGLExtensions.CopyWebGLText(_inviteSystem.InviteText);
-        }
+        private void OnClickCopyLink() 
+            => WebGLExtensions.CopyWebGLText(_inviteSystem.InviteText);
     }
 }

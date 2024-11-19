@@ -1,5 +1,6 @@
 using Game.BuildingSystem;
 using Game.Environment;
+using Game.Invite;
 using Game.Perks;
 using Game.Player;
 using Game.Validation;
@@ -52,6 +53,7 @@ namespace Game.Infrastructure
             _container.Bind<PlayerMovementByTap>().AsSingle();
             _container.Bind<PerksService>().AsSingle();
             _container.Bind<CoinValidationService>().AsSingle();
+            _container.Bind<InviteSystem>().AsSingle();
             
             _container.BindInterfacesAndSelfTo<PlayerHolder>().AsSingle();
             _container.BindInterfacesAndSelfTo<ClickCoinSpawner>().AsSingle();

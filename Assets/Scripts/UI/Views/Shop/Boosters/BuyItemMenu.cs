@@ -35,13 +35,13 @@ namespace UI.Views.Shop.Boosters
             _buyButton.onClick.AddListener(buyAction);
         }
 
-        public void Open(PerkData perkData, int coins, PerkEntity perk, UnityAction buyAction)
+        public void Open(PerkData data, int coins, PerkEntity perk, UnityAction buyAction)
         {
             gameObject.SetActive(true);
-            _iconImage.sprite = perkData.Icon;
-            _titleText.text = perkData.Tittle;
-            _descriptionText.text = perkData.UpgradeDescriptionText;
-
+            _iconImage.sprite = data.Icon;
+            _titleText.text = $"{perk.NextLevel} {UpgradePerkMenu.LevelText} {data.Tittle}" ;
+            _descriptionText.text =  $"{data.UpgradeDescriptionText} {perk.NextValue.ToString().ApplyPurpleColor()} {data.UpgradeDescriptionTextAfterValue}";
+            
             SetPrice(perk.NextLevelPrice, coins, perk.IsDonat);
             _buyButton.onClick.AddListener(buyAction);
         }
@@ -52,7 +52,7 @@ namespace UI.Views.Shop.Boosters
             _buyButton.interactable = !isLock;
             
             string currency = SpritesAtlasCode.GetCurrentCurrencyCode(isDonat);
-            _priceText.text = $"{currency} {price}";
+            _priceText.text = $"{currency} {NumbersFormatter.GetCountVariant(price)}";
             
             var buttonText = isLock ? $"{SpritesAtlasCode.Lock}" : $"{currency}";
             _buttonText.text = $"{buttonText} buy now";

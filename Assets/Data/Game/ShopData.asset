@@ -66,6 +66,7 @@ MonoBehaviour:
       _tittle: ENERGY LIMIT
       _description: Increase your energy
       _upgradeDescriptionText: Boost your energy limit to
+      _upgradeDescriptionTextAfterValue: 
   - _key: 1
     _value:
       _icon: {fileID: 21300000, guid: b4c3a564811f3014d9601c7df76a6c80, type: 3}
@@ -73,7 +74,8 @@ MonoBehaviour:
       _lastIconText: coin
       _tittle: MULTI-TAP
       _description: More coins per tap
-      _upgradeDescriptionText: Earn coins per tap
+      _upgradeDescriptionText: Earn
+      _upgradeDescriptionTextAfterValue: coins per tap
   - _key: 2
     _value:
       _icon: {fileID: 21300000, guid: a9fe436d41ecfeb4f8825f7558c11862, type: 3}
@@ -81,4 +83,5 @@ MonoBehaviour:
       _lastIconText: 
       _tittle: auto tap
       _description: Tap while away.
-      _upgradeDescriptionText: Tap while away. Must claim every 12 hours
+      _upgradeDescriptionText: Tap while away. Must claim every
+      _upgradeDescriptionTextAfterValue: hours

@@ -20,7 +20,7 @@ namespace UI.Views
         public void Initialize(string link, int referralCount, int score)
         {
             _countReferralText.text = $"You referral: <color=#FFFFFF>{referralCount}</color>";
-            _scoreReferralText.text = $"Score: <sprite name=coin> <color=#FFFFFF>{NumbersFormatter.GetCoinsCountVariant(score)}</color>";
+            _scoreReferralText.text = $"Score: <color=#FFFFFF>{NumbersFormatter.GetCoinsCountVariant(score)}</color>";
 
             int maxLength = 20;
 

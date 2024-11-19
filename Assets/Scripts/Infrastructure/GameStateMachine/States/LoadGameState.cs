@@ -14,6 +14,8 @@ using Infrastructure.Telegram;
 using Player;
 using UI.Core;
 using UnityEngine;
+using static System.String;
+using Object = UnityEngine.Object;
 
 namespace Game.Infrastructure
 {
@@ -46,7 +48,7 @@ namespace Game.Infrastructure
             PlayerMovementByTap playerMovementByTap,
             BuildingMovementSystem buildingMovementSystem,
             TelegramLauncher telegramLauncher,
-            PerksService perksService, 
+            PerksService perksService,
             InviteSystem inviteSystem)
         {
             _sceneLoader = sceneLoader;
@@ -67,15 +69,16 @@ namespace Game.Infrastructure
         public async void Enter()
         {
             await _sceneLoader.LoadSceneAsync(SceneName);
-            await LoadInfoFromTelegram();
+            await WaitLoadTelegramInfo();
 
             RegisterEvents();
 
             _serverRequestSender.Initialize(_telegramLauncher.UserId);
-            
-            ServerResponse<GameData> response = await _serverRequestSender.SendToServerAndHandle<LoginRequest, GameData>(
-                GetLoginRequest(),
-                ServerAddress.Login);
+
+            ServerResponse<GameData> response =
+                await _serverRequestSender.SendToServerAndHandle<LoginRequest, GameData>(
+                    GetLoginRequest(),
+                    ServerAddress.Login);
 
             if (!response.Success)
             {
@@ -85,13 +88,13 @@ namespace Game.Infrastructure
 
             var data = response.Data;
             _serverRequestSender.UpdateToken(data.Token);
-            
+
             InitializeScene();
             InitializePlayer();
             _inviteSystem.Initialize(data.ReferralInfo);
-            
+
             _gameStateMachine.Enter<MainMenuState>();
-            
+
             if (data.BalanceUpdate.Coins <= 100)
                 ShowStartsScreen();
 
@@ -102,7 +105,7 @@ namespace Game.Infrastructure
         public void Exit()
             => _loadingCurtain.ShowStartButton();
 
-        private async UniTask LoadInfoFromTelegram()
+        private async UniTask WaitLoadTelegramInfo()
             => await UniTask.WaitUntil(() => _telegramLauncher.IsInit);
 
         private void InitializeScene()
@@ -123,12 +126,13 @@ namespace Game.Infrastructure
 #if UNITY_EDITOR
             return new LoginRequest(
                 "",
-                "lol");
+                "lol", "");
 #endif
 
+            var referralId = _telegramLauncher.IsLaunchedFromReferralUrl ? _telegramLauncher.ReferralCode : Empty;
             return new LoginRequest(
                 _telegramLauncher.AuthDate.ToString(),
-                _telegramLauncher.Hash);
+                _telegramLauncher.Hash, referralId);
         }
 
         private void RegisterEvents()
@@ -146,9 +150,9 @@ namespace Game.Infrastructure
             });
         }
 
-        private void ShowStartsScreen() 
+        private void ShowStartsScreen()
             => _viewService.ShowPermanent<StartScreenView, StartScreenViewController>();
-        
+
         private void ShowAutoTapClaimScreen(int claimCoins)
             => _viewService.ShowPermanent<AutoTapClaimView, AutoTapClaimViewController>().SetInfo(claimCoins);
     }

@@ -30,6 +30,8 @@ namespace UI.Views.Shop.Boosters
 
         public event Action<bool> OnShow;
 
+        public const string LevelText = "LVL •";
+        
         private void OnEnable()
         {
             _disposable = _backButton.SubscribeListener(() => { gameObject.SetActive(false); });
@@ -43,25 +45,23 @@ namespace UI.Views.Shop.Boosters
             OnShow?.Invoke(false);
         }
 
-        public void SetCountText(int count)
-        {
-            _coinsCountText.text = $"{SpritesAtlasCode.Coin} {count.ToString()}";
-        }
+        private void SetCountText(int count) 
+            => _coinsCountText.text = NumbersFormatter.GetCoinsCountVariant(count);
 
-        public void Open(PerkData data,  int countCoins, PerkEntity perkEntity, UnityAction onUpgradeButton)
+        public void Open(PerkData data,  int countCoins, PerkEntity perk, UnityAction onUpgradeButton)
         {
             gameObject.gameObject.SetActive(true);
             _upgradeButton.onClick.AddListener(onUpgradeButton);
             
             _iconImage.sprite = data.Icon;
-            _iconText.text = data.GetIconText(perkEntity.CurrentValue);
-            _tittleText.text = data.Tittle;
+            _iconText.text = data.GetIconText(perk.CurrentValue);
+            _tittleText.text = $"{perk.NextLevel} {LevelText} {data.Tittle}";
             _descriptionText.text = data.Description;
-            _upgradeDescriptionText.text = data.UpgradeDescriptionText;
+            _upgradeDescriptionText.text = $"{data.UpgradeDescriptionText} {perk.NextValue.ToString().ApplyPurpleColor()} {data.UpgradeDescriptionTextAfterValue}";
             _levelText.text =
-                $"{perkEntity.NextLevel} LVL • {GetCurrentCurrencyCode(perkEntity.IsDonat)} {perkEntity.NextLevelPrice}";
+                $"{perk.NextLevel} {LevelText} {GetCurrentCurrencyCode(perk.IsDonat)} {perk.NextLevelPrice}";
             
-            if (perkEntity.CurrentLevel == perkEntity.MaxLevel || !CheckBalance())
+            if (perk.CurrentLevel == perk.MaxLevel || !CheckBalance())
                 LockButton();
             else   
                 UnlockButton();
@@ -69,7 +69,7 @@ namespace UI.Views.Shop.Boosters
             SetCountText(countCoins);
 
             bool CheckBalance()
-                => perkEntity.IsDonat || perkEntity.NextLevelPrice <= countCoins;
+                => perk.IsDonat || perk.NextLevelPrice <= countCoins;
         }
 
         private void LockButton()
