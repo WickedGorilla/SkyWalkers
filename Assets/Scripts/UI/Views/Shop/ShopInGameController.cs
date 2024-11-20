@@ -20,7 +20,8 @@ namespace UI.Views
             PerksService perksService, 
             ShopData shopData,
             WalletService walletService,
-            OnGameFocusEvent onGameFocusEvent, CoinValidationService coinValidationService) 
+            OnGameFocusEvent onGameFocusEvent, 
+            CoinValidationService coinValidationService) 
             : base(view, serverRequestSender, perksService, shopData, walletService, onGameFocusEvent)
         {
             _viewService = viewService;
