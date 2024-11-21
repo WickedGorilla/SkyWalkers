@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game.Perks
 {
-    public class PerksService : IRequestHandler<GameData>, IRequestHandler<ValidationPaymentResponse>
+    public class PerksService
     {
         public PerkEntity EnergyLimit { get; private set; }
         public PerkEntity MultiTap { get; private set; }
@@ -20,7 +20,7 @@ namespace Game.Perks
             {
                 case PerkType.EnergyLimit:
                     return EnergyLimit;
-                
+
                 case PerkType.AutoTap:
                     return AutoTap;
 
@@ -38,7 +38,7 @@ namespace Game.Perks
                 case PerkType.EnergyLimit:
                     EnergyLimit = new PerkEntity(perkInfo, perkType);
                     return;
-                
+
                 case PerkType.AutoTap:
                     AutoTap = new PerkEntity(perkInfo, perkType);
                     return;
@@ -47,33 +47,27 @@ namespace Game.Perks
                     MultiTap = new PerkEntity(perkInfo, perkType);
                     return;
             }
-
         }
-        
-        public void Handle(GameData response)
+
+        public void HandlePerks(PerksResponse perks)
         {
-            if (response.Perks.Perks.Length == 0)
+            if (perks.Perks.Length == 0)
                 return;
 
-            HandlePerk(response.Perks);
+            foreach (PerkInfo perkInfo in perks.Perks) 
+                HandlePerk(perkInfo);
         }
 
-        public void Handle(ValidationPaymentResponse response) 
-            => HandlePerk(response.Perks);
-
-        private void HandlePerk(PerksResponse perks)
+        public void HandlePerk(PerkInfo perkInfo)
         {
-            foreach (PerkInfo perkInfo in perks.Perks)
+            if (!Enum.IsDefined(typeof(PerkType), perkInfo.Id))
             {
-                if (!Enum.IsDefined(typeof(PerkType), perkInfo.Id))
-                {
-                    Debug.LogError("The integer does not correspond to a defined enum value.");
-                    return;
-                }
-                
-                PerkType enumValue = (PerkType)perkInfo.Id;
-                SetPerkByType(enumValue, perkInfo);
+                Debug.LogError("The integer does not correspond to a defined enum value.");
+                return;
             }
+
+            PerkType enumValue = (PerkType)perkInfo.Id;
+            SetPerkByType(enumValue, perkInfo);
         }
     }
 }

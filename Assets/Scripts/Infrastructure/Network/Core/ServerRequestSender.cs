@@ -18,6 +18,11 @@ namespace Infrastructure.Network
 
         private readonly ResponsesHandler _responsesHandler = new();
 
+        public ServerRequestSender()
+        {
+            
+        }
+        
         public void Initialize(long userId)
         {
             _userId = userId;

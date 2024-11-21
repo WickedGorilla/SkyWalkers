@@ -3,6 +3,7 @@ using Game.Environment;
 using Game.Invite;
 using Game.Perks;
 using Game.Player;
+using Game.UpdateResponseServices;
 using Game.Validation;
 using Game.Wallet;
 using Infrastructure.Network;
@@ -54,6 +55,7 @@ namespace Game.Infrastructure
             _container.Bind<PerksService>().AsSingle();
             _container.Bind<CoinValidationService>().AsSingle();
             _container.Bind<InviteSystem>().AsSingle();
+            _container.Bind<IResponseHandler>().To<BalanceUpdateHandler>().AsSingle();
             
             _container.BindInterfacesAndSelfTo<PlayerHolder>().AsSingle();
             _container.BindInterfacesAndSelfTo<ClickCoinSpawner>().AsSingle();

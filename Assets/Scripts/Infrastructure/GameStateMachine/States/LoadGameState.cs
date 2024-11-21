@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.BuildingSystem;
 using Game.Environment;
 using Game.Invite;
 using Game.Perks;
 using Game.Player;
+using Game.UpdateResponseServices;
 using Infrastructure.Network;
 using Infrastructure.Network.Request;
 using Infrastructure.Network.Request.Base.Player;
@@ -25,15 +28,14 @@ namespace Game.Infrastructure
         private readonly IServerRequestSender _serverRequestSender;
         private readonly LoadingCurtain _loadingCurtain;
         private readonly IGameStateMachine _gameStateMachine;
-        private readonly WalletService _balanceService;
         private readonly ViewService _viewService;
         private readonly EnvironmentHolder _environmentHolder;
         private readonly PlayerHolder _playerHolder;
         private readonly PlayerMovementByTap _playerMovementByTap;
         private readonly BuildingMovementSystem _buildingMovementSystem;
         private readonly TelegramLauncher _telegramLauncher;
-        private readonly PerksService _perksService;
         private readonly InviteSystem _inviteSystem;
+        private readonly List<IResponseHandler> _responseHandlers;
 
         private const string SceneName = "Game";
 
@@ -41,29 +43,27 @@ namespace Game.Infrastructure
             IServerRequestSender serverRequestSender,
             LoadingCurtain loadingCurtain,
             IGameStateMachine gameStateMachine,
-            WalletService balanceService,
             ViewService viewService,
             EnvironmentHolder environmentHolder,
             PlayerHolder playerHolder,
             PlayerMovementByTap playerMovementByTap,
             BuildingMovementSystem buildingMovementSystem,
             TelegramLauncher telegramLauncher,
-            PerksService perksService,
-            InviteSystem inviteSystem)
+            InviteSystem inviteSystem,
+            List<IResponseHandler> responseHandlers)
         {
             _sceneLoader = sceneLoader;
             _serverRequestSender = serverRequestSender;
             _loadingCurtain = loadingCurtain;
             _gameStateMachine = gameStateMachine;
-            _balanceService = balanceService;
             _viewService = viewService;
             _environmentHolder = environmentHolder;
             _playerHolder = playerHolder;
             _playerMovementByTap = playerMovementByTap;
             _buildingMovementSystem = buildingMovementSystem;
             _telegramLauncher = telegramLauncher;
-            _perksService = perksService;
             _inviteSystem = inviteSystem;
+            _responseHandlers = responseHandlers;
         }
 
         public async void Enter()
@@ -71,7 +71,7 @@ namespace Game.Infrastructure
             await _sceneLoader.LoadSceneAsync(SceneName);
             await WaitLoadTelegramInfo();
 
-            RegisterEvents();
+            RegisterServerHandlers();
 
             _serverRequestSender.Initialize(_telegramLauncher.UserId);
 
@@ -100,6 +100,12 @@ namespace Game.Infrastructure
 
             if (data.AutoTapCoins > 0)
                 ShowAutoTapClaimScreen(data.AutoTapCoins);
+        }
+
+        private void RegisterServerHandlers()
+        {
+            foreach (var handler in _responseHandlers)
+                handler.StartListening();
         }
 
         public void Exit()
@@ -133,21 +139,6 @@ namespace Game.Infrastructure
             return new LoginRequest(
                 _telegramLauncher.AuthDate.ToString(),
                 _telegramLauncher.Hash, referralId);
-        }
-
-        private void RegisterEvents()
-        {
-            _serverRequestSender.AddHandler(new IRequestHandler<GameData>[]
-            {
-                _balanceService,
-                _perksService
-            });
-
-            _serverRequestSender.AddHandler(new IRequestHandler<ValidationPaymentResponse>[]
-            {
-                _balanceService,
-                _perksService
-            });
         }
 
         private void ShowStartsScreen()

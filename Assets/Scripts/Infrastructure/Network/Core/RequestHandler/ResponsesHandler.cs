@@ -7,10 +7,7 @@ namespace Infrastructure.Network.RequestHandler
     public class ResponsesHandler
     {
         private readonly Dictionary<Type, object> _handlers = new();
-
-        private void AddHolder<T>(IRequestHandlersHolder<T> holder) 
-            => _handlers[typeof(T)] = holder;
-
+        
         public IRequestHandlersHolder<T>? GetHolder<T>()
         {
             if (_handlers.TryGetValue(typeof(T), out object handler) 
@@ -50,6 +47,7 @@ namespace Infrastructure.Network.RequestHandler
                 holder.Remove(handler);
         }
         
- 
+        private void AddHolder<T>(IRequestHandlersHolder<T> holder) 
+            => _handlers[typeof(T)] = holder;
     }
 }
