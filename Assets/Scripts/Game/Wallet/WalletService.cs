@@ -1,10 +1,6 @@
 using System.Linq;
 using Game.Wallet;
 using Infrastructure.Data.Game.Shop;
-using Infrastructure.Network.Request.Base.Player;
-using Infrastructure.Network.Request.ValidationPayment;
-using Infrastructure.Network.RequestHandler;
-using Infrastructure.Network.Response;
 using Infrastructure.Network.Response.Player;
 
 namespace Player
@@ -34,7 +30,5 @@ namespace Player
             var maxEnergy = energyPerk?.CurrentValue ?? 0;
             Energy = new IntRangeValue(update.Energy, maxEnergy);
         }
-
-  
     }
 }

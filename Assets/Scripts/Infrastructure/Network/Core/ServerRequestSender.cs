@@ -17,11 +17,6 @@ namespace Infrastructure.Network
         private string _token;
 
         private readonly ResponsesHandler _responsesHandler = new();
-
-        public ServerRequestSender()
-        {
-            
-        }
         
         public void Initialize(long userId)
         {

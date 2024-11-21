@@ -11,7 +11,8 @@ namespace Game.UpdateResponseServices
     public class BalanceUpdateHandler : ResponseHandler,
         IRequestHandler<GameData>,
         IRequestHandler<ValidationPaymentResponse>,
-        IRequestHandler<PaymentUpgradePerkResult>
+        IRequestHandler<PaymentUpgradePerkResult>,
+        IRequestHandler<PaymentItemResult>
     {
         private readonly WalletService _walletService;
         private readonly PerksService _perksService;
@@ -28,12 +29,14 @@ namespace Game.UpdateResponseServices
         {
             ServerRequestSender.AddHandler(new IRequestHandler<GameData>[] { this });
             ServerRequestSender.AddHandler(new IRequestHandler<ValidationPaymentResponse>[] { this });
+            ServerRequestSender.AddHandler(new IRequestHandler<PaymentItemResult>[] { this });
         }
 
         public override void StopListening()
         {
             ServerRequestSender.RemoveHandler(new IRequestHandler<GameData>[] { this });
             ServerRequestSender.RemoveHandler(new IRequestHandler<ValidationPaymentResponse>[] { this });
+            ServerRequestSender.RemoveHandler(new IRequestHandler<PaymentItemResult>[] { this });
         }
 
         public void Handle(GameData response)
@@ -51,9 +54,12 @@ namespace Game.UpdateResponseServices
         public void Handle(PaymentUpgradePerkResult response)
         {
             _walletService.UpdateValues(response.BalanceUpdate);
+            _perksService.HandlePerk(response.PerkInfo);
+        }
 
-            if (response.OrderCode == "0")
-                _perksService.HandlePerk(response.PerkInfo);
+        public void Handle(PaymentItemResult response)
+        {
+            _walletService.UpdateValues(response.BalanceUpdate);
         }
     }
 }
