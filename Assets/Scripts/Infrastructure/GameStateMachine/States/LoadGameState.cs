@@ -14,6 +14,7 @@ using Infrastructure.Network.Request.ValidationPayment;
 using Infrastructure.Network.RequestHandler;
 using Infrastructure.SceneManagement;
 using Infrastructure.Telegram;
+using Newtonsoft.Json;
 using Player;
 using UI.Core;
 using UnityEngine;
@@ -78,7 +79,7 @@ namespace Game.Infrastructure
             ServerResponse<GameData> response =
                 await _serverRequestSender.SendToServerAndHandle<LoginRequest, GameData>(
                     GetLoginRequest(),
-                    ServerAddress.Login);
+                    ServerAddress.Login, OnErrorLogin);
 
             if (!response.Success)
             {
@@ -132,13 +133,21 @@ namespace Game.Infrastructure
 #if UNITY_EDITOR
             return new LoginRequest(
                 "",
-                "lol", "");
+                "lol", "", "wickedgorilla");
 #endif
-
-            var referralId = _telegramLauncher.IsLaunchedFromReferralUrl ? _telegramLauncher.ReferralCode : Empty;
-            return new LoginRequest(
-                _telegramLauncher.AuthDate.ToString(),
-                _telegramLauncher.Hash, referralId);
+            var tgData = _telegramLauncher.TgData;
+            
+            return new LoginRequest
+            {
+                AuthDate = tgData.auth_date.ToString(),
+                FirstName = tgData.first_name,
+                Hash = tgData.hash,
+                LastName = tgData.last_name,
+                PhotoUrl = tgData.photo_url,
+                ReferralId = _telegramLauncher.ReferralCode,
+                UserId = tgData.id,
+                UserName = tgData.username
+            };
         }
 
         private void ShowStartsScreen()
@@ -146,5 +155,14 @@ namespace Game.Infrastructure
 
         private void ShowAutoTapClaimScreen(int claimCoins)
             => _viewService.ShowPermanent<AutoTapClaimView, AutoTapClaimViewController>().SetInfo(claimCoins);
+        
+        private void OnErrorLogin(long errorCode, string data)
+        {
+            if (errorCode == 401)
+            {
+                var result = JsonConvert.DeserializeObject<LoginErrorResponse>(data);
+                _loadingCurtain.ShowLog(result.Message);
+            }
+        }
     }
 }

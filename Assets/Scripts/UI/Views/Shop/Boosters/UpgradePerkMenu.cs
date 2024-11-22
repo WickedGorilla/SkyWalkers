@@ -48,7 +48,7 @@ namespace UI.Views.Shop.Boosters
         private void SetCountText(int count) 
             => _coinsCountText.text = NumbersFormatter.GetCoinsCountVariant(count);
 
-        public void Open(PerkData data,  int countCoins, PerkEntity perk, UnityAction onUpgradeButton)
+        public void Open(PerkData data, int countCoins, PerkEntity perk, UnityAction onUpgradeButton)
         {
             gameObject.gameObject.SetActive(true);
             _upgradeButton.onClick.AddListener(onUpgradeButton);

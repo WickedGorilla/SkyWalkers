@@ -4,12 +4,12 @@ using Infrastructure.Network.Request.Base;
 namespace Infrastructure.Network.Request
 {
     [Serializable]
-    public class PaymentLinkItemRequest : ServerRequest
+    public class PayItemRequest : ServerRequest
     {
         public int ItemId;
         public int Amount;
 
-        public PaymentLinkItemRequest(int itemId, int amount)
+        public PayItemRequest(int itemId, int amount)
         {
             ItemId = itemId;
             Amount = amount;
@@ -17,12 +17,12 @@ namespace Infrastructure.Network.Request
     }
 
     [Serializable]
-    public class PaymentLinkPerkUpgradeRequest : ServerRequest
+    public class PayUpgradeRequest : ServerRequest
     {
         public int PerkId;
         public int Level;
 
-        public PaymentLinkPerkUpgradeRequest(int perkId, int level)
+        public PayUpgradeRequest(int perkId, int level)
         {
             PerkId = perkId;
             Level = level;

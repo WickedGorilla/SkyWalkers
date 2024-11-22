@@ -62,7 +62,7 @@ namespace Game.Validation
 
         private async void SendTask(CancellationToken token)
         {
-            _nextTimeUpdate =  Time.time + TimeIntervalUpdate;
+            _nextTimeUpdate = Time.time + TimeIntervalUpdate;
             _lastUpdateBalance = _walletService.Coins.Count;
             
             while (true)
@@ -83,6 +83,7 @@ namespace Game.Validation
         private void OnChangeCoins(int coins)
         {
             var tapedCoins = coins - _lastUpdateBalance;
+            _lastUpdateBalance = coins;
             
             if (!_boostSystem.IsBoost)
             {
@@ -96,12 +97,14 @@ namespace Game.Validation
         
         private void AddToStack<TCoinValidation>(TCoinValidation action) where TCoinValidation : ICoinPlayerActionData
         {
-            if (_stackActions.Count == 0 || _stackActions.Last.Value is not TCoinValidation)
+            if (_stackActions.Count > 0 && _stackActions.Last.Value is TCoinValidation coinValidationData)
             {
-                _stackActions.AddLast(action);
+                var data = coinValidationData;
+                data.CoinsCount += action.CoinsCount;
+                _stackActions.Last.Value = data;
             }
             else
-                _stackActions.Last.Value = action;
+                _stackActions.AddLast(action);
         }
         
         private void OnPlayPassActivated()

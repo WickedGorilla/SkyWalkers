@@ -2,7 +2,7 @@ namespace Game.Validation
 {
     public struct CoinPlayerActionData : ICoinPlayerActionData
     {
-        public int CoinsCount;
+        public int CoinsCount { get; set; }
         public int EnergyCount;
 
         public CoinPlayerActionData(int coinsCount, int energyCount)
@@ -19,7 +19,7 @@ namespace Game.Validation
 
     public struct CoinWithBoostActionData : ICoinPlayerActionData
     {
-        public int CoinsCount;
+        public int CoinsCount { get; set; }
 
         public CoinWithBoostActionData(int coinsCount)
         {
@@ -34,5 +34,6 @@ namespace Game.Validation
 
     public interface ICoinPlayerActionData : IPlayerActionData
     {
+        public int CoinsCount { get; set; }
     }
 }

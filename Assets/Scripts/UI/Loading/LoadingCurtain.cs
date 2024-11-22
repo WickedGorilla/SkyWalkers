@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,9 @@ public class LoadingCurtain : MonoBehaviour
     [SerializeField] private GameObject _loaderGroup;
     [SerializeField] private Button _startButton;
     
+    [SerializeField] private GameObject _infoObject;
+    [SerializeField] private TMP_Text _infoField;
+
     private void Awake() 
         => DontDestroyOnLoad(gameObject);
 
@@ -45,5 +49,10 @@ public class LoadingCurtain : MonoBehaviour
             yield return null;
         }
     }
-    
+
+    public void ShowLog(string resultMessage)
+    {
+        _infoObject.SetActive(true);
+        _infoField.text = resultMessage;
+    }
 }

@@ -17,7 +17,7 @@ namespace Game.UpdateResponseServices
         private readonly WalletService _walletService;
         private readonly PerksService _perksService;
 
-        public BalanceUpdateHandler(ServerRequestSender serverRequestSender,
+        public BalanceUpdateHandler(IServerRequestSender serverRequestSender,
             WalletService walletService, PerksService perksService)
             : base(serverRequestSender)
         {
@@ -30,6 +30,7 @@ namespace Game.UpdateResponseServices
             ServerRequestSender.AddHandler(new IRequestHandler<GameData>[] { this });
             ServerRequestSender.AddHandler(new IRequestHandler<ValidationPaymentResponse>[] { this });
             ServerRequestSender.AddHandler(new IRequestHandler<PaymentItemResult>[] { this });
+            ServerRequestSender.AddHandler(new IRequestHandler<PaymentUpgradePerkResult>[] { this });
         }
 
         public override void StopListening()
@@ -37,6 +38,7 @@ namespace Game.UpdateResponseServices
             ServerRequestSender.RemoveHandler(new IRequestHandler<GameData>[] { this });
             ServerRequestSender.RemoveHandler(new IRequestHandler<ValidationPaymentResponse>[] { this });
             ServerRequestSender.RemoveHandler(new IRequestHandler<PaymentItemResult>[] { this });
+            ServerRequestSender.RemoveHandler(new IRequestHandler<PaymentUpgradePerkResult>[] { this });
         }
 
         public void Handle(GameData response)

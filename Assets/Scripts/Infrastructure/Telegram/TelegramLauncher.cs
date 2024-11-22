@@ -1,28 +1,29 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Infrastructure.Telegram
 {
     public class TelegramLauncher : MonoBehaviour
     {
-        private TelegramData _tgData;
+        public TelegramData TgData { get; private set; }
 
-        public bool IsInit => _tgData is not null;
+        public bool IsInit => TgData is not null;
 
         public string UserName
-            => string.IsNullOrEmpty(_tgData.username)
-                ? $"{_tgData.first_name} {_tgData.last_name}"
-                : _tgData.username;
+            => string.IsNullOrEmpty(TgData.username)
+                ? $"{TgData.first_name} {TgData.last_name}"
+                : TgData.username;
 
         public long UserId
-            => _tgData.id;
+            => TgData.id;
 
-        public string PhotoUrl => _tgData.photo_url;
-        public long AuthDate => _tgData.auth_date;
-        public string Hash => _tgData.hash;
+        public string PhotoUrl => TgData.photo_url;
+        public long AuthDate => TgData.auth_date;
+        public string Hash => TgData.hash;
 
         public bool IsLaunchedFromReferralUrl { get; private set; }
-        public string ReferralCode { get; private set; }
+        public long ReferralCode { get; private set; }
 
         private void Awake()
             => DontDestroyOnLoad(gameObject);
@@ -48,9 +49,9 @@ namespace Infrastructure.Telegram
         // Call from Telegram .jsLib
         private void SetTelegramId(string jsonData)
         {
-            _tgData = JsonUtility.FromJson<TelegramData>(jsonData);
+            TgData = JsonUtility.FromJson<TelegramData>(jsonData);
 
-            if (_tgData == null)
+            if (TgData == null)
                 Debug.LogError("TG data is null");
         }
 
@@ -58,7 +59,7 @@ namespace Infrastructure.Telegram
         private void SetReferralCode(string code)
         {
             IsLaunchedFromReferralUrl = true;
-            ReferralCode = code;
+            ReferralCode = long.TryParse(code, out long refCode) ? refCode : 0;
         }
 
         [DllImport("__Internal")]

@@ -104,8 +104,8 @@ namespace UI.Views
         {
             View.ShowLoader();
 
-            var request = new PaymentLinkItemRequest((int)itemEntity.Type, itemEntity.Amount);
-            var response = await _serverRequestSender.SendToServer<PaymentLinkItemRequest, PaymentItemResult>(request,
+            var request = new PayItemRequest((int)itemEntity.Type, itemEntity.Amount);
+            var response = await _serverRequestSender.SendToServer<PayItemRequest, PaymentItemResult>(request,
                 ServerAddress.PaymentItem);
             
             if (!response.Success)
@@ -130,8 +130,8 @@ namespace UI.Views
         {
             View.ShowLoader();
 
-            var request = new PaymentLinkPerkUpgradeRequest((int)perkEntity.PerkType, perkEntity.NextLevel);
-            var response = await _serverRequestSender.SendToServerAndHandle<PaymentLinkPerkUpgradeRequest, 
+            var request = new PayUpgradeRequest((int)perkEntity.PerkType, perkEntity.NextLevel);
+            var response = await _serverRequestSender.SendToServerAndHandle<PayUpgradeRequest, 
                 PaymentUpgradePerkResult>(request, ServerAddress.PaymentPerk);
 
             if (!response.Success)
@@ -145,6 +145,7 @@ namespace UI.Views
             if (string.IsNullOrEmpty(data.PaymentUrl))
             {
                 View.HideLoader();
+                openedView.gameObject.SetActive(false);
                 return;
             }
             
