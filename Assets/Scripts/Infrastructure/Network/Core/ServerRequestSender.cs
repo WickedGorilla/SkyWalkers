@@ -11,7 +11,7 @@ namespace Infrastructure.Network
 {
     public class ServerRequestSender : IServerRequestSender
     {
-        private const string BaseUrl = "http://localhost:5120/";
+        private const string BaseUrl = "https://app.skywalkersgame.com";
 
         private long _userId;
         private string _token;

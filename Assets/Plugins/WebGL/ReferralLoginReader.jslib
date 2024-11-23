@@ -1,6 +1,8 @@
-document.addEventListener("DOMContentLoaded", () => {
-    handleReferralCode();
-});
+if (typeof document !== 'undefined') 
+{
+   document.addEventListener("DOMContentLoaded", () => {
+    handleReferralCode();});
+}
 
 
 function handleReferralCode() {
