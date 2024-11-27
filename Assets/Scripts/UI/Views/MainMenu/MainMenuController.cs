@@ -33,7 +33,7 @@ namespace UI.Views
         protected override void OnShow()
         {
             View.PlayButton.onClick.AddListener(OnClickPlay);
-            View.Initialize(_walletService.Coins, _telegramLauncher.UserName);
+            View.Initialize(_walletService.Coins, _telegramLauncher.UserName, _telegramLauncher.LanguageCode);
             _walletService.Coins.OnChangeValue += OnChangeCoins;
 
             if (!_isLoadPicture)

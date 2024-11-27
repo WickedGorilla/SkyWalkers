@@ -1,7 +1,7 @@
 using Game.Perks;
-using Infrastructure;
 using Infrastructure.Data.Game.Shop;
 using Infrastructure.Network;
+using Infrastructure.Telegram;
 using Player;
 using UI.Core;
 
@@ -16,14 +16,12 @@ namespace UI.Views
             PerksService perksService,
             ShopData data,
             WalletService walletService,
-            ViewService viewService,
-            OnGameFocusEvent onGameFocusEvent)
+            ViewService viewService, TelegramLauncher telegramLauncher)
             : base(viewBase, 
                 serverRequestSender, 
                 perksService, 
                 data, 
-                walletService, 
-                onGameFocusEvent)
+                walletService, telegramLauncher)
         {
             _viewService = viewService;
         }

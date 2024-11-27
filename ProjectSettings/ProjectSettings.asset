@@ -709,7 +709,7 @@ PlayerSettings:
     Stadia: DOTWEEN
     Standalone: DOTWEEN
     VisionOS: DOTWEEN
-    WebGL: DOTWEEN;TEST
+    WebGL: DOTWEEN
     Windows Store Apps: DOTWEEN
     XboxOne: DOTWEEN
     iPhone: DOTWEEN

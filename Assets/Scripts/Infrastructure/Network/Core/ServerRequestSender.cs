@@ -11,12 +11,21 @@ namespace Infrastructure.Network
 {
     public class ServerRequestSender : IServerRequestSender
     {
-        private const string BaseUrl = "https://app.skywalkersgame.com/";
-
+        private readonly string _baseUrl;
+        private readonly ResponsesHandler _responsesHandler = new();
+        
         private long _userId;
         private string _token;
-
-        private readonly ResponsesHandler _responsesHandler = new();
+        
+        public ServerRequestSender()
+        {
+            _baseUrl = 
+            #if DEV_BUILD
+            "https://similarly-mutual-gobbler.ngrok-free.app/";
+            #else
+                "https://app.skywalkersgame.com/";
+            #endif
+        }
         
         public void Initialize(long userId)
         {
@@ -71,7 +80,7 @@ namespace Infrastructure.Network
             Action<long, string> onError = null)
         {
             string jsonData = JsonConvert.SerializeObject(message);
-            string authUrl = $"{BaseUrl}{address}";
+            string authUrl = $"{_baseUrl}{address}";
 
             Debug.Log($"Send: {jsonData}");
 

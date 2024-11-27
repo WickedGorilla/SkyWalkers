@@ -17,7 +17,6 @@ namespace Infrastructure.BootSystem.Installers
             
             Container.Bind<LoadingCurtain>().FromMethod(() => Instantiate(_loadingCurtain)).AsSingle();
             Container.Bind<TelegramLauncher>().FromMethod(FindFirstObjectByType<TelegramLauncher>).AsSingle();
-            Container.Bind<OnGameFocusEvent>().FromMethod(FindFirstObjectByType<OnGameFocusEvent>).AsSingle();
         }
     }
 }

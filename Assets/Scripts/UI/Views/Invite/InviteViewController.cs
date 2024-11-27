@@ -32,6 +32,6 @@ namespace UI.Views
             => Application.OpenURL(_inviteSystem.InviteShareLink);
 
         private void OnClickCopyLink() 
-            => WebGLExtensions.CopyWebGLText(_inviteSystem.InviteText);
+            => WebGLExtensions.CopyText(_inviteSystem.InviteText);
     }
 }

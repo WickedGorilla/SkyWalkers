@@ -2771,6 +2771,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3060869370598444655, guid: c2e93e7cbc976284d827f845b1ada81e, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3060869370598444655, guid: c2e93e7cbc976284d827f845b1ada81e, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3060869370598444655, guid: c2e93e7cbc976284d827f845b1ada81e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 139.00098
+      objectReference: {fileID: 0}
+    - target: {fileID: 3060869370598444655, guid: c2e93e7cbc976284d827f845b1ada81e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -125
+      objectReference: {fileID: 0}
     - target: {fileID: 8137822524163027262, guid: c2e93e7cbc976284d827f845b1ada81e, type: 3}
       propertyPath: m_Name
       value: BuyItemMenu

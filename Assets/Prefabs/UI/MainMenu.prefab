@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: EN
+  m_text: en
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ca8f099dd5072443bda4e05703f4181, type: 2}
   m_sharedMaterial: {fileID: -6167540237833562052, guid: 3ca8f099dd5072443bda4e05703f4181, type: 2}
@@ -92,13 +92,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51.33
+  m_fontSize: 61.64
   m_fontSizeBase: 51.33
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontSizeMax: 61.64
+  m_fontStyle: 17
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -531,6 +531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _coinsText: {fileID: 4589282885717711470}
+  _languageCode: {fileID: 4095024950506321117}
   _nicknameText: {fileID: 8048619782185384352}
   _userPicture: {fileID: 5950420702794178584}
   _playButton: {fileID: 579005122579136127}

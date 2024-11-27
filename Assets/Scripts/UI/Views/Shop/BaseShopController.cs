@@ -9,6 +9,7 @@ using Infrastructure.Network;
 using Infrastructure.Network.Request;
 using Infrastructure.Network.Request.ValidationPayment;
 using Infrastructure.Network.Response;
+using Infrastructure.Telegram;
 using Player;
 using SkyExtensions;
 using UI.Core;
@@ -21,7 +22,7 @@ namespace UI.Views
         private readonly IServerRequestSender _serverRequestSender;
         private readonly PerksService _perksService;
         private readonly WalletService _walletService;
-        private readonly OnGameFocusEvent _onGameFocusEvent;
+        private readonly TelegramLauncher _telegramLauncher;
 
         private readonly Dictionary<PerkType, PerkData> _perksData;
         private readonly Dictionary<ItemType, ItemData> _itemData;
@@ -33,12 +34,12 @@ namespace UI.Views
             PerksService perksService,
             ShopData shopData,
             WalletService walletService,
-            OnGameFocusEvent onGameFocusEvent) : base(view)
+            TelegramLauncher telegramLauncher) : base(view)
         {
             _serverRequestSender = serverRequestSender;
             _perksService = perksService;
             _walletService = walletService;
-            _onGameFocusEvent = onGameFocusEvent;
+            _telegramLauncher = telegramLauncher;
 
             _itemData = shopData.CreateItemsDictionary();
             _perksData = shopData.CreatePerksDictionary();
@@ -121,9 +122,8 @@ namespace UI.Views
                 View.HideLoader();
                 return;
             }
-            
-            _onGameFocusEvent.AddOnFocusEvent(() => SendValidationPayment(data.OrderCode, openedView));
-            Application.OpenURL(data.PaymentUrl);
+
+            _telegramLauncher.OpenInvoiceLink(data.PaymentUrl, () => SendValidationPayment(data.OrderCode, openedView));
         }
 
         private async void OnClickBuyUpgrade(PerkEntity perkEntity, MonoBehaviour openedView)
@@ -149,10 +149,9 @@ namespace UI.Views
                 return;
             }
             
-            _onGameFocusEvent.AddOnFocusEvent(() => SendValidationPayment(data.OrderCode, openedView));
-            Application.OpenURL(data.PaymentUrl);
+            _telegramLauncher.OpenInvoiceLink(data.PaymentUrl, () => SendValidationPayment(data.OrderCode, openedView));
         }
-
+        
         private void OnClickShopButton()
             => View.ShowShopMenu();
 

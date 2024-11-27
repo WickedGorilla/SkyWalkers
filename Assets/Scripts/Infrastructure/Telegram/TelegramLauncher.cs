@@ -1,11 +1,13 @@
+using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Infrastructure.Telegram
 {
     public class TelegramLauncher : MonoBehaviour
     {
+        private event Action OnCloseInvoice;
+
         public TelegramData TgData { get; private set; }
 
         public bool IsInit => TgData is not null;
@@ -21,6 +23,9 @@ namespace Infrastructure.Telegram
         public string PhotoUrl => TgData.photo_url;
         public long AuthDate => TgData.auth_date;
         public string Hash => TgData.hash;
+
+        public string LanguageCode
+            => string.IsNullOrEmpty(TgData.language_code) ? "en" : TgData.language_code;
 
         public bool IsLaunchedFromReferralUrl { get; private set; }
         public long ReferralCode { get; private set; }
@@ -46,6 +51,9 @@ namespace Infrastructure.Telegram
 #endif
         }
 
+        [DllImport("__Internal")]
+        private static extern void OnUnityReady();
+
         // Call from Telegram .jsLib
         private void SetTelegramId(string jsonData)
         {
@@ -62,7 +70,22 @@ namespace Infrastructure.Telegram
             ReferralCode = long.TryParse(code, out long refCode) ? refCode : 0;
         }
 
+        public void OpenInvoiceLink(string url, Action action)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+         OnOpenInvoiceLink(url);
+            OnCloseInvoice = action;
+#endif
+        }
+
         [DllImport("__Internal")]
-        private static extern void OnUnityReady();
+        private static extern void OnOpenInvoiceLink(string url);
+
+        // Call from Telegram .jsLib
+        private void CloseInvoice()
+        {
+            OnCloseInvoice?.Invoke();
+            OnCloseInvoice = null;
+        }
     }
 }

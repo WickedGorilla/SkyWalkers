@@ -12,5 +12,7 @@ namespace Infrastructure.Telegram
         public string photo_url;
         public long auth_date;
         public string hash;
+        public string language_code;
+        public string InitData;
     }
 }

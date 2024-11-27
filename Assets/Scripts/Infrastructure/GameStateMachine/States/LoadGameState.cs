@@ -130,22 +130,18 @@ namespace Game.Infrastructure
 
         private LoginRequest GetLoginRequest()
         {
-#if UNITY_EDITOR
+/*#if UNITY_EDITOR
             return new LoginRequest(
                 "",
                 "lol", "", "wickedgorilla");
-#endif
+#endif*/
             var tgData = _telegramLauncher.TgData;
-            
+
             return new LoginRequest
             {
-                AuthDate = tgData.auth_date.ToString(),
-                FirstName = tgData.first_name,
-                Hash = tgData.hash,
-                LastName = tgData.last_name,
-                PhotoUrl = tgData.photo_url,
                 ReferralId = _telegramLauncher.ReferralCode,
                 UserId = tgData.id,
+                InitData = tgData.InitData,
                 UserName = tgData.username
             };
         }
@@ -155,7 +151,7 @@ namespace Game.Infrastructure
 
         private void ShowAutoTapClaimScreen(int claimCoins)
             => _viewService.ShowPermanent<AutoTapClaimView, AutoTapClaimViewController>().SetInfo(claimCoins);
-        
+
         private void OnErrorLogin(long errorCode, string data)
         {
             if (errorCode == 401)

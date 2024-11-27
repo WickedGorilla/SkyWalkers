@@ -10,13 +10,15 @@ namespace UI.Views
     public class MainMenuView : View
     {
         [SerializeField] private TMP_Text _coinsText;
+        [SerializeField] private TMP_Text _languageCode;
         [SerializeField] private TMP_Text _nicknameText;
         [SerializeField] private Image _userPicture;
 
-        [Header("Buttons")] [SerializeField] private Button _playButton;
+        [Header("Buttons")] 
+        [SerializeField] private Button _playButton;
 
-        [Header("Update coins count Animation params")] [SerializeField]
-        private float pulseFontSize = 60f;
+        [Header("Update coins count Animation params")] 
+        [SerializeField] private float pulseFontSize = 60f;
 
         [SerializeField] private float pulseDuration = 0.2f;
         [SerializeField] private float increaseDuration = 1.0f;
@@ -26,9 +28,10 @@ namespace UI.Views
 
         public Button PlayButton => _playButton;
 
-        public void Initialize(int coins, string nickname)
+        public void Initialize(int coins, string nickname, string languageCode)
         {
             _currentCoins = coins;
+            _languageCode.text = languageCode;
             SetCoinsCount(_currentCoins);
             _nicknameText.text = nickname;
         }

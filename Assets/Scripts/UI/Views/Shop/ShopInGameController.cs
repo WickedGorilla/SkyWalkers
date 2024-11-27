@@ -3,6 +3,7 @@ using Game.Validation;
 using Infrastructure;
 using Infrastructure.Data.Game.Shop;
 using Infrastructure.Network;
+using Infrastructure.Telegram;
 using Player;
 using UI.Core;
 using UI.Hud;
@@ -20,9 +21,14 @@ namespace UI.Views
             PerksService perksService, 
             ShopData shopData,
             WalletService walletService,
-            OnGameFocusEvent onGameFocusEvent, 
-            CoinValidationService coinValidationService) 
-            : base(view, serverRequestSender, perksService, shopData, walletService, onGameFocusEvent)
+            CoinValidationService coinValidationService,
+            TelegramLauncher telegramLauncher) 
+            : base(view, 
+                serverRequestSender,
+                perksService,
+                shopData, 
+                walletService, 
+                telegramLauncher)
         {
             _viewService = viewService;
             _coinValidationService = coinValidationService;
