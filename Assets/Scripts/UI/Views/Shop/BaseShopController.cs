@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Items;
 using Game.Perks;
-using Infrastructure;
 using Infrastructure.Data.Game.Shop;
 using Infrastructure.Network;
 using Infrastructure.Network.Request;

@@ -20,24 +20,7 @@ mergeInto(LibraryManager.library, {
             }
             document.body.removeChild(textArea);
         }
-    },
-
-    OpenUrlLinkWebGL: function (urlPtr) {
-        var url = UTF8ToString(urlPtr);
-
-        if (window.Telegram && window.Telegram.WebApp) {
-
-   window.Telegram.WebApp.openInvoice(url);
-
-    window.Telegram.WebApp.onEvent('invoiceClosed', function () {
-        console.log("Платеж завершен.");
-        if (window.unityInstance) {
-            window.unityInstance.SendMessage("WebGLEvent", "OnCurrentPageClose");
-        }
-    });
-
-
-
     }
-    }
+
+
 });

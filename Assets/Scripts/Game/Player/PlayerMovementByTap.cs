@@ -66,10 +66,10 @@ namespace Game.Player
         {
             if (_boostSystem.IsBoost)
                 return true;
-            
-            if (_walletService.Energy.Count <= 0)
-                return false;
 
+            if (_walletService.Energy.Count == 0)
+                return _boostSystem.UsePlayPass();
+            
             _walletService.Energy.Add(-1);
             return true;
         }

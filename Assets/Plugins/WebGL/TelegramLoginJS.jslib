@@ -47,7 +47,7 @@ InitData: initData
 
     window.Telegram.WebApp.onEvent('invoiceClosed', function () {
               if (window.unityInstance) {
-            window.unityInstance.SendMessage("WebGLEvent", "CloseInvoice");
+            window.unityInstance.SendMessage('TelegramLauncher', 'CloseInvoice');
         }
     });
     }
