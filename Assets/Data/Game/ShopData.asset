@@ -54,8 +54,8 @@ MonoBehaviour:
         _isDonat: 1
       - _tittle: play pass 10x
         _description: Best deal.
-        _price: 30
-        _amount: 50
+        _price: 50
+        _amount: 10
         _isDonat: 1
   _perks:
   - _key: 0
