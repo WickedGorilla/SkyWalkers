@@ -1,24 +1,18 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.BuildingSystem;
 using Game.Environment;
 using Game.Invite;
-using Game.Perks;
 using Game.Player;
 using Game.UpdateResponseServices;
 using Infrastructure.Network;
 using Infrastructure.Network.Request;
 using Infrastructure.Network.Request.Base.Player;
-using Infrastructure.Network.Request.ValidationPayment;
-using Infrastructure.Network.RequestHandler;
 using Infrastructure.SceneManagement;
 using Infrastructure.Telegram;
 using Newtonsoft.Json;
-using Player;
 using UI.Core;
 using UnityEngine;
-using static System.String;
 using Object = UnityEngine.Object;
 
 namespace Game.Infrastructure
@@ -96,7 +90,7 @@ namespace Game.Infrastructure
 
             _gameStateMachine.Enter<MainMenuState>();
 
-            if (data.BalanceUpdate.Coins <= 100)
+            if (data.BalanceUpdate.Coins == 0)
                 ShowStartsScreen();
 
             if (data.AutoTapCoins > 0)
@@ -117,7 +111,7 @@ namespace Game.Infrastructure
 
         private void InitializeScene()
         {
-            var environment = Object.FindObjectOfType<EnvironmentObjects>();
+            var environment = Object.FindAnyObjectByType<EnvironmentObjects>();
             _environmentHolder.Hold(environment);
             _playerHolder.Hold(environment.Player);
 
@@ -133,7 +127,7 @@ namespace Game.Infrastructure
 /*#if UNITY_EDITOR
             return new LoginRequest(
                 "",
-                "lol", "", "wickedgorilla");
+                "lol", "", "kerk");
 #endif*/
             var tgData = _telegramLauncher.TgData;
 
@@ -150,7 +144,8 @@ namespace Game.Infrastructure
             => _viewService.ShowPermanent<StartScreenView, StartScreenViewController>();
 
         private void ShowAutoTapClaimScreen(int claimCoins)
-            => _viewService.ShowPermanent<AutoTapClaimView, AutoTapClaimViewController>().SetInfo(claimCoins);
+            => _viewService.AddPopupToQueueAndShow<AutoTapClaimView, AutoTapClaimViewController>(controller =>
+                controller.SetInfo(claimCoins));
 
         private void OnErrorLogin(long errorCode, string data)
         {
@@ -160,5 +155,6 @@ namespace Game.Infrastructure
                 _loadingCurtain.ShowLog(result.Message);
             }
         }
+        
     }
 }

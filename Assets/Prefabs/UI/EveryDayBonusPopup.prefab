@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 6753162022654486862}
   - component: {fileID: 3943467567018404606}
   - component: {fileID: 5056007652235144569}
+  - component: {fileID: 5462789405538622452}
   - component: {fileID: 2011847741113613637}
   m_Layer: 5
   m_Name: EveryDayBonusPopup
@@ -102,7 +103,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 318522420799844028}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -153,6 +154,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5462789405538622452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318522420799844028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97bf76530a1f4dc7971e958cd586c4fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _claimButton: {fileID: 8008293653419349479}
 --- !u!114 &2011847741113613637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,7 +180,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _transforms:
-  - {fileID: 0}
+  - {fileID: 2330139945693208664}
+  - {fileID: 9041394489732528637}
   _duration: 3
 --- !u!1 &1218462773334927698
 GameObject:
