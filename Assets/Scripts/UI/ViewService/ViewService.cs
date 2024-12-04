@@ -11,7 +11,7 @@ namespace UI.Core
         private readonly LinkedList<IViewController> _permanentViews;
         private readonly Dictionary<Type, IViewController> _createdViews;
         private readonly Queue<Action> _popupQueue;
-        
+
         private IViewController _currentView;
         private UIRoot _root;
 
@@ -105,7 +105,16 @@ namespace UI.Core
             }
 
             controller.Show();
-            return controller as TController;
+            
+            var concreteController = controller as TController;
+            concreteController.AddOnCloseEvent(OnClosePopup);
+            return concreteController;
+        }
+
+        private void OnClosePopup()
+        {
+            if (_popupQueue.Count > 0)
+                _popupQueue.Dequeue().Invoke();
         }
     }
 }

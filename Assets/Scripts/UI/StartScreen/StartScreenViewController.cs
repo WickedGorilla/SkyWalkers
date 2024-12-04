@@ -2,17 +2,15 @@ using UI.Core;
 
 public class StartScreenViewController : ViewController<StartScreenView>
 {
-    private readonly ViewService _viewService;
 
-    public StartScreenViewController(StartScreenView view, ViewService viewService) : base(view) 
-        => _viewService = viewService;
+    public StartScreenViewController(StartScreenView view) : base(view)
+    {
+        
+    }
 
     protected override void OnShow() 
-        => View.OnEnd += OnEnd;
+        => View.OnEnd += Hide;
 
     protected override void OnHide() 
-        => View.OnEnd -= OnEnd;
-
-    private void OnEnd() 
-        => _viewService.HidePermanent<StartScreenViewController>();
+        => View.OnEnd -= Hide;
 }

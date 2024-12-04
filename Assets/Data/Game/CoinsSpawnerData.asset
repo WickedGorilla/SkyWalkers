@@ -15,8 +15,8 @@ MonoBehaviour:
   _coinPrefab: {fileID: 5762726001577793232, guid: 86b90d4e4321abb4c9f36a11ed91a608, type: 3}
   _textPrefab: {fileID: 6834158898675241195, guid: df7fb696d67f8534497aab6ecaa954ce, type: 3}
   _moveDistance: 250
-  _coinAnimationDuration: 3
-  _textAnimationDuration: 1.5
+  _coinAnimationDuration: 1.5
+  _textAnimationDuration: 1
   _numberOfCoins: 1
   _textOffset: {x: 100, y: 20}
   _minRadius: 0

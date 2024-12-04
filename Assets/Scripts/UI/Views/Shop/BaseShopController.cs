@@ -81,13 +81,13 @@ namespace UI.Views
 
             if (perk.CurrentLevel > 0)
             {
-                View.UpgradesPerkMenu.Open(_perksData[perkType], _walletService.Coins, perk, 
-                    () => OnClickBuyUpgrade(perk,  View.UpgradesPerkMenu));
+                View.UpgradesPerkMenu.Open(_perksData[perkType], _walletService.Coins, perk,
+                    () => OnClickBuyUpgrade(perk, View.UpgradesPerkMenu));
             }
             else
             {
-                View.BuyItemMenu.Open(_perksData[perkType], _walletService.Coins, perk, 
-                    () => OnClickBuyUpgrade(perk,  View.UpgradesPerkMenu));
+                View.BuyItemMenu.Open(_perksData[perkType], _walletService.Coins, perk,
+                    () => OnClickBuyUpgrade(perk, View.UpgradesPerkMenu));
             }
         }
 
@@ -107,7 +107,7 @@ namespace UI.Views
             var request = new PayItemRequest((int)itemEntity.Type, itemEntity.Amount);
             var response = await _serverRequestSender.SendToServer<PayItemRequest, PaymentItemResult>(request,
                 ServerAddress.PaymentItem);
-            
+
             if (!response.Success)
             {
                 View.HideLoader();
@@ -115,7 +115,7 @@ namespace UI.Views
             }
 
             var data = response.Data;
-            
+
             if (string.IsNullOrEmpty(data.PaymentUrl))
             {
                 View.HideLoader();
@@ -130,7 +130,7 @@ namespace UI.Views
             View.ShowLoader();
 
             var request = new PayUpgradeRequest((int)perkEntity.PerkType, perkEntity.NextLevel);
-            var response = await _serverRequestSender.SendToServerAndHandle<PayUpgradeRequest, 
+            var response = await _serverRequestSender.SendToServerAndHandle<PayUpgradeRequest,
                 PaymentUpgradePerkResult>(request, ServerAddress.PaymentPerk);
 
             if (!response.Success)
@@ -140,32 +140,34 @@ namespace UI.Views
             }
 
             var data = response.Data;
-            
+
             if (string.IsNullOrEmpty(data.PaymentUrl))
             {
                 View.HideLoader();
                 openedView.gameObject.SetActive(false);
                 return;
             }
-            
-            _telegramLauncher.OpenInvoiceLink(data.PaymentUrl, () => SendValidationPayment(data.OrderCode, openedView));
+
+            _telegramLauncher.OpenInvoiceLink(data.PaymentUrl, () => SendValidationPayment(data.OrderCode));
         }
-        
+
         private void OnClickShopButton()
             => View.ShowShopMenu();
 
         private void OnClickBoostersButton()
             => View.ShowBoosters();
 
-        private async void SendValidationPayment(string orderCode, MonoBehaviour openedView)
+        private async void SendValidationPayment(string orderCode, MonoBehaviour openedView = null)
         {
             await UniTask.WaitForSeconds(1.7f);
-            
+
             await _serverRequestSender.SendToServerAndHandle<ValidationPaymentRequest, ValidationPaymentResponse>(
                 new ValidationPaymentRequest(orderCode),
                 ServerAddress.PaymentValidation);
+
+            if (openedView != null)
+                openedView.gameObject.SetActive(false);
             
-            openedView.gameObject.SetActive(false);
             View.HideLoader();
         }
     }

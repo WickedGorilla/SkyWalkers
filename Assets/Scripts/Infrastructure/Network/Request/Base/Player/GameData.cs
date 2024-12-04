@@ -11,7 +11,8 @@ namespace Infrastructure.Network.Request.Base.Player
         public PerksResponse Perks;
         public int AutoTapCoins;
         public ReferralInfo ReferralInfo;
-
+        public bool ClaimBonus;
+        
         public GameData(int coins, int energy, int playPass, int boosts)
         {
             BalanceUpdate = new BalanceUpdate

@@ -12,6 +12,8 @@ using Infrastructure.SceneManagement;
 using Infrastructure.Telegram;
 using Newtonsoft.Json;
 using UI.Core;
+using UI.Views;
+using UI.Views.EveryDayPopup;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -88,15 +90,31 @@ namespace Game.Infrastructure
             InitializePlayer();
             _inviteSystem.Initialize(data.ReferralInfo);
 
+            ShowPopups(data);
             _gameStateMachine.Enter<MainMenuState>();
-
-            if (data.BalanceUpdate.Coins == 0)
-                ShowStartsScreen();
-
-            if (data.AutoTapCoins > 0)
-                ShowAutoTapClaimScreen(data.AutoTapCoins);
         }
 
+        private void ShowPopups(GameData data)
+        {
+            if (data.BalanceUpdate.Coins == 0) 
+                _viewService.AddPopupToQueueAndShow<StartScreenView, StartScreenViewController>();
+
+            if (data.AutoTapCoins > 0)
+            {
+                _viewService.AddPopupToQueueAndShow<AutoTapClaimView, AutoTapClaimViewController>(controller =>
+                    controller.SetInfo(data.AutoTapCoins));
+            }
+               
+            if (data.ClaimBonus) 
+                _viewService.AddPopupToQueueAndShow<EveryDayBonusView, EveryDayBonusViewController>();
+
+            if (data.ReferralInfo is { CountReferrals: > 0, NewAddedValue: > 0 })
+            {
+                _viewService.AddPopupToQueueAndShow<ReferralsUpdatePopup, ReferralsUpdatePopupController>(controller 
+                    => controller.SetInfo(data.ReferralInfo));
+            }
+        }
+        
         private void RegisterServerHandlers()
         {
             foreach (var handler in _responseHandlers)
@@ -124,11 +142,13 @@ namespace Game.Infrastructure
 
         private LoginRequest GetLoginRequest()
         {
-/*#if UNITY_EDITOR
-            return new LoginRequest(
-                "",
-                "lol", "", "kerk");
-#endif*/
+#if UNITY_EDITOR
+            return new LoginRequest
+            {
+                UserId = 101,
+                UserName = "DevDev"
+            };
+#endif
             var tgData = _telegramLauncher.TgData;
 
             return new LoginRequest
@@ -140,13 +160,6 @@ namespace Game.Infrastructure
             };
         }
 
-        private void ShowStartsScreen()
-            => _viewService.ShowPermanent<StartScreenView, StartScreenViewController>();
-
-        private void ShowAutoTapClaimScreen(int claimCoins)
-            => _viewService.AddPopupToQueueAndShow<AutoTapClaimView, AutoTapClaimViewController>(controller =>
-                controller.SetInfo(claimCoins));
-
         private void OnErrorLogin(long errorCode, string data)
         {
             if (errorCode == 401)
@@ -155,6 +168,5 @@ namespace Game.Infrastructure
                 _loadingCurtain.ShowLog(result.Message);
             }
         }
-        
     }
 }
