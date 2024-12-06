@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Cysharp.Threading.Tasks;
 using Game.Player;
 using Infrastructure.Network;
 using Infrastructure.Network.Response.Player;
@@ -46,7 +45,7 @@ namespace Game.Validation
             _boostSystem.OnUsePlayPass += OnPlayPassActivated;
 
             _cancellationTokenSource = new CancellationTokenSource();
-            SendTask(_cancellationTokenSource.Token);
+            SendTask(_cancellationTokenSource);
         }
 
         public void Stop()
@@ -60,14 +59,14 @@ namespace Game.Validation
             SendValidationRequest();
         }
 
-        private async void SendTask(CancellationToken token)
+        private async void SendTask(CancellationTokenSource token)
         {
             _nextTimeUpdate = Time.time + TimeIntervalUpdate;
             _lastUpdateBalance = _walletService.Coins.Count;
             
             while (true)
             {
-                await UniTask.NextFrame(token);
+                await Awaitable.NextFrameAsync(token.Token);
 
                 if (token.IsCancellationRequested)
                     break;

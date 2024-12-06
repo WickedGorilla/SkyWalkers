@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Game.BuildingSystem;
 using Game.Environment;
 using Game.Invite;
@@ -11,6 +10,7 @@ using Infrastructure.Network.Request.Base.Player;
 using Infrastructure.SceneManagement;
 using Infrastructure.Telegram;
 using Newtonsoft.Json;
+using SkyExtensions.Awaitable;
 using UI.Core;
 using UI.Views;
 using UI.Views.EveryDayPopup;
@@ -27,7 +27,7 @@ namespace Game.Infrastructure
         private readonly IGameStateMachine _gameStateMachine;
         private readonly ViewService _viewService;
         private readonly EnvironmentHolder _environmentHolder;
-        private readonly PlayerHolder _playerHolder;
+        private readonly PlayerHolder _playerHolder; 
         private readonly PlayerMovementByTap _playerMovementByTap;
         private readonly BuildingMovementSystem _buildingMovementSystem;
         private readonly TelegramLauncher _telegramLauncher;
@@ -124,8 +124,8 @@ namespace Game.Infrastructure
         public void Exit()
             => _loadingCurtain.ShowStartButton();
 
-        private async UniTask WaitLoadTelegramInfo()
-            => await UniTask.WaitUntil(() => _telegramLauncher.IsInit);
+        private async Awaitable WaitLoadTelegramInfo()
+            => await AwaitableExtensions.WaitUntilAsync(() => _telegramLauncher.IsInit);
 
         private void InitializeScene()
         {
@@ -142,13 +142,6 @@ namespace Game.Infrastructure
 
         private LoginRequest GetLoginRequest()
         {
-#if UNITY_EDITOR
-            return new LoginRequest
-            {
-                UserId = 101,
-                UserName = "DevDev"
-            };
-#endif
             var tgData = _telegramLauncher.TgData;
 
             return new LoginRequest

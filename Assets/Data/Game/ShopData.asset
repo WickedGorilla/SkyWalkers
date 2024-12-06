@@ -22,17 +22,17 @@ MonoBehaviour:
       _shopVariables:
       - _tittle: 3 boosts
         _description: 15 sec multiplier
-        _price: 25
+        _price: 35
         _amount: 3
         _isDonat: 1
       - _tittle: 5 boosts
         _description: Great price.
-        _price: 35
+        _price: 55
         _amount: 5
         _isDonat: 1
       - _tittle: 10 boosts
         _description: Best deal.
-        _price: 50
+        _price: 100
         _amount: 10
         _isDonat: 1
   - _key: 1
@@ -54,7 +54,7 @@ MonoBehaviour:
         _isDonat: 1
       - _tittle: play pass 10x
         _description: Best deal.
-        _price: 50
+        _price: 60
         _amount: 10
         _isDonat: 1
   _perks:

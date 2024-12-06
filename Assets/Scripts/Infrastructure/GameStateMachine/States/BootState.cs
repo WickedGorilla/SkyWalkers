@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Game.Infrastructure
 {
@@ -18,7 +18,7 @@ namespace Game.Infrastructure
         {
             _loadingCurtain.Show();
             
-            await UniTask.DelayFrame(1);
+            await Awaitable.NextFrameAsync();
             _gameStateMachine.Enter<BindGameState>();
         }
 

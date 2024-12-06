@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Game.Items;
 using Game.Perks;
 using Infrastructure.Data.Game.Shop;
@@ -121,8 +120,11 @@ namespace UI.Views
                 View.HideLoader();
                 return;
             }
-
-            _telegramLauncher.OpenInvoiceLink(data.PaymentUrl, () => SendValidationPayment(data.OrderCode, openedView));
+            
+            _telegramLauncher.OpenInvoiceLink(data.PaymentUrl, Action);
+            
+            async void Action()
+                => await SendValidationPayment(data.OrderCode, openedView);
         }
 
         private async void OnClickBuyUpgrade(PerkEntity perkEntity, MonoBehaviour openedView)
@@ -145,21 +147,29 @@ namespace UI.Views
             {
                 View.HideLoader();
                 openedView.gameObject.SetActive(false);
+                OpenUpgradeCard(perkEntity.PerkType);
                 return;
             }
 
-            _telegramLauncher.OpenInvoiceLink(data.PaymentUrl, () => SendValidationPayment(data.OrderCode));
+            _telegramLauncher.OpenInvoiceLink(data.PaymentUrl, 
+                () => SendValidationUpgrade(data.OrderCode, perkEntity.PerkType, openedView));
         }
 
+        private async void SendValidationUpgrade(string orderCode, PerkType perkType, MonoBehaviour openedView)
+        {
+            await SendValidationPayment(orderCode, openedView);
+            OpenUpgradeCard(perkType);
+        }
+        
         private void OnClickShopButton()
             => View.ShowShopMenu();
 
         private void OnClickBoostersButton()
             => View.ShowBoosters();
 
-        private async void SendValidationPayment(string orderCode, MonoBehaviour openedView = null)
+        private async Awaitable SendValidationPayment(string orderCode, MonoBehaviour openedView = null)
         {
-            await UniTask.WaitForSeconds(1.7f);
+            await Awaitable.WaitForSecondsAsync(1.7f);
 
             await _serverRequestSender.SendToServerAndHandle<ValidationPaymentRequest, ValidationPaymentResponse>(
                 new ValidationPaymentRequest(orderCode),

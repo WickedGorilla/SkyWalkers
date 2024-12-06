@@ -1,7 +1,7 @@
 using System;
-using Cysharp.Threading.Tasks;
 using Infrastructure.Network.Request.Base;
 using Infrastructure.Network.RequestHandler;
+using UnityEngine;
 
 namespace Infrastructure.Network
 {
@@ -13,11 +13,11 @@ namespace Infrastructure.Network
         public void AddHandler<T>(params IRequestHandler<T>[] handlers);
         public void RemoveHandler<T>(params IRequestHandler<T>[] handlers);
 
-        UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
+        Awaitable<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
             string address,
             Action<long, string> onError = null) where TRequest : ServerRequest;
 
-        UniTask<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>(TRequest message,
+        Awaitable<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>(TRequest message,
             string address,
             Action<long, string> onError = null) where TRequest : ServerRequest;
 
@@ -26,7 +26,7 @@ namespace Infrastructure.Network
             Action<ServerResponse<TResponse>> onComplete, Action<long, string> onError = null)
             where TRequest : ServerRequest;
 
-        UniTask<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(TRequest message,
+        Awaitable<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(TRequest message,
             string address, Action<long, string> onError = null);
     }
 }

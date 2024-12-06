@@ -1,9 +1,9 @@
 using System;
 using System.Text;
-using Cysharp.Threading.Tasks;
 using Infrastructure.Network.Request.Base;
 using Infrastructure.Network.RequestHandler;
 using Newtonsoft.Json;
+using SkyExtensions.Awaitable;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,20 +13,22 @@ namespace Infrastructure.Network
     {
         private readonly string _baseUrl;
         private readonly ResponsesHandler _responsesHandler = new();
-        
+
         private long _userId;
         private string _token;
-        
+
         public ServerRequestSender()
         {
-            _baseUrl = 
-            #if DEV_BUILD
-            "https://similarly-mutual-gobbler.ngrok-free.app/";
-            #else
+            _baseUrl =
+#if DEV_BUILD
+                "https://similarly-mutual-gobbler.ngrok-free.app/";
+#elif DEV_BUILD_LOCAL
+   "http://localhost:5000/";   
+#else
                 "https://app.skywalkersgame.com/";
-            #endif
+#endif
         }
-        
+
         public void Initialize(long userId)
         {
             _userId = userId;
@@ -43,7 +45,7 @@ namespace Infrastructure.Network
         public void RemoveHandler<T>(params IRequestHandler<T>[] handlers)
             => _responsesHandler.RemoveHandlers(handlers);
 
-        public async UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
+        public async Awaitable<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
             string address,
             Action<long, string> onError = null) where TRequest : ServerRequest
         {
@@ -53,7 +55,7 @@ namespace Infrastructure.Network
             return await SendToServerBase<TRequest, TResponse>(message, address, onError);
         }
 
-        public async UniTask<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>
+        public async Awaitable<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>
             (TRequest message, string address, Action<long, string> onError = null) where TRequest : ServerRequest
         {
             var result = await SendToServer<TRequest, TResponse>(message, address, onError);
@@ -68,13 +70,14 @@ namespace Infrastructure.Network
         }
 
         public async void SendToServer<TRequest, TResponse>(TRequest message, string address,
-            Action<ServerResponse<TResponse>> onComplete, Action<long, string> onError = null) where TRequest : ServerRequest
+            Action<ServerResponse<TResponse>> onComplete, Action<long, string> onError = null)
+            where TRequest : ServerRequest
         {
             var response = await SendToServer<TRequest, TResponse>(message, address, onError);
             onComplete(response);
         }
 
-        public async UniTask<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(
+        public async Awaitable<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(
             TRequest message,
             string address,
             Action<long, string> onError = null)
@@ -92,7 +95,7 @@ namespace Infrastructure.Network
             request.downloadHandler = new DownloadHandlerBuffer();
 
             request.SendWebRequest();
-            await UniTask.WaitUntil(() => request.result != UnityWebRequest.Result.InProgress);
+            await AwaitableExtensions.WaitUntilAsync(() => request.result != UnityWebRequest.Result.InProgress);
 
             var response = new ServerResponse<TResponse>();
 

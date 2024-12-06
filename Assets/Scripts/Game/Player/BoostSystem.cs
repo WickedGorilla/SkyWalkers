@@ -1,8 +1,8 @@
 using System;
-using Cysharp.Threading.Tasks;
 using Game.Environment;
 using Game.Wallet;
 using Player;
+using UnityEngine;
 
 namespace Game.Player
 {
@@ -63,7 +63,7 @@ namespace Game.Player
             for (int i = BoostingTime; i > 0; i--)
             {
                 onTickSecond(i);
-                await UniTask.WaitForSeconds(1f);
+                await Awaitable.WaitForSecondsAsync(1f);
             }
             
             onTickSecond(0);
