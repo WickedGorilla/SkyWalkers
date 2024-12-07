@@ -71,7 +71,7 @@ namespace Game.Infrastructure
             RegisterServerHandlers();
 
             _serverRequestSender.Initialize(_telegramLauncher.UserId);
-
+            
             ServerResponse<GameData> response =
                 await _serverRequestSender.SendToServerAndHandle<LoginRequest, GameData>(
                     GetLoginRequest(),

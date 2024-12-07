@@ -13,10 +13,10 @@ namespace UI.Views
         public void SetInfo(ReferralInfo dataReferralInfo)
             => View.SetInfo(dataReferralInfo.CountReferrals, dataReferralInfo.NewAddedValue);
         
-        protected override void OnHide() 
+        protected override void OnShow() 
             => View.ClaimButton.AddClickAction(OnClickClaim);
 
-        protected override void OnShow()
+        protected override void OnHide()
             => View.ClaimButton.RemoveClickAction(OnClickClaim);
 
         private void OnClickClaim() 

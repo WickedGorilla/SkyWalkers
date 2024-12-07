@@ -41,6 +41,12 @@ namespace Game.Player
 
         public bool UseBoost(Action<int> onTickSecond, Action onComplete)
         {
+            if (_walletService.Energy.Count == 0)
+            {
+                if (!UsePlayPass())
+                    return false;
+            }
+            
             if (!_walletService.Boosts.Subtract(1))
                 return false;
             

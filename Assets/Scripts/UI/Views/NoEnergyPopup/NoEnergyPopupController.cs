@@ -27,7 +27,7 @@ namespace UI.Views
         private void OnClickShop()
         {
             Hide();
-            _viewService.ShowPermanent<ShopInGameView, ShopInGameController>();
+            _viewService.Show<ShopInGameView, ShopInGameController>();
         }
     }
 }

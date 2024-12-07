@@ -83,7 +83,7 @@ namespace Game.Validation
         {
             var tapedCoins = coins - _lastUpdateBalance;
             _lastUpdateBalance = coins;
-            
+             
             if (!_boostSystem.IsBoost)
             {
                 AddToStack(new CoinPlayerActionData(tapedCoins, _walletService.Energy.Count));

@@ -60,7 +60,7 @@ namespace Game.Player
             int calculateCoins = _coinsCalculatorService.CalculateCoinsByTap();
             var energy = ConvertCoinsToAvialableEnergy(calculateCoins);
             
-            if (energy == 0 && !_boostSystem.IsBoost)
+            if (energy == 0)
                 return;
 
             _clickCoinSpawner.SpawnCoinEffect(energy, tapPosition);
@@ -71,10 +71,13 @@ namespace Game.Player
 
         private int ConvertCoinsToAvialableEnergy(int coins)
         {
+            if (_boostSystem.IsBoost)
+                return coins;
+            
             if (_walletService.Energy.Count == 0)
             {
                 if (!_boostSystem.UsePlayPass())
-                    _viewService.Show<NoEnergyPopup, NoEnergyPopupController>();
+                    _viewService.AddPopupToQueueAndShow<NoEnergyPopup, NoEnergyPopupController>();
 
                 return 0;
             }

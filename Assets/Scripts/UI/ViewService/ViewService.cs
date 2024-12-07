@@ -57,7 +57,7 @@ namespace UI.Core
 
             if (!_createdViews.TryGetValue(type, out IViewController controller))
             {
-                controller = _viewFabric.Create<TView, TController>(_root.Layer2);
+                controller = _viewFabric.Create<TView, TController>(_root.Layer2Permanent);
                 _createdViews.Add(type, controller);
             }
 
@@ -85,11 +85,15 @@ namespace UI.Core
         {
             if (_popupQueue.Count == 0)
             {
-                onShowAction?.Invoke(ShowPopup<TView, TController>());
+                var popup = ShowPopup<TView, TController>();
+                onShowAction?.Invoke(popup);
                 return;
             }
 
-            Action action = onShowAction == null ? null : () => onShowAction(ShowPopup<TView, TController>());
+            Action action = onShowAction == null 
+                ? () => ShowPopup<TView, TController>() 
+                : () => onShowAction(ShowPopup<TView, TController>());
+            
             _popupQueue.Enqueue(action);
         }
 
@@ -100,7 +104,7 @@ namespace UI.Core
 
             if (!_createdViews.TryGetValue(type, out IViewController controller))
             {
-                controller = _viewFabric.Create<TView, TController>(_root.Layer2);
+                controller = _viewFabric.Create<TView, TController>(_root.Layer3Popup);
                 _createdViews.Add(type, controller);
             }
 

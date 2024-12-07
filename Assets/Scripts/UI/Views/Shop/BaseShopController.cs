@@ -86,7 +86,7 @@ namespace UI.Views
             else
             {
                 View.BuyItemMenu.Open(_perksData[perkType], _walletService.Coins, perk,
-                    () => OnClickBuyUpgrade(perk, View.UpgradesPerkMenu));
+                    () => OnClickBuyUpgrade(perk, View.BuyItemMenu));
             }
         }
 
