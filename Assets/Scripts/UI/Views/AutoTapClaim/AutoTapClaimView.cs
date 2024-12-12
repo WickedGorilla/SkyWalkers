@@ -1,4 +1,3 @@
-using DG.Tweening;
 using TMPro;
 using UI.Core;
 using UI.Views;
@@ -12,19 +11,8 @@ public class AutoTapClaimView : View
     [SerializeField] private TMP_Text _coinsClaimText;
     [SerializeField] private string _firstDescription;
     [SerializeField] private string _secondDescription;
-    [SerializeField] private RectTransform _lightingImage;
     
     public Button ClaimButton => _claimButton;
-
-    private void OnEnable()
-    {
-        _lightingImage.DORotate(new Vector3(0, 0, 360f), 1f, RotateMode.FastBeyond360)
-            .SetEase(Ease.Linear)
-            .SetLoops(-1, LoopType.Restart);
-    }
-
-    private void OnDisable() 
-        => _lightingImage.DOKill();
     
     public void FillWithParameter(int countHours, int coinsClaim)
     {

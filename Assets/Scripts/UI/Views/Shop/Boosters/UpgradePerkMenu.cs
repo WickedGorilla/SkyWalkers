@@ -55,7 +55,7 @@ namespace UI.Views.Shop.Boosters
             
             _iconImage.sprite = data.Icon;
             _iconText.text = data.GetIconText(perk.CurrentValue);
-            _tittleText.text = $"{perk.NextLevel} {LevelText} {data.Tittle}";
+            _tittleText.text = $"{data.Tittle} {perk.CurrentLevel} • LVL";
             _descriptionText.text = data.Description;
             _upgradeDescriptionText.text = $"{data.UpgradeDescriptionText} {perk.NextValue.ToString().ApplyPurpleColor()} {data.UpgradeDescriptionTextAfterValue}";
             _levelText.text =

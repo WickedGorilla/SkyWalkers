@@ -55,7 +55,7 @@ namespace Game.UpdateResponseServices
 
         public void Handle(PaymentUpgradePerkResult response)
         {
-            _walletService.UpdateValues(response.BalanceUpdate);
+            _walletService.UpdateValues(response.BalanceUpdate, response.PerkInfo);
             _perksService.HandlePerk(response.PerkInfo);
         }
 

@@ -1,4 +1,3 @@
-using System.Globalization;
 using DG.Tweening;
 using TMPro;
 using UI.Core;
@@ -36,18 +35,14 @@ namespace UI.Views
             _nicknameText.text = nickname;
         }
 
-        public override void OnShow()
-        {
-            _originalFontSize = _coinsText.fontSizeMax;
-        }
+        public override void OnShow() 
+            => _originalFontSize = _coinsText.fontSizeMax;
 
         public override void OnHide()
             => ResetAnimations();
 
         public void UpdateCoins(int newValue)
         {
-            var added = newValue - _currentCoins;
-
             DOTween.To(() => _currentCoins, x =>
                 {
                     _currentCoins = x;

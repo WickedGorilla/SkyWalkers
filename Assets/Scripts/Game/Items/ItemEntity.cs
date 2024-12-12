@@ -5,16 +5,15 @@ namespace Game.Items
     public struct ItemEntity
     {
         public ItemType Type { get; }
-        public int Price { get; }
-        public int Amount { get; }
-        public bool IsDonat { get; }
+        public ItemData.ShopVariable ShopVariable { get; }
+        public int Price => ShopVariable.Price;
+        public int Amount => ShopVariable.Amount;
+        public bool IsDonat => ShopVariable.IsDonat;
         
         public ItemEntity(ItemType type, ItemData.ShopVariable shopVariable)
         {
             Type = type;
-            Price = shopVariable.Price;
-            Amount = shopVariable.Amount;
-            IsDonat = shopVariable.IsDonat;
+            ShopVariable = shopVariable;
         }
     }
 }

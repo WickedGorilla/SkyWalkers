@@ -24,7 +24,6 @@ namespace UI.Views
 
         private readonly Dictionary<PerkType, PerkData> _perksData;
         private readonly Dictionary<ItemType, ItemData> _itemData;
-
         private readonly LinkedList<IDisposable> _disposables = new();
 
         protected BaseShopController(TShopView view,

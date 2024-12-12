@@ -67,14 +67,19 @@ namespace UI.Hud
 
         private void OnClickEnergy()
         {
-            if (!_boostSystem.UsePlayPass())
+            if (_boostSystem.UsePlayPass()) 
                 return;
+            
+            _viewService.AddPopupToQueueAndShow<NoEnergyPopup, NoEnergyPopupController>();
         }
 
         private void OnClickBoost()
         {
             if (!_boostSystem.UseBoost(View.UpdateTimerText, OnComplete))
+            {
+                _viewService.AddPopupToQueueAndShow<NoEnergyPopup, NoEnergyPopupController>();
                 return;
+            }
             
             View.EnableBoost(true);
             View.SetBoostCount(_walletService.Boosts);

@@ -30,5 +30,14 @@ namespace Player
             var maxEnergy = energyPerk?.CurrentValue ?? 0;
             Energy = new IntRangeValue(update.Energy, maxEnergy);
         }
+        
+        public void UpdateValues(BalanceUpdate update, PerkInfo perkInfo)
+        {
+            Coins = new IntValue(update.Coins);
+            PlayPass = new IntValue(update.PlayPass);
+            Boosts = new IntValue(update.Boosts);
+            var maxEnergy = perkInfo.Id == (int)PerkType.EnergyLimit ? perkInfo.CurrentValue : Energy.Max;
+            Energy = new IntRangeValue(update.Energy, maxEnergy);
+        }
     }
 }

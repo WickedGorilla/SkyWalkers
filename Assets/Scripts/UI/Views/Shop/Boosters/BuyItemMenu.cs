@@ -28,8 +28,8 @@ namespace UI.Views.Shop.Boosters
         {
             gameObject.SetActive(true);
             _iconImage.sprite = itemData.Icon;
-            _titleText.text = itemData.Tittle;
-            _descriptionText.text = itemData.Description;
+            _titleText.text = item.ShopVariable.Tittle;
+            _descriptionText.text = item.ShopVariable.Description;
 
             SetPrice(item.Price, coins, item.IsDonat);
             _buyButton.onClick.AddListener(buyAction);

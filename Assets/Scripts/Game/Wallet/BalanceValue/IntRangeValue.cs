@@ -43,6 +43,9 @@ namespace Game.Wallet
             return Count;
         }
         
+        public int Subtract(int value) 
+            => Add(-value);
+
         public static implicit operator RangeValue(IntRangeValue addableInt) => addableInt._value;
     }
 }
