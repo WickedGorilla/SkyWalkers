@@ -1,7 +1,10 @@
 fileFormatVersion: 2
-guid: 526a54d52be5c9a4fa094be4db2a6e19
+guid: 8251b9612cf536a44a972263cdb53660
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 4821499735090501366
+    second: Frame 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -69,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 512
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -106,128 +109,27 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Windows_0
+      name: Frame 1_0
       rect:
         serializedVersion: 2
-        x: 126
-        y: 290
-        width: 340
-        height: 1468
+        x: 0
+        y: 0
+        width: 390
+        height: 724
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 856e18aeb4115564b8e153ffbd39d732
-      internalID: -1617025481
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Windows_1
-      rect:
-        serializedVersion: 2
-        x: 490
-        y: 290
-        width: 340
-        height: 1468
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b761eaa733b71504dbea3dd1142c3968
-      internalID: -266409492
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Windows_2
-      rect:
-        serializedVersion: 2
-        x: 854
-        y: 290
-        width: 340
-        height: 1468
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: eeb38a15ee9fd8842a26fcf47b730b05
-      internalID: -899468475
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Windows_3
-      rect:
-        serializedVersion: 2
-        x: 1218
-        y: 290
-        width: 340
-        height: 1468
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3e791fc59d24e4c48abddb7def19a65c
-      internalID: 230022888
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Windows_4
-      rect:
-        serializedVersion: 2
-        x: 1582
-        y: 290
-        width: 340
-        height: 1468
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 51b2f180ec0392e4a85b04fcc51532f2
-      internalID: -739395879
+      spriteID: 6f695b2b67869e240800000000000000
+      internalID: 4821499735090501366
       vertices: []
       indices: 
       edges: []
@@ -236,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -245,12 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Windows_0: -1617025481
-      Windows_1: -266409492
-      Windows_2: -899468475
-      Windows_3: 230022888
-      Windows_4: -739395879
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

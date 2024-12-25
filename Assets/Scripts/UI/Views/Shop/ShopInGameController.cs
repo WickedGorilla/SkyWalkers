@@ -1,6 +1,5 @@
 using Game.Perks;
 using Game.Validation;
-using Infrastructure;
 using Infrastructure.Data.Game.Shop;
 using Infrastructure.Network;
 using Infrastructure.Telegram;
