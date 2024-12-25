@@ -10,8 +10,9 @@ namespace UI.Views
         [SerializeField] private RectTransform[] _circles;
         [SerializeField] private RectTransform _viewTransofrm;
 
-        private LinkedList<int> _selectedNodes = new();
+        private readonly LinkedList<int> _selectedNodes = new();
         
+        private int _countSelectedNodes;
         private int _selectedNodesMask;
 
         private void Awake()
@@ -28,18 +29,23 @@ namespace UI.Views
                 
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(_viewTransofrm, mousePosition, null,
                     out _);
-
+                
                 for (int i = 0; i < _circles.Length; i++)
                 {
                     RectTransform node = _circles[i];
                     
                     if (CheckContainsInBitmask(_selectedNodesMask, i))
                         continue;
-                    
+
                     if (RectTransformUtility.RectangleContainsScreenPoint(node, mousePosition)) 
-                        AddNode(i);
+                        _selectedNodes.AddLast(i);
                 }
+
+                if (_countSelectedNodes == _selectedNodes.Count)
+                    return;
                 
+                _lineRenderer.SetPoints(GetSelectedNodes());
+                _countSelectedNodes = _selectedNodes.Count;
                 _selectedNodesMask = GenerateBitmask(_selectedNodes);
             }
         }
@@ -56,12 +62,6 @@ namespace UI.Views
 
         private bool CheckContainsInBitmask(int mask, int index) 
             => (mask & (1 << index)) != 0;
-        
-        private void AddNode(int index)
-        {
-            _selectedNodes.AddLast(index);
-            _lineRenderer.SetPoints(GetSelectedNodes());
-        }
 
         private void ResetPattern()
         {
