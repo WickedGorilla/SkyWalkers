@@ -1,22 +1,51 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UI.Core;
 using UnityEngine;
 
 namespace UI.Views
 {
-    public class PasswordView : View
+    public class PasswordView : View, IPasswordStateMachine
     {
-        [SerializeField] private UILineRenderer _lineRenderer;
-        [SerializeField] private RectTransform[] _circles;
-        [SerializeField] private RectTransform _viewTransofrm;
+        [SerializeField] private UILineRenderer _inputLineRenderer;
+        [SerializeField] private UILineRenderer _previewLineRenderer;
+        [SerializeField] private Color _defaultColor;
+        [SerializeField] private Color _successColor;
+        [SerializeField] private Color _errorColor;
 
-        private readonly LinkedList<int> _selectedNodes = new();
-        
-        private int _countSelectedNodes;
-        private int _selectedNodesMask;
+        [SerializeField] private RectTransform _viewTransofrm;
+        [SerializeField] private NodeContainer[] _nodeContainers;
+
+        private PasswordState _currentState;
+        private Dictionary<Type, PasswordState> _states;
 
         private void Awake()
-            => ResetPattern();
+        {
+            _states = new Dictionary<Type, PasswordState>
+            {
+                [typeof(DefaultPasswordState)] = new DefaultPasswordState(_defaultColor, this, _inputLineRenderer,
+                    _nodeContainers, Array.Empty<int>()),
+                
+                [typeof(ErrorPasswordState)] = new ErrorPasswordState(_errorColor, this, _inputLineRenderer,
+                    _nodeContainers)
+            };
+        }
+
+        public void Initialize(IEnumerable<int> passIndexes)
+        {
+            _previewLineRenderer.SetPoints(GetPointsByIndex(passIndexes));
+            EnterState<DefaultPasswordState>(new LinkedList<int>());
+        }
+
+        public void EnterState<TState>(LinkedList<int> selectedNodes) where TState : PasswordState
+        {
+            if (!_states.TryGetValue(typeof(TState), out var state))
+                throw new KeyNotFoundException($"No state by {typeof(TState)}");
+            
+            _currentState = state;
+            _currentState.Enter(selectedNodes);
+        }
 
         private void Update()
         {
@@ -26,53 +55,34 @@ namespace UI.Views
             if (Input.GetMouseButton(0))
             {
                 Vector2 mousePosition = Input.mousePosition;
-                
+
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(_viewTransofrm, mousePosition, null,
                     out _);
-                
-                for (int i = 0; i < _circles.Length; i++)
-                {
-                    RectTransform node = _circles[i];
-                    
-                    if (CheckContainsInBitmask(_selectedNodesMask, i))
-                        continue;
 
-                    if (RectTransformUtility.RectangleContainsScreenPoint(node, mousePosition)) 
-                        _selectedNodes.AddLast(i);
+                for (int i = 0; i < _nodeContainers.Length; i++)
+                {
+                    var node = _nodeContainers[i];
+                    _currentState.CheckNode(node, i, mousePosition);
                 }
 
-                if (_countSelectedNodes == _selectedNodes.Count)
-                    return;
-                
-                _lineRenderer.SetPoints(GetSelectedNodes());
-                _countSelectedNodes = _selectedNodes.Count;
-                _selectedNodesMask = GenerateBitmask(_selectedNodes);
+                _currentState.UpdateRender();
             }
         }
-        
-        private int GenerateBitmask(IEnumerable<int> indexes)
+
+        private IEnumerable<Vector2> GetPointsByIndex(IEnumerable<int> passIndexes)
         {
-            int bitmask = 0;
-
-            foreach (var index in indexes) 
-                bitmask |= 1 << index;
-
-            return bitmask;
-        }
-
-        private bool CheckContainsInBitmask(int mask, int index) 
-            => (mask & (1 << index)) != 0;
-
-        private void ResetPattern()
-        {
-            _selectedNodes.Clear();
-            _lineRenderer.ClearPoints();
+            foreach (var index in passIndexes)
+                yield return _nodeContainers[index].Position;
         }
         
-        private IEnumerable<Vector2> GetSelectedNodes()
+        public void ResetPattern()
         {
-            foreach (int index in _selectedNodes)
-                yield return _circles[index].transform.localPosition;
+            foreach (var index in _currentState.SelectedNodes)
+                _nodeContainers[index].SetColor(_defaultColor);
+
+            _currentState.SelectedNodes.Clear();
+            _inputLineRenderer.ClearPoints();
+            _previewLineRenderer.ClearPoints();
         }
     }
 }

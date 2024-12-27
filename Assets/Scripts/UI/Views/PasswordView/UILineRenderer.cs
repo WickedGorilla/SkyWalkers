@@ -89,5 +89,20 @@ namespace UI.Views
                 uv0 = Vector2.zero
             };
         }
+
+        public void UpdateColor(Color newColor)
+        {
+            color = newColor;
+            
+            if (_meshDirty)
+                return;
+            
+            for (int i = 0; i < _cacheVertices.Count; i++)
+            {
+                var uiVertex = _cacheVertices[i];
+                uiVertex.color = newColor;
+                _cacheVertices[i] = uiVertex;
+            }
+        }
     }
 }
