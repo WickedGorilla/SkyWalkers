@@ -28,9 +28,10 @@ namespace UI.Views
         public virtual void Enter(LinkedList<int> selectedNodes)
         {
             SelectedNodes = selectedNodes;
+            UpdateColor(SelectColor);
         }
         
-        public abstract void CheckNode(NodeContainer node, int index, Vector2 touchPosition);
+        public abstract bool CheckNode(NodeContainer node, int index, Vector2 touchPosition);
 
         public void UpdateRender()
         {
@@ -46,6 +47,12 @@ namespace UI.Views
         {
             foreach (var index in passIndexes)
                 yield return _nodeContainers[index].Position;
+        }
+        
+        private void UpdateColor(Color color)
+        {
+            foreach (var node in _nodeContainers)
+                node.SetColor(color);
         }
     }
 }

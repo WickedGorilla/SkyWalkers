@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UI.Core;
 using UnityEngine;
 
@@ -26,6 +25,9 @@ namespace UI.Views
             {
                 [typeof(DefaultPasswordState)] = new DefaultPasswordState(_defaultColor, this, _inputLineRenderer,
                     _nodeContainers, Array.Empty<int>()),
+                
+                [typeof(SuccessPasswordState)] = new SuccessPasswordState(_defaultColor, this, _inputLineRenderer,
+                    _nodeContainers),
                 
                 [typeof(ErrorPasswordState)] = new ErrorPasswordState(_errorColor, this, _inputLineRenderer,
                     _nodeContainers)
@@ -62,7 +64,9 @@ namespace UI.Views
                 for (int i = 0; i < _nodeContainers.Length; i++)
                 {
                     var node = _nodeContainers[i];
-                    _currentState.CheckNode(node, i, mousePosition);
+                    
+                    if (_currentState.CheckNode(node, i, mousePosition))
+                        break;
                 }
 
                 _currentState.UpdateRender();

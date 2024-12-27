@@ -17,23 +17,24 @@ namespace UI.Views
             _passwordNodesMask = BitmaskHelper.GenerateBitmask(passIndexes);
         }
 
-        public override void CheckNode(NodeContainer node, int index, Vector2 touchPosition)
+        public override bool CheckNode(NodeContainer node, int index, Vector2 touchPosition)
         {
             if (BitmaskHelper.CheckContainsInBitmask(SelectedNodesMask, index))
-                return;
+                return false;
 
             if (!RectTransformUtility.RectangleContainsScreenPoint(node.Circle, touchPosition)) 
-                return;
+                return false;
             
             SelectedNodes.AddLast(index);
                 
             if (!BitmaskHelper.CheckContainsInBitmask(_passwordNodesMask, index))
             {
                 StateMachine.EnterState<ErrorPasswordState>(SelectedNodes);
-                return;
+                return true;
             }
                 
             node.SetColor(SelectColor);
+            return true;
         }
     }
 }

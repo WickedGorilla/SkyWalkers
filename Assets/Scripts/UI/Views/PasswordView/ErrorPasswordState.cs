@@ -19,16 +19,17 @@ namespace UI.Views
             LineRenderer.UpdateColor(SelectColor);
         }
 
-        public override void CheckNode(NodeContainer node, int index, Vector2 touchPosition)
+        public override bool CheckNode(NodeContainer node, int index, Vector2 touchPosition)
         {
             if (BitmaskHelper.CheckContainsInBitmask(SelectedNodesMask, index))
-                return;
+                return false;
             
             if (!RectTransformUtility.RectangleContainsScreenPoint(node.Circle, touchPosition)) 
-                return;
+                return false;
             
             SelectedNodes.AddLast(index);
             node.SetColor(SelectColor);
+            return true;
         }
     }
 }
