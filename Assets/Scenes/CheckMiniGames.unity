@@ -1287,13 +1287,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dec6be67d314a94787c63d810a2abb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputLineRenderer: {fileID: 0}
-  _previewLineRenderer: {fileID: 0}
+  _numberGameText: {fileID: 424417423}
+  _numberGameTextUndo: Repeat the password
+  _numberGameTextUntil: to hack the drone
+  _inputLineRenderer: {fileID: 1853183403}
+  _previewLineRenderer: {fileID: 1209048486}
   _defaultColor: {r: 1, g: 0, b: 0.59264755, a: 1}
   _successColor: {r: 0.2396766, g: 1, b: 0, a: 1}
   _errorColor: {r: 1, g: 0, b: 0, a: 1}
   _viewTransofrm: {fileID: 1543694299}
-  _nodeContainers: []
+  _nodeContainers:
+  - _circle: {fileID: 1795180303}
+    _coloreImage: {fileID: 1750233441}
+  - _circle: {fileID: 195899928}
+    _coloreImage: {fileID: 1956325398}
+  - _circle: {fileID: 1929089425}
+    _coloreImage: {fileID: 1262594275}
+  - _circle: {fileID: 96522635}
+    _coloreImage: {fileID: 1239275611}
+  - _circle: {fileID: 1481048390}
+    _coloreImage: {fileID: 1805089584}
+  - _circle: {fileID: 389923403}
+    _coloreImage: {fileID: 162873512}
+  - _circle: {fileID: 942271679}
+    _coloreImage: {fileID: 673535862}
+  - _circle: {fileID: 2027200983}
+    _coloreImage: {fileID: 1344163541}
+  - _circle: {fileID: 1662354445}
+    _coloreImage: {fileID: 1947392582}
 --- !u!114 &1184300288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1407,7 +1428,7 @@ GameObject:
   - component: {fileID: 1239275612}
   - component: {fileID: 1239275611}
   m_Layer: 5
-  m_Name: Point
+  m_Name: Point4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2206,6 +2227,7 @@ RectTransform:
   - {fileID: 2027200983}
   - {fileID: 1662354445}
   - {fileID: 1209048485}
+  - {fileID: 1853183402}
   - {fileID: 1750233440}
   - {fileID: 1956325397}
   - {fileID: 1262594274}
@@ -2215,7 +2237,6 @@ RectTransform:
   - {fileID: 673535861}
   - {fileID: 1344163540}
   - {fileID: 1947392581}
-  - {fileID: 1853183402}
   m_Father: {fileID: 1184300286}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

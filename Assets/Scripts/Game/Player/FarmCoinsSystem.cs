@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Game.Player
 {
-    public class PlayerMovementByTap
+    public class FarmCoinsSystem
     {
         private readonly IPlayerHolder _playerHolder;
         private readonly BuildingMovementSystem _buildingMovementSystem;
@@ -21,7 +21,9 @@ namespace Game.Player
 
         private IDisposable _buildingMovement;
 
-        public PlayerMovementByTap(IPlayerHolder playerHolder,
+        public event Action<int> OnFarmCoinsPerTap;
+        
+        public FarmCoinsSystem(IPlayerHolder playerHolder,
             BuildingMovementSystem buildingMovementSystem,
             WalletService walletService,
             CoinsCalculatorService coinsCalculatorService,
@@ -64,9 +66,10 @@ namespace Game.Player
                 return;
 
             _clickCoinSpawner.SpawnCoinEffect(energy, tapPosition);
-
             _walletService.Coins.Add(energy);
             _playerHolder.Player.AnimateByClick();
+            
+            OnFarmCoinsPerTap?.Invoke(energy);
         }
 
         private int ConvertCoinsToAvialableEnergy(int coins)
@@ -85,7 +88,7 @@ namespace Game.Player
             if (_walletService.Energy.Count < coins)
                 coins = _walletService.Energy.Count;
 
-            _walletService.Energy.Add(-coins);
+            _walletService.Energy.Subtract(coins);
             return coins;
         }
     }

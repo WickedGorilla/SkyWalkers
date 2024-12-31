@@ -1,4 +1,5 @@
 using Game.Environment;
+using Game.Minigames;
 using Game.Player;
 using Game.Validation;
 using UI.Hud;
@@ -10,32 +11,38 @@ namespace Game.Infrastructure
     {
         private readonly IEnvironmentHolder _environmentHolder;
         private readonly ViewService _viewService;
-        private readonly PlayerMovementByTap _playerMovementByTap;
+        private readonly FarmCoinsSystem _farmCoinsSystem;
         private readonly CoinValidationService _coinValidationService;
+        private readonly MiniGamesSystem _miniGamesSystem;
 
         public GameTapLoopState(IEnvironmentHolder environmentHolder,
             ViewService viewService,
-            PlayerMovementByTap playerMovementByTap, CoinValidationService coinValidationService)
+            FarmCoinsSystem farmCoinsSystem, 
+            CoinValidationService coinValidationService,
+            MiniGamesSystem miniGamesSystem)
         {
             _environmentHolder = environmentHolder;
             _viewService = viewService;
-            _playerMovementByTap = playerMovementByTap;
+            _farmCoinsSystem = farmCoinsSystem;
             _coinValidationService = coinValidationService;
+            _miniGamesSystem = miniGamesSystem;
         }
         
         public void Enter()
         {
             _environmentHolder.Environment.ShowBuildingGroup();
-            _playerMovementByTap.Subscribe();
+            _farmCoinsSystem.Subscribe();
             _viewService.Show<HudView, HudController>();
             _coinValidationService.Start();
+            _miniGamesSystem.OnStart();
         }
 
         public void Exit()
         {
-            _playerMovementByTap.Unsubscribe();
+            _farmCoinsSystem.Unsubscribe();
             _environmentHolder.Environment.ShowSitGroup();
             _coinValidationService.Stop();
+            _miniGamesSystem.OnStop();
         }
     }
 }

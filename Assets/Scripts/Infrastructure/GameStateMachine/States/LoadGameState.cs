@@ -28,7 +28,7 @@ namespace Game.Infrastructure
         private readonly ViewService _viewService;
         private readonly EnvironmentHolder _environmentHolder;
         private readonly PlayerHolder _playerHolder; 
-        private readonly PlayerMovementByTap _playerMovementByTap;
+        private readonly FarmCoinsSystem _farmCoinsSystem;
         private readonly BuildingMovementSystem _buildingMovementSystem;
         private readonly TelegramLauncher _telegramLauncher;
         private readonly InviteSystem _inviteSystem;
@@ -43,7 +43,7 @@ namespace Game.Infrastructure
             ViewService viewService,
             EnvironmentHolder environmentHolder,
             PlayerHolder playerHolder,
-            PlayerMovementByTap playerMovementByTap,
+            FarmCoinsSystem farmCoinsSystem,
             BuildingMovementSystem buildingMovementSystem,
             TelegramLauncher telegramLauncher,
             InviteSystem inviteSystem,
@@ -56,7 +56,7 @@ namespace Game.Infrastructure
             _viewService = viewService;
             _environmentHolder = environmentHolder;
             _playerHolder = playerHolder;
-            _playerMovementByTap = playerMovementByTap;
+            _farmCoinsSystem = farmCoinsSystem;
             _buildingMovementSystem = buildingMovementSystem;
             _telegramLauncher = telegramLauncher;
             _inviteSystem = inviteSystem;
@@ -138,7 +138,7 @@ namespace Game.Infrastructure
         }
 
         private void InitializePlayer()
-            => _playerMovementByTap.Initialize();
+            => _farmCoinsSystem.Initialize();
 
         private LoginRequest GetLoginRequest()
         {

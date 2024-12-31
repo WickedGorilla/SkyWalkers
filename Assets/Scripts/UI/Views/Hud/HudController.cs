@@ -10,7 +10,7 @@ namespace UI.Hud
 {
     public class HudController : ViewController<HudView>
     {
-        private readonly PlayerMovementByTap _playerMovementByTap;
+        private readonly FarmCoinsSystem _farmCoinsSystem;
         private readonly WalletService _walletService;
         private readonly BoostSystem _boostSystem;
         private readonly IGameStateMachine _gameStateMachine;
@@ -18,14 +18,14 @@ namespace UI.Hud
         private readonly IEnvironmentHolder _environmentHolder;
 
         public HudController(HudView view,
-            PlayerMovementByTap playerMovementByTap,
+            FarmCoinsSystem farmCoinsSystem,
             WalletService walletService,
             BoostSystem boostSystem,
             IGameStateMachine gameStateMachine,
             ViewService viewService,
             IEnvironmentHolder environmentHolder) : base(view)
         {
-            _playerMovementByTap = playerMovementByTap;
+            _farmCoinsSystem = farmCoinsSystem;
             _walletService = walletService;
             _boostSystem = boostSystem;
             _gameStateMachine = gameStateMachine;
@@ -60,7 +60,7 @@ namespace UI.Hud
         }
 
         private void OnTap(Vector2 position)
-            => _playerMovementByTap.Tap(position);
+            => _farmCoinsSystem.Tap(position);
 
         private void SetEnergy(int count)
             => View.FillEnergy(count, _walletService.Energy.Max, _walletService.PlayPass);

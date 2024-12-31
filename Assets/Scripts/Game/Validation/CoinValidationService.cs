@@ -16,6 +16,7 @@ namespace Game.Validation
         private readonly WalletService _walletService;
         private readonly IServerRequestSender _serverRequestSender;
         private readonly BoostSystem _boostSystem;
+        private readonly FarmCoinsSystem _farmCoinsSystem;
         private readonly LinkedList<IPlayerActionData> _stackActions = new();
 
         private float _nextTimeUpdate;
@@ -30,18 +31,21 @@ namespace Game.Validation
         
         public CoinValidationService(WalletService walletService, 
             IServerRequestSender serverRequestSender, 
-            BoostSystem boostSystem)
+            BoostSystem boostSystem,
+            FarmCoinsSystem farmCoinsSystem)
         {
             _walletService = walletService;
             _serverRequestSender = serverRequestSender;
             _boostSystem = boostSystem;
+            _farmCoinsSystem = farmCoinsSystem;
         }
         
         public void Start()
         {
-            _walletService.Coins.OnChangeValue += OnChangeCoins;
+            _farmCoinsSystem.OnFarmCoinsPerTap += OnChangeCoins;
             _boostSystem.OnUseBoost += OnBoostActivated;
             _boostSystem.OnEndBoost += OnBoostEnd;
+            _boostSystem.OnUsePlayPass += OnPlayPassActivated;
             _boostSystem.OnUsePlayPass += OnPlayPassActivated;
 
             _cancellationTokenSource = new CancellationTokenSource();
@@ -50,7 +54,7 @@ namespace Game.Validation
 
         public void Stop()
         {
-            _walletService.Coins.OnChangeValue -= OnChangeCoins;
+            _farmCoinsSystem.OnFarmCoinsPerTap -= OnChangeCoins;
             _boostSystem.OnUseBoost -= OnBoostActivated;
             _boostSystem.OnEndBoost -= OnBoostEnd;
             _boostSystem.OnUsePlayPass -= OnPlayPassActivated;
@@ -79,8 +83,9 @@ namespace Game.Validation
             }
         }
         
-        private void OnChangeCoins(int coins)
+        private void OnChangeCoins(int farmedCoins)
         {
+            var coins = _walletService.Coins.Count;
             var tapedCoins = coins - _lastUpdateBalance;
             _lastUpdateBalance = coins;
              

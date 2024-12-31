@@ -1,6 +1,7 @@
 using Game.BuildingSystem;
 using Game.Environment;
 using Game.Invite;
+using Game.Minigames;
 using Game.Perks;
 using Game.Player;
 using Game.UpdateResponseServices;
@@ -51,7 +52,7 @@ namespace Game.Infrastructure
         {
             _container.Bind<WalletService>().AsSingle();
             _container.Bind<BuildingMovementSystem>().AsSingle();
-            _container.Bind<PlayerMovementByTap>().AsSingle();
+            _container.Bind<FarmCoinsSystem>().AsSingle();
             _container.Bind<PerksService>().AsSingle();
             _container.Bind<CoinValidationService>().AsSingle();
             _container.Bind<InviteSystem>().AsSingle();
@@ -61,6 +62,8 @@ namespace Game.Infrastructure
             _container.BindInterfacesAndSelfTo<ClickCoinSpawner>().AsSingle();
             _container.BindInterfacesAndSelfTo<CoinsCalculatorService>().AsSingle();
             _container.BindInterfacesAndSelfTo<BoostSystem>().AsSingle();
+            
+            _container.Bind<MiniGamesSystem>().AsSingle();
         }
         
         private void BindEnvironment()
