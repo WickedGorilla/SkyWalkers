@@ -20,8 +20,7 @@ namespace Game.Minigames
         private readonly ViewService _viewService;
         private readonly BoostSystem _boostSystem;
         private readonly Dictionary<MiniGameType, Func<IMiniGameViewController>> _miniGamesStartActions;
-
-        private int _earnedCoinsBeforeMiniGame;
+        
         private int _tapsCount;
         private int _countTapsToStartMiniGame;
         
@@ -45,6 +44,8 @@ namespace Game.Minigames
             _miniGamesStartActions = CreateMiniGamesStartActions();
             _countTapsToStartMiniGame = GetUpdateTapsToStartMiniGame();
         }
+        
+        public int EarnedCoinsBeforeMiniGame { get; private set; }
         
         public void OnStart()
         {
@@ -80,7 +81,7 @@ namespace Game.Minigames
         
         private void OnFarmCoins(int coins)
         {
-            _earnedCoinsBeforeMiniGame += coins;
+            EarnedCoinsBeforeMiniGame += coins;
             _tapsCount++;
 
             if (_tapsCount >= _countTapsToStartMiniGame)
@@ -115,23 +116,25 @@ namespace Game.Minigames
         
         private void OnMiniGameFail()
         {
-            var subtractValue = _earnedCoinsBeforeMiniGame / 2;
+            var subtractValue = EarnedCoinsBeforeMiniGame / 2;
             _walletService.Coins.Subtract(subtractValue);
-            ResetMiniGame();
             
             OnCompleteMiniGame?.Invoke(false);
+            
+            ResetMiniGame();
         }
 
         private void OnMiniGameComplete()
         {
-            ResetMiniGame();
             OnCompleteMiniGame?.Invoke(true);
+            
+            ResetMiniGame();
         }
 
         private void ResetMiniGame()
         {
             _countTapsToStartMiniGame = GetUpdateTapsToStartMiniGame();
-            _earnedCoinsBeforeMiniGame = 0;
+            EarnedCoinsBeforeMiniGame = 0;
             _tapsCount = 0;
             
             _miniGameDisposable.Dispose();

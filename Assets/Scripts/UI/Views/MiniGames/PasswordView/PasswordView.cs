@@ -16,15 +16,14 @@ namespace UI.Views
         [SerializeField] private Color _defaultColor;
         [SerializeField] private Color _successColor;
         [SerializeField] private Color _errorColor;
-
-        [SerializeField] private RectTransform _viewTransofrm;
         [SerializeField] private NodeContainer[] _nodeContainers;
 
+        private RectTransform _canvasTransform;
         private PasswordState _currentState;
         private Dictionary<Type, PasswordState> _states;
         
         public event Action OnCompletePass;
-        public event Action OnErrorPass;
+        public event Action OnErrorPass; 
 
         private void Awake()
         {
@@ -41,8 +40,9 @@ namespace UI.Views
             };
         }
 
-        public void Initialize(IEnumerable<int> passIndexes, int currentRound, int totalRounds)
+        public void Initialize(RectTransform canvasTransform, IEnumerable<int> passIndexes, int currentRound, int totalRounds)
         {
+            _canvasTransform = canvasTransform;
             _numberGameText.text = $"{_numberGameTextUndo}{currentRound}/{totalRounds}\n{_numberGameTextUntil}";
             
             _previewLineRenderer.SetPoints(GetPointsByIndex(passIndexes));
@@ -66,7 +66,7 @@ namespace UI.Views
             if (!GetTouch(out Vector2 touchPosition)) 
                 return;
 
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(_viewTransofrm, touchPosition, null,
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasTransform, touchPosition, null,
                 out _);
 
             for (int i = 0; i < _nodeContainers.Length; i++)

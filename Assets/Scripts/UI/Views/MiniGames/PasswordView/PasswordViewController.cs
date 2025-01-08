@@ -7,6 +7,7 @@ namespace UI.Views
 {
     public class PasswordViewController : ViewController<PasswordView>, IMiniGameViewController
     {
+        private readonly ViewService _viewService;
         private readonly PasswordMiniGameData _miniGameData;
 
         private int _currentRound;
@@ -15,8 +16,9 @@ namespace UI.Views
         public event Action OnCompleteMiniGame;
         public event Action OnFailMiniGame;
         
-        public PasswordViewController(PasswordView view, PasswordMiniGameData miniGameData) : base(view)
+        public PasswordViewController(ViewService viewService, PasswordView view, PasswordMiniGameData miniGameData) : base(view)
         {
+            _viewService = viewService;
             _miniGameData = miniGameData;
         }
 
@@ -24,8 +26,9 @@ namespace UI.Views
         {
             _currentRound = 1;
             _currentPassMistakes = 0;
-            
-            View.Initialize(_miniGameData.GetRandomPassword().NodesIndexes, _currentRound, _miniGameData.CountRounds);
+
+            int[] idsPass = _miniGameData.GetRandomPassword().NodesIndexes;
+            View.Initialize(_viewService.RootTransform, idsPass, _currentRound, _miniGameData.CountRounds);
             View.OnCompletePass += OnCompletePass;
             View.OnErrorPass += OnErrorPass;
         }

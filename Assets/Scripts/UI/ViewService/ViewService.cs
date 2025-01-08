@@ -23,6 +23,9 @@ namespace UI.Core
             _popupQueue = new Queue<Action>();
         }
 
+        public RectTransform RootTransform
+            => _root.transform as RectTransform;
+        
         public TController Show<TView, TController>()
             where TView : View where TController : ViewController<TView>
         {

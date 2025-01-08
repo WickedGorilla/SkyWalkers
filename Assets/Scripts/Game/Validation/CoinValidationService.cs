@@ -127,10 +127,12 @@ namespace Game.Validation
             => _stackActions.AddLast(new BoostEndActionData());
 
         private void OnEnterMiniGame(MiniGameType miniGame)
-            => _stackActions.AddLast(new EnterMiniGameActionData(miniGame));
+            => _stackActions.AddLast(new EnterMiniGameActionData(miniGame, _miniGamesSystem.EarnedCoinsBeforeMiniGame));
 
-        private void OnEndMiniGame(bool isComplete) 
-            => _stackActions.AddLast(new EndMiniGameActionData(isComplete));
+        private void OnEndMiniGame(bool isComplete)
+        {
+            _stackActions.AddLast(new EndMiniGameActionData(isComplete));
+        }
 
         private void SendValidationRequest()
         {
