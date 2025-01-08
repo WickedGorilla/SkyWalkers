@@ -26,7 +26,6 @@ namespace Game.Player
         public event Action OnUseBoost;
         public event Action OnEndBoost;
         public event Action OnUsePlayPass;
-        
         public bool IsBoost { get; private set; }
 
         public bool UsePlayPass()
@@ -70,7 +69,6 @@ namespace Game.Player
             environment.ShowSun();
             
             IsBoost = true;
-            
             _coinsCalculatorService.UpdateInstruction(3);
             
             for (int i = BoostingTime; i > 0; i--)

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Game.Minigames;
 using Game.Player;
 using Infrastructure.Network;
 using Infrastructure.Network.Response.Player;
@@ -17,6 +18,7 @@ namespace Game.Validation
         private readonly IServerRequestSender _serverRequestSender;
         private readonly BoostSystem _boostSystem;
         private readonly FarmCoinsSystem _farmCoinsSystem;
+        private readonly MiniGamesSystem _miniGamesSystem;
         private readonly LinkedList<IPlayerActionData> _stackActions = new();
 
         private float _nextTimeUpdate;
@@ -32,12 +34,14 @@ namespace Game.Validation
         public CoinValidationService(WalletService walletService, 
             IServerRequestSender serverRequestSender, 
             BoostSystem boostSystem,
-            FarmCoinsSystem farmCoinsSystem)
+            FarmCoinsSystem farmCoinsSystem,
+            MiniGamesSystem miniGamesSystem)
         {
             _walletService = walletService;
             _serverRequestSender = serverRequestSender;
             _boostSystem = boostSystem;
             _farmCoinsSystem = farmCoinsSystem;
+            _miniGamesSystem = miniGamesSystem;
         }
         
         public void Start()
@@ -46,8 +50,9 @@ namespace Game.Validation
             _boostSystem.OnUseBoost += OnBoostActivated;
             _boostSystem.OnEndBoost += OnBoostEnd;
             _boostSystem.OnUsePlayPass += OnPlayPassActivated;
-            _boostSystem.OnUsePlayPass += OnPlayPassActivated;
-
+            _miniGamesSystem.OnEnterMiniGame += OnEnterMiniGame;
+            _miniGamesSystem.OnCompleteMiniGame += OnEndMiniGame;
+            
             _cancellationTokenSource = new CancellationTokenSource();
             SendTask(_cancellationTokenSource);
         }
@@ -58,6 +63,7 @@ namespace Game.Validation
             _boostSystem.OnUseBoost -= OnBoostActivated;
             _boostSystem.OnEndBoost -= OnBoostEnd;
             _boostSystem.OnUsePlayPass -= OnPlayPassActivated;
+            _miniGamesSystem.OnEnterMiniGame -= OnEnterMiniGame;
             
             _cancellationTokenSource.Cancel();
             SendValidationRequest();
@@ -111,24 +117,21 @@ namespace Game.Validation
                 _stackActions.AddLast(action);
         }
         
-        private void OnPlayPassActivated()
-        {
-            var action = new ActivatePlayPassActionData();
-            _stackActions.AddLast(action);
-        }
+        private void OnPlayPassActivated() 
+            => _stackActions.AddLast(new ActivatePlayPassActionData());
 
-        private void OnBoostActivated()
-        {
-            var action = new ActivateBoostActionData();
-            _stackActions.AddLast(action);
-        }
+        private void OnBoostActivated() 
+            => _stackActions.AddLast(new ActivateBoostActionData());
 
-        private void OnBoostEnd()
-        {
-            var action = new BoostEndActionData();
-            _stackActions.AddLast(action);
-        }
-        
+        private void OnBoostEnd() 
+            => _stackActions.AddLast(new BoostEndActionData());
+
+        private void OnEnterMiniGame(MiniGameType miniGame)
+            => _stackActions.AddLast(new EnterMiniGameActionData(miniGame));
+
+        private void OnEndMiniGame(bool isComplete) 
+            => _stackActions.AddLast(new EndMiniGameActionData(isComplete));
+
         private void SendValidationRequest()
         {
             if (_stackActions.Count == 0 || _lastTimeUpdate + TimeIntervalUpdate / 3 > Time.time)

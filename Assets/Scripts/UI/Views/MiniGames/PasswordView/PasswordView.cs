@@ -63,19 +63,17 @@ namespace UI.Views
             if (GetTouchDown())
                 ResetPattern();
 
-            if (!GetTouch()) 
+            if (!GetTouch(out Vector2 touchPosition)) 
                 return;
-            
-            Vector2 mousePosition = Input.mousePosition;
 
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(_viewTransofrm, mousePosition, null,
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(_viewTransofrm, touchPosition, null,
                 out _);
 
             for (int i = 0; i < _nodeContainers.Length; i++)
             {
                 var node = _nodeContainers[i];
 
-                if (_currentState.CheckNode(node, i, mousePosition))
+                if (_currentState.CheckNode(node, i, touchPosition))
                     break;
             }
 
@@ -107,13 +105,20 @@ namespace UI.Views
             return touch.phase == TouchPhase.Began;
         }
 
-        private bool GetTouch()
+        private bool GetTouch(out Vector2 position)
         {
             if (Input.touchCount == 0)
-                return Input.GetMouseButton(0);
+            {
+                var isMouseDown = Input.GetMouseButton(0);
+                position = isMouseDown ? Input.mousePosition : Vector2.zero; 
+                return isMouseDown;
+            }
             
             Touch touch = Input.GetTouch(0);
-            return touch.phase is TouchPhase.Moved or TouchPhase.Stationary;
+
+            var isTouch = touch.phase is TouchPhase.Moved or TouchPhase.Stationary;
+            position = isTouch ? touch.position : Vector2.zero; 
+            return isTouch;
         }
     }
 }

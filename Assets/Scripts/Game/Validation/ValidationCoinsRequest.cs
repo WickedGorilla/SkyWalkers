@@ -37,7 +37,9 @@ namespace Game.Validation
             ActivatePlayPass = 1,
             ActivateBoost = 2,
             EndBoost = 3,
-            TapCoinsWithBoost = 4
+            TapCoinsWithBoost = 4,
+            EnterMiniGame = 5,
+            EndMiniGame = 6
         }
     }
 }

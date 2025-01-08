@@ -18,36 +18,66 @@ namespace Game.Minigames
         private readonly WalletService _walletService;
         private readonly FarmCoinsSystem _farmCoinsSystem;
         private readonly ViewService _viewService;
+        private readonly BoostSystem _boostSystem;
         private readonly Dictionary<MiniGameType, Func<IMiniGameViewController>> _miniGamesStartActions;
 
         private int _earnedCoinsBeforeMiniGame;
         private int _tapsCount;
         private int _countTapsToStartMiniGame;
+        
         private IDisposable _miniGameDisposable;
+        private IDisposable _tapCoinListener;
+
+        public event Action<MiniGameType> OnEnterMiniGame;
+        public event Action<bool> OnCompleteMiniGame;
         
         public MiniGamesSystem(MiniGamesData miniGamesData,
             WalletService walletService,
             FarmCoinsSystem farmCoinsSystem,
-            ViewService viewService)
+            ViewService viewService,
+            BoostSystem boostSystem)
         {
             _miniGamesData = miniGamesData;
             _walletService = walletService;
             _farmCoinsSystem = farmCoinsSystem;
             _viewService = viewService;
+            _boostSystem = boostSystem;
             _miniGamesStartActions = CreateMiniGamesStartActions();
             _countTapsToStartMiniGame = GetUpdateTapsToStartMiniGame();
         }
-
+        
         public void OnStart()
         {
-            _farmCoinsSystem.OnFarmCoinsPerTap += OnFarmCoins;
+            _tapCoinListener = EnableMiniGameCounter();
+            
+            _boostSystem.OnUseBoost += OnBoostActivated;
+            _boostSystem.OnEndBoost += OnBoostDeactivated;
         }
 
         public void OnStop()
         {
-            _farmCoinsSystem.OnFarmCoinsPerTap -= OnFarmCoins;
+            _tapCoinListener.Dispose();
+            
+            _boostSystem.OnUseBoost -= OnBoostActivated;
+            _boostSystem.OnEndBoost -= OnBoostDeactivated;
         }
 
+        private void OnBoostActivated() 
+            => _tapCoinListener.Dispose();
+
+        private void OnBoostDeactivated() 
+            => _tapCoinListener = EnableMiniGameCounter();
+        
+        private IDisposable EnableMiniGameCounter()
+        {
+            _farmCoinsSystem.OnFarmCoinsPerTap += OnFarmCoins;
+            
+            return DisposableContainer.Create(Disable);
+
+            void Disable() 
+                => _farmCoinsSystem.OnFarmCoinsPerTap -= OnFarmCoins;
+        }
+        
         private void OnFarmCoins(int coins)
         {
             _earnedCoinsBeforeMiniGame += coins;
@@ -62,11 +92,13 @@ namespace Game.Minigames
             var enumType = typeof(MiniGameType);
             var maxIndex = Enum.GetValues(enumType).Length;
             var randomIndex = Random.Range(0, maxIndex);
-
-            if (!_miniGamesStartActions.TryGetValue((MiniGameType)randomIndex, out Func<IMiniGameViewController> miniGameStartAction))
+            var miniGameType = (MiniGameType)randomIndex;
+            
+            if (!_miniGamesStartActions.TryGetValue(miniGameType, out Func<IMiniGameViewController> miniGameStartAction))
                 throw new KeyNotFoundException("Unknown mini game type");
 
             _miniGameDisposable = SubscribeController(miniGameStartAction());
+            OnEnterMiniGame?.Invoke(miniGameType);
         }
 
         private IDisposable SubscribeController(IMiniGameViewController controller)
@@ -83,13 +115,17 @@ namespace Game.Minigames
         
         private void OnMiniGameFail()
         {
-            _walletService.Coins.Subtract(_earnedCoinsBeforeMiniGame / 2);
+            var subtractValue = _earnedCoinsBeforeMiniGame / 2;
+            _walletService.Coins.Subtract(subtractValue);
             ResetMiniGame();
+            
+            OnCompleteMiniGame?.Invoke(false);
         }
 
         private void OnMiniGameComplete()
         {
             ResetMiniGame();
+            OnCompleteMiniGame?.Invoke(true);
         }
 
         private void ResetMiniGame()
@@ -114,11 +150,6 @@ namespace Game.Minigames
         {
             Vector2Int value = _miniGamesData.RangeTapsToStartMiniGame;
             return Random.Range(value.x, value.y);
-        }
-
-        private enum MiniGameType
-        {
-            Password = 0,
         }
     }
 }
