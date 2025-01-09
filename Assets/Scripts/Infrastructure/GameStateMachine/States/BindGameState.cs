@@ -1,7 +1,7 @@
 using Game.BuildingSystem;
 using Game.Environment;
 using Game.Invite;
-using Game.Minigames;
+using Game.MiniGames;
 using Game.Perks;
 using Game.Player;
 using Game.UpdateResponseServices;

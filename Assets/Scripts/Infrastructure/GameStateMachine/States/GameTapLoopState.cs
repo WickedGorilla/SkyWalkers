@@ -1,5 +1,5 @@
 using Game.Environment;
-using Game.Minigames;
+using Game.MiniGames;
 using Game.Player;
 using Game.Validation;
 using UI.Hud;

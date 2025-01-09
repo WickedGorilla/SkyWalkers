@@ -2,6 +2,7 @@ using System;
 using Infrastructure.Data.Game.MiniGames;
 using UI.Core;
 using UI.Views.MiniGames;
+using UI.Views.Timer;
 
 namespace UI.Views
 {
@@ -16,6 +17,15 @@ namespace UI.Views
         public event Action OnCompleteMiniGame;
         public event Action OnFailMiniGame;
         
+        public IUpdateTimer CreateTimer(int time, Action onComplete) 
+            => View.Timer.CreateTimer(time, onComplete);
+
+        public bool CheckIsComplete() 
+            => _currentRound == _miniGameData.CountRounds;
+
+        public void DoFailMiniGame() 
+            => OnErrorPass();
+
         public PasswordViewController(ViewService viewService, PasswordView view, PasswordMiniGameData miniGameData) : base(view)
         {
             _viewService = viewService;
@@ -27,8 +37,9 @@ namespace UI.Views
             _currentRound = 1;
             _currentPassMistakes = 0;
 
-            int[] idsPass = _miniGameData.GetRandomPassword().NodesIndexes;
+            var idsPass = _miniGameData.GetRandomPassword().NodesIndexes;
             View.Initialize(_viewService.RootTransform, idsPass, _currentRound, _miniGameData.CountRounds);
+            
             View.OnCompletePass += OnCompletePass;
             View.OnErrorPass += OnErrorPass;
         }
@@ -36,13 +47,14 @@ namespace UI.Views
         protected override void OnHide()
         {
             View.ResetPattern();
+            
             View.OnCompletePass -= OnCompletePass;
             View.OnErrorPass -= OnErrorPass;
         }
 
         private void OnCompletePass()
         {
-            if (_currentRound == _miniGameData.CountRounds)
+            if (CheckIsComplete())
             {
                 OnCompleteMiniGame?.Invoke();   
                 return;

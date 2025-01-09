@@ -6,6 +6,7 @@ using TMPro;
 using UI.CustomButtons;
 using UI.Core;
 using UI.Views;
+using UI.Views.Timer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,7 +41,7 @@ namespace UI.Hud
         [Header("Boost Mode")]
         [SerializeField] private GameObject _defaultGroup;
         [SerializeField] private GameObject _boostGroup;
-        [SerializeField] private TMP_Text _timerText;
+        [SerializeField] private ViewTimer _viewTimer;
         
         private Coroutine _energyFillerCoroutine;
 
@@ -49,6 +50,7 @@ namespace UI.Hud
         public Button BoostButton => _boostButton;
         public Button EnergyButton => _energyButton;
         public Button BackButton => _backButton;
+        public ViewTimer Timer => _viewTimer;
 
         public override void OnShow()
         {
@@ -99,13 +101,6 @@ namespace UI.Hud
 
         public void SetBoostCount(int boosts) 
             => _boostCountText.text = $"{boosts}";
-
-        public void UpdateTimerText(int totalSeconds)
-        {
-            int minutes = totalSeconds / 60;
-            int seconds = totalSeconds % 60;
-            _timerText.text = $"{minutes:D2}:{seconds:D2}";
-        }
 
         private void AnimateRocketButton() 
             => DoCycleRotateZ(_rocketFlashIcon);

@@ -1,4 +1,4 @@
-using Game.Minigames;
+using Game.MiniGames;
 
 namespace Game.Validation
 {

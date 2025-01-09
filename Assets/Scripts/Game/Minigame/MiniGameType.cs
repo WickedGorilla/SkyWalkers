@@ -1,4 +1,4 @@
-namespace Game.Minigames
+namespace Game.MiniGames
 {
     public enum MiniGameType
     {

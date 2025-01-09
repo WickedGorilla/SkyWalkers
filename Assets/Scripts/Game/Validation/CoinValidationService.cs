@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Game.Minigames;
+using Game.MiniGames;
 using Game.Player;
 using Infrastructure.Network;
 using Infrastructure.Network.Response.Player;

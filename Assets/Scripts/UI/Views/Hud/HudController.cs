@@ -1,3 +1,4 @@
+using System;
 using Game.Environment;
 using Game.Infrastructure;
 using Game.Player;
@@ -75,7 +76,7 @@ namespace UI.Hud
 
         private void OnClickBoost()
         {
-            if (!_boostSystem.UseBoost(View.UpdateTimerText, OnComplete))
+            if (!_boostSystem.UseBoost(StartTimer))
             {
                 _viewService.AddPopupToQueueAndShow<NoEnergyPopup, NoEnergyPopupController>();
                 return;
@@ -83,10 +84,18 @@ namespace UI.Hud
             
             View.EnableBoost(true);
             View.SetBoostCount(_walletService.Boosts);
-            return;
-
-            void OnComplete() 
-                => View.EnableBoost(false);
+        }
+        
+        private void StartTimer(int time, Action onComplete)
+        {
+            var timer = View.Timer.CreateTimer(time, OnComplete);
+            timer.Start();
+                
+            void OnComplete()
+            {
+                onComplete();
+                View.EnableBoost(false);
+            }
         }
         
         private void OnClickBack()

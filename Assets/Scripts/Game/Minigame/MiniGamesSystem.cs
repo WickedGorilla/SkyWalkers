@@ -7,10 +7,11 @@ using Player;
 using UI.Core;
 using UI.Views;
 using UI.Views.MiniGames;
+using UI.Views.Timer;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.Minigames
+namespace Game.MiniGames
 {
     public class MiniGamesSystem
     {
@@ -26,9 +27,13 @@ namespace Game.Minigames
         
         private IDisposable _miniGameDisposable;
         private IDisposable _tapCoinListener;
+        private IMiniGameViewController _miniGameViewController;
+        private IUpdateTimer _timer;
 
         public event Action<MiniGameType> OnEnterMiniGame;
         public event Action<bool> OnCompleteMiniGame;
+
+        private const int TimeForMiniGame = 30; 
         
         public MiniGamesSystem(MiniGamesData miniGamesData,
             WalletService walletService,
@@ -98,8 +103,19 @@ namespace Game.Minigames
             if (!_miniGamesStartActions.TryGetValue(miniGameType, out Func<IMiniGameViewController> miniGameStartAction))
                 throw new KeyNotFoundException("Unknown mini game type");
 
-            _miniGameDisposable = SubscribeController(miniGameStartAction());
+            var controller = miniGameStartAction();
+            _timer = controller.CreateTimer(TimeForMiniGame, OnTimeLeft);
+            
+            _miniGameDisposable = SubscribeController(controller);
             OnEnterMiniGame?.Invoke(miniGameType);
+        }
+
+        private void OnTimeLeft()
+        {
+            if (_miniGameViewController.CheckIsComplete())
+                return;
+
+            _miniGameViewController.DoFailMiniGame();
         }
 
         private IDisposable SubscribeController(IMiniGameViewController controller)
@@ -119,8 +135,9 @@ namespace Game.Minigames
             var subtractValue = EarnedCoinsBeforeMiniGame / 2;
             _walletService.Coins.Subtract(subtractValue);
             
-            OnCompleteMiniGame?.Invoke(false);
+            _timer.Stop();
             
+            OnCompleteMiniGame?.Invoke(false);
             ResetMiniGame();
         }
 
@@ -128,6 +145,7 @@ namespace Game.Minigames
         {
             OnCompleteMiniGame?.Invoke(true);
             
+            _timer.Stop();
             ResetMiniGame();
         }
 

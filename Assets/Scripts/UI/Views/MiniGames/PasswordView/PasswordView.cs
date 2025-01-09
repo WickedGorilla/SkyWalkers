@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UI.Core;
+using UI.Views.Timer;
 using UnityEngine;
 
 namespace UI.Views
@@ -17,13 +18,15 @@ namespace UI.Views
         [SerializeField] private Color _successColor;
         [SerializeField] private Color _errorColor;
         [SerializeField] private NodeContainer[] _nodeContainers;
+        [SerializeField] private ViewTimer _timer;
 
         private RectTransform _canvasTransform;
         private PasswordState _currentState;
         private Dictionary<Type, PasswordState> _states;
         
         public event Action OnCompletePass;
-        public event Action OnErrorPass; 
+        public event Action OnErrorPass;
+        public ViewTimer Timer => _timer;
 
         private void Awake()
         {

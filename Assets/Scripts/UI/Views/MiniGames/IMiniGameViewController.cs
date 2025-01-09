@@ -1,4 +1,5 @@
 using System;
+using UI.Views.Timer;
 
 namespace UI.Views.MiniGames
 {
@@ -6,5 +7,8 @@ namespace UI.Views.MiniGames
     {
         event Action OnCompleteMiniGame;
         event Action OnFailMiniGame;
+        IUpdateTimer CreateTimer(int time, Action onComplete);
+        bool CheckIsComplete();
+        void DoFailMiniGame();
     }
 }

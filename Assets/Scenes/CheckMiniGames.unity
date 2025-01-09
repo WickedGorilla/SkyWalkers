@@ -451,6 +451,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PasswordMiniGame
       objectReference: {fileID: 0}
+    - target: {fileID: 2435087776780920047, guid: 18ccbbb55a3dd3b45b2d54792995c3b5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2645384239621403997, guid: 18ccbbb55a3dd3b45b2d54792995c3b5, type: 3}
       propertyPath: _viewTransofrm
       value: 

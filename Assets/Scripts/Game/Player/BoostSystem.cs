@@ -2,6 +2,7 @@ using System;
 using Game.Environment;
 using Game.Wallet;
 using Player;
+using UI.Views.Timer;
 using UnityEngine;
 
 namespace Game.Player
@@ -13,9 +14,9 @@ namespace Game.Player
         private readonly CoinsCalculatorService _coinsCalculatorService;
 
         private const int BoostingTime = 15;
-        
-        public BoostSystem(WalletService walletService, 
-            IEnvironmentHolder environmentHolder, 
+
+        public BoostSystem(WalletService walletService,
+            IEnvironmentHolder environmentHolder,
             CoinsCalculatorService coinsCalculatorService)
         {
             _walletService = walletService;
@@ -38,55 +39,49 @@ namespace Game.Player
             return true;
         }
 
-        public bool UseBoost(Action<int> onTickSecond, Action onComplete)
+        public bool UseBoost(Action<int, Action> onCreateTimer)
         {
             if (_walletService.Boosts.Count == 0)
                 return false;
-            
+
             var energy = _coinsCalculatorService.CalculateCoinsByTap();
-            
+
             if (_walletService.Energy.Count < energy)
             {
                 if (_walletService.PlayPass.Count == 0)
                     return false;
-                
+
                 UsePlayPass();
             }
-
+            
             _walletService.Energy.Subtract(energy);
-            _walletService.Boosts.Subtract(1); 
+            _walletService.Boosts.Subtract(1);
+            onCreateTimer(BoostingTime, EndBoost);
 
-            Boosting(onTickSecond, onComplete);
+            StartBoost();
             return true;
         }
 
-        private async void Boosting(Action<int> onTickSecond, Action onComplete)
+        private void StartBoost()
         {
             OnUseBoost?.Invoke();
             var environment = _environmentHolder.Environment;
-            var coinsParticle = environment.CoinsParticle;
-            coinsParticle.Play();
+            environment.CoinsParticle.Play();
             environment.ShowSun();
-            
+
             IsBoost = true;
             _coinsCalculatorService.UpdateInstruction(3);
-            
-            for (int i = BoostingTime; i > 0; i--)
-            {
-                onTickSecond(i);
-                await Awaitable.WaitForSecondsAsync(1f);
-            }
-            
-            onTickSecond(0);
-            onComplete();
-            
-            coinsParticle.Stop();
+        }
+        
+        private void EndBoost()
+        {
+            var environment = _environmentHolder.Environment;
+            environment.CoinsParticle.Stop();
             environment.HideSun();
-            
+
             _coinsCalculatorService.ResetInstruction();
             IsBoost = false;
             OnEndBoost?.Invoke();
         }
-        
     }
 }
