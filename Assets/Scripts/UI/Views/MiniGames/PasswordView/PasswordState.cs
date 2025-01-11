@@ -6,21 +6,22 @@ namespace UI.Views
     public abstract class PasswordState
     {
         private readonly NodeContainer[] _nodeContainers;
+        
         private int _prevCountSelectedNodes;
         
-        protected PasswordState(Color selectColor, IPasswordStateMachine stateMachine, 
+        protected PasswordState(Color selectedColor, IPasswordStateMachine stateMachine, 
             UILineRenderer lineRenderer,
             NodeContainer[] nodeContainers)
         {
             LineRenderer = lineRenderer;
             _nodeContainers = nodeContainers;
-            SelectColor = selectColor;
+            SelectedColor = selectedColor;
             StateMachine = stateMachine;
         }
 
         public LinkedList<int> SelectedNodes { get; private set; }
 
-        protected Color SelectColor { get; }
+        protected Color SelectedColor { get; }
         protected IPasswordStateMachine StateMachine { get; }
         protected UILineRenderer LineRenderer { get; }
         protected int SelectedNodesMask { get; private set; }
@@ -28,11 +29,17 @@ namespace UI.Views
         public virtual void Enter(LinkedList<int> selectedNodes)
         {
             SelectedNodes = selectedNodes;
-            UpdateColor(SelectColor);
+            UpdateColor(selectedNodes, SelectedColor);
         }
         
-        public abstract bool CheckNode(NodeContainer node, int index, Vector2 touchPosition);
-
+        public abstract bool CheckNode(NodeContainer node, int selectedIndex, Vector2 touchPosition);
+        
+        
+        protected virtual void Reset()
+        {
+            _prevCountSelectedNodes = default;
+        }
+        
         public void UpdateRender()
         {
             if (_prevCountSelectedNodes == SelectedNodes.Count)
@@ -40,19 +47,24 @@ namespace UI.Views
             
             LineRenderer.SetPoints(GetPointsByIndex(SelectedNodes));
             _prevCountSelectedNodes = SelectedNodes.Count;
-            SelectedNodesMask = BitmaskHelper.GenerateBitmask(SelectedNodes);
         }
 
+        protected void AddSelected(int index)
+        {
+            SelectedNodes.AddLast(index);
+            SelectedNodesMask = BitmaskHelper.GenerateBitmask(SelectedNodes);
+        }
+        
         private IEnumerable<Vector2> GetPointsByIndex(IEnumerable<int> passIndexes)
         {
             foreach (var index in passIndexes)
                 yield return _nodeContainers[index].Position;
         }
         
-        private void UpdateColor(Color color)
+        protected void UpdateColor(LinkedList<int> selectedNodes, Color color)
         {
-            foreach (var node in _nodeContainers)
-                node.SetColor(color);
+            foreach (var index in selectedNodes)
+              _nodeContainers[index].SetColor(color);
         }
     }
 }

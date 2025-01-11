@@ -76,7 +76,7 @@ namespace Game.Validation
             
             while (true)
             {
-                await Awaitable.NextFrameAsync(token.Token);
+                await Awaitable.NextFrameAsync();
 
                 if (token.IsCancellationRequested)
                     break;

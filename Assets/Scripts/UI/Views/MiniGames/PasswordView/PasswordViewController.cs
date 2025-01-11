@@ -26,7 +26,9 @@ namespace UI.Views
         public void DoFailMiniGame() 
             => OnErrorPass();
 
-        public PasswordViewController(ViewService viewService, PasswordView view, PasswordMiniGameData miniGameData) : base(view)
+        public PasswordViewController(ViewService viewService, 
+            PasswordView view,
+            PasswordMiniGameData miniGameData) : base(view)
         {
             _viewService = viewService;
             _miniGameData = miniGameData;
@@ -37,8 +39,7 @@ namespace UI.Views
             _currentRound = 1;
             _currentPassMistakes = 0;
 
-            var idsPass = _miniGameData.GetRandomPassword().NodesIndexes;
-            View.Initialize(_viewService.RootTransform, idsPass, _currentRound, _miniGameData.CountRounds);
+            UpdateRoundOnTheView(_currentRound);
             
             View.OnCompletePass += OnCompletePass;
             View.OnErrorPass += OnErrorPass;
@@ -60,7 +61,13 @@ namespace UI.Views
                 return;
             }
             
-            _currentRound++;
+            UpdateRoundOnTheView(_currentRound++);
+        }
+
+        private void UpdateRoundOnTheView(int currentRound)
+        {
+            var idsPass = _miniGameData.GetRandomPassword().NodesIndexes;
+            View.Initialize(_viewService.RootTransform, idsPass, currentRound, _miniGameData.CountRounds);
         }
         
         private void OnErrorPass()
@@ -68,9 +75,8 @@ namespace UI.Views
             _currentPassMistakes++;
             
             if (_currentPassMistakes == _miniGameData.CountMistakes)
-            {
                 OnFailMiniGame?.Invoke();
-            }
         }
+
     }
 }

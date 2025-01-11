@@ -154,7 +154,7 @@ namespace Game.MiniGames
             _countTapsToStartMiniGame = GetUpdateTapsToStartMiniGame();
             EarnedCoinsBeforeMiniGame = 0;
             _tapsCount = 0;
-            
+
             _miniGameDisposable.Dispose();
             _miniGameDisposable = null;
         }

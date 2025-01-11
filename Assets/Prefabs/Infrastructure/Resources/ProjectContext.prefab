@@ -107,3 +107,4 @@ MonoBehaviour:
   _buildingsData: {fileID: 11400000, guid: 2b4bb60e286a35d41ac6be43c8fc1e51, type: 2}
   _coinsSpawnerData: {fileID: 11400000, guid: e5880df2664cad143a8b064fc8e8df72, type: 2}
   _shopData: {fileID: 11400000, guid: bc7c4e7425c5f5f45b9328a3845686d7, type: 2}
+  _miniGamesData: {fileID: 11400000, guid: 2d4f0b42eb3240149b3fa0e9dc16b570, type: 2}

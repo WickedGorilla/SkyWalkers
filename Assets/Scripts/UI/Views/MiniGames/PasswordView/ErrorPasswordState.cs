@@ -8,11 +8,11 @@ namespace UI.Views
     {
         private readonly Action _onOnErrorPass;
 
-        public ErrorPasswordState(Color selectColor,
+        public ErrorPasswordState(Color selectedColor,
             IPasswordStateMachine stateMachine,
             UILineRenderer lineRenderer,
-            NodeContainer[] nodeContainers, Action onOnErrorPass) 
-            : base(selectColor, stateMachine, lineRenderer, nodeContainers)
+            NodeContainer[] nodeContainers, Action onOnErrorPass)
+            : base(selectedColor, stateMachine, lineRenderer, nodeContainers)
         {
             _onOnErrorPass = onOnErrorPass;
         }
@@ -20,7 +20,7 @@ namespace UI.Views
         public override void Enter(LinkedList<int> selectedNodes)
         {
             base.Enter(selectedNodes);
-            LineRenderer.UpdateColor(SelectColor);
+            LineRenderer.UpdateColor(SelectedColor);
             _onOnErrorPass();
         }
 
@@ -28,12 +28,12 @@ namespace UI.Views
         {
             if (BitmaskHelper.CheckContainsInBitmask(SelectedNodesMask, index))
                 return false;
-            
-            if (!RectTransformUtility.RectangleContainsScreenPoint(node.Circle, touchPosition)) 
+
+            if (!RectTransformUtility.RectangleContainsScreenPoint(node.Circle, touchPosition))
                 return false;
-            
-            SelectedNodes.AddLast(index);
-            node.SetColor(SelectColor);
+
+            AddSelected(index);
+            node.SetColor(SelectedColor);
             return true;
         }
     }

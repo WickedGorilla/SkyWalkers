@@ -434,11 +434,6 @@ PrefabInstance:
       addedObject: {fileID: 1184300286}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d920d93f415ee94b96e01cc1bfc759b, type: 3}
---- !u!224 &1543694299 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2618964397307924685, guid: 4d920d93f415ee94b96e01cc1bfc759b, type: 3}
-  m_PrefabInstance: {fileID: 1382718577}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3509262624179546939
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -451,14 +446,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PasswordMiniGame
       objectReference: {fileID: 0}
-    - target: {fileID: 2435087776780920047, guid: 18ccbbb55a3dd3b45b2d54792995c3b5, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2645384239621403997, guid: 18ccbbb55a3dd3b45b2d54792995c3b5, type: 3}
-      propertyPath: _viewTransofrm
-      value: 
-      objectReference: {fileID: 1543694299}
     - target: {fileID: 4632756161587412783, guid: 18ccbbb55a3dd3b45b2d54792995c3b5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

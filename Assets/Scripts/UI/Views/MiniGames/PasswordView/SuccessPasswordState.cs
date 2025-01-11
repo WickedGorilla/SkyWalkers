@@ -8,12 +8,12 @@ namespace UI.Views
     {
         private readonly Action _onSuccess;
 
-        public SuccessPasswordState(Color selectColor,
+        public SuccessPasswordState(Color selectedColor,
             IPasswordStateMachine stateMachine,
             UILineRenderer lineRenderer,
             NodeContainer[] nodeContainers,
             Action onSuccess)
-            : base(selectColor, stateMachine, lineRenderer, nodeContainers)
+            : base(selectedColor, stateMachine, lineRenderer, nodeContainers)
         {
             _onSuccess = onSuccess;
         }
@@ -21,11 +21,11 @@ namespace UI.Views
         public override void Enter(LinkedList<int> selectedNodes)
         {
             base.Enter(selectedNodes);
-            LineRenderer.UpdateColor(SelectColor);
+            LineRenderer.UpdateColor(SelectedColor);
             _onSuccess();
         }
 
-        public override bool CheckNode(NodeContainer node, int index, Vector2 touchPosition) 
+        public override bool CheckNode(NodeContainer node, int selectedIndex, Vector2 touchPosition) 
             => true;
     }
 }

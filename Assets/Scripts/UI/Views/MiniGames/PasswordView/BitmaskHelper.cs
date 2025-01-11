@@ -16,5 +16,8 @@ namespace UI.Views
 
         public static bool CheckContainsInBitmask(int mask, int index) 
             => (mask & (1 << index)) != 0;
+        
+        public static bool CheckTwoBitmaskEqualsInAtBit(int mask1, int mask2, int index) 
+            => ((mask1 >> index) & 1) == ((mask2 >> index) & 1);
     }
 }
