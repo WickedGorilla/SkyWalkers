@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using DG.Tweening.Core;
-using DG.Tweening.Plugins.Options;
 using TMPro;
 using UI.Core;
 using UI.Views.Timer;
@@ -48,6 +46,7 @@ namespace UI.Views
         public event Action OnErrorPass;
         public ViewTimer Timer => _timer;
 
+        
         private void Awake()
         {
             _passIndexes = Array.Empty<int>();
@@ -58,10 +57,10 @@ namespace UI.Views
                     _nodeContainers, () => _passIndexes),
 
                 [typeof(SuccessPasswordState)] = new SuccessPasswordState(_successColor, this, _inputLineRenderer,
-                    _nodeContainers, CompletePass),
+                    _nodeContainers, () => OnCompletePass?.Invoke()),
 
                 [typeof(ErrorPasswordState)] = new ErrorPasswordState(_errorColor, this, _inputLineRenderer,
-                    _nodeContainers, ErrorPass)
+                    _nodeContainers, () => OnErrorPass?.Invoke())
             };
         }
 
@@ -88,14 +87,19 @@ namespace UI.Views
             if (!_states.TryGetValue(typeof(TState), out var state))
                 throw new KeyNotFoundException($"No state by {typeof(TState)}");
 
+            _currentState?.Exit();
             _currentState = state;
             _currentState.Enter(selectedNodes);
         }
 
         private void Update()
         {
+            if (GetTouchUp())
+                _currentState?.OnEndInput();
+            
             if (GetTouchDown())
                 ResetPattern();
+              
 
             if (!GetTouch(out Vector2 touchPosition))
                 return;
@@ -138,6 +142,15 @@ namespace UI.Views
             return touch.phase == TouchPhase.Began;
         }
 
+        private bool GetTouchUp()
+        {
+            if (Input.touchCount == 0)
+                return Input.GetMouseButtonUp(0);
+
+            Touch touch = Input.GetTouch(0);
+            return touch.phase == TouchPhase.Ended;
+        }
+        
         private bool GetTouch(out Vector2 position)
         {
             if (Input.touchCount == 0)
@@ -154,44 +167,48 @@ namespace UI.Views
             return isTouch;
         }
 
-        private void CompletePass()
-        {
-            DoSuccess();
-            OnCompletePass?.Invoke();
-        }
-
-        private void ErrorPass()
-        {
-            DoError();
-            OnErrorPass?.Invoke();
-        }
-
-        private void DoError()
-        {
-            _backgroundImage.color = _errorColor;
-            AnimateAlpha(1);
-        }
-
-        private void DoSuccess()
+        public void CompletePass(Action onAnimationEnd)
         {
             _backgroundImage.color = _successColor;
             _saveAreaImage.enabled = true;
 
-            AnimateAlpha(1)
-                .OnComplete(() => _saveAreaImage.enabled = false);
+            AnimateAlpha(1, OnComplete);
+            
+            void OnComplete()
+            {
+                _saveAreaImage.enabled = false;
+                ResetPattern();
+                onAnimationEnd();
+            }
         }
 
-        private TweenerCore<Color, Color, ColorOptions> AnimateAlpha(int loops)
+        public void ErrorPass()
+        {
+            _backgroundImage.color = _errorColor;
+            AnimateAlpha(1, OnComplete);
+            
+            void OnComplete()
+            {
+                ResetPattern();
+                EnterState<DefaultPasswordState>(_currentState.SelectedNodes);
+            }
+        }
+
+        private void AnimateAlpha(int loops, Action onComplete)
         {
             _backgroundImage.enabled = true;
             Color initialColor = _backgroundImage.color;
             initialColor.a = maxAlpha;
             _backgroundImage.color = initialColor;
-
-            return _backgroundImage.DOFade(minAlpha, duration)
+            
+            _backgroundImage.DOFade(minAlpha, duration)
                 .SetEase(Ease.InOutSine)
                 .SetLoops(loops, LoopType.Yoyo)
-                .OnComplete(() => _backgroundImage.enabled = false);
+                .OnComplete(() =>
+                {
+                    _backgroundImage.enabled = false;
+                    onComplete();
+                });
         }
     }
 }

@@ -12,8 +12,11 @@ namespace UI.Views.Timer
         public void SetParamText(string text)
             => _paramText.text = text;
 
-        public IUpdateTimer CreateTimer(int seconds, Action onComplete) 
-            => new SecondsTimer(seconds, UpdateTimerText, onComplete);
+        public IUpdateTimer CreateTimer(int seconds, Action onComplete)
+        {
+            UpdateTimerText(seconds);
+            return new SecondsTimer(seconds, UpdateTimerText, onComplete);
+        }
 
         private void UpdateTimerText(int totalSeconds)
         {

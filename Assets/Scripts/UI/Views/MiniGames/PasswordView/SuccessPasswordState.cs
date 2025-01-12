@@ -21,7 +21,6 @@ namespace UI.Views
         public override void Enter(LinkedList<int> selectedNodes)
         {
             base.Enter(selectedNodes);
-            LineRenderer.UpdateColor(SelectedColor);
             _onSuccess();
         }
 

@@ -60,8 +60,18 @@ namespace UI.Views
                 OnCompleteMiniGame?.Invoke();   
                 return;
             }
+
+            _currentRound++;
+            View.CompletePass(() => UpdateRoundOnTheView(_currentRound));
+        }
+
+        private void OnErrorPass()
+        {
+            _currentPassMistakes++;
+            View.ErrorPass();
             
-            UpdateRoundOnTheView(_currentRound++);
+            if (_currentPassMistakes == _miniGameData.CountMistakes)
+                OnFailMiniGame?.Invoke();
         }
 
         private void UpdateRoundOnTheView(int currentRound)
@@ -69,14 +79,5 @@ namespace UI.Views
             var idsPass = _miniGameData.GetRandomPassword().NodesIndexes;
             View.Initialize(_viewService.RootTransform, idsPass, currentRound, _miniGameData.CountRounds);
         }
-        
-        private void OnErrorPass()
-        {
-            _currentPassMistakes++;
-            
-            if (_currentPassMistakes == _miniGameData.CountMistakes)
-                OnFailMiniGame?.Invoke();
-        }
-
     }
 }

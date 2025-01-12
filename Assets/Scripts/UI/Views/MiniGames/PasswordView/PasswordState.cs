@@ -31,13 +31,18 @@ namespace UI.Views
             SelectedNodes = selectedNodes;
             UpdateColor(selectedNodes, SelectedColor);
         }
+
+        public virtual void Exit()
+        {
+            SelectedNodesMask = default;
+            _prevCountSelectedNodes = default;
+        }
         
         public abstract bool CheckNode(NodeContainer node, int selectedIndex, Vector2 touchPosition);
-        
-        
-        protected virtual void Reset()
+
+        public virtual void OnEndInput()
         {
-            _prevCountSelectedNodes = default;
+            
         }
         
         public void UpdateRender()
@@ -63,6 +68,8 @@ namespace UI.Views
         
         protected void UpdateColor(LinkedList<int> selectedNodes, Color color)
         {
+            LineRenderer.UpdateColor(SelectedColor);
+            
             foreach (var index in selectedNodes)
               _nodeContainers[index].SetColor(color);
         }

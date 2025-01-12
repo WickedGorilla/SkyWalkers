@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI.Views
@@ -8,7 +9,7 @@ namespace UI.Views
     [RequireComponent(typeof(CanvasRenderer))]
     public class UILineRenderer : Graphic
     {
-        public List<Vector2> points = new();
+        [FormerlySerializedAs("points")] public List<Vector2> _points = new();
         public float thickness = 5f;
 
         private List<UIVertex> _cacheVertices = new();
@@ -26,17 +27,17 @@ namespace UI.Views
 
             vh.Clear();
 
-            if (points.Count < 2)
+            if (_points.Count < 2)
                 return;
 
             float halfThickness = thickness / 2f;
-            _cacheVertices = new List<UIVertex>(points.Count * 4);
-            _cacheTriangles = new List<int>(points.Count * 6);
+            _cacheVertices = new List<UIVertex>(_points.Count * 4);
+            _cacheTriangles = new List<int>(_points.Count * 6);
 
-            for (int i = 0; i < points.Count - 1; i++)
+            for (int i = 0; i < _points.Count - 1; i++)
             {
-                Vector2 start = points[i];
-                Vector2 end = points[i + 1];
+                Vector2 start = _points[i];
+                Vector2 end = _points[i + 1];
 
                 Vector2 direction = (end - start).normalized;
                 Vector2 perpendicular = new Vector2(-direction.y, direction.x) * halfThickness;
@@ -68,14 +69,14 @@ namespace UI.Views
 
         public void SetPoints(IEnumerable<Vector2> newPoints)
         {
-            points = newPoints.ToList();
+            _points = newPoints.ToList();
             _meshDirty = true;
             SetVerticesDirty();
         }
 
         public void ClearPoints()
         {
-            points.Clear();
+            _points.Clear();
             _meshDirty = true;
             SetVerticesDirty();
         }
@@ -92,6 +93,8 @@ namespace UI.Views
 
         public void UpdateColor(Color newColor)
         {
+            
+            
             color = newColor;
             
             if (_meshDirty)

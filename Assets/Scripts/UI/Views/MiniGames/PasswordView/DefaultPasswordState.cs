@@ -25,6 +25,12 @@ namespace UI.Views
             base.Enter(selectedNodes);
         }
 
+        public override void Exit()
+        {
+            base.Exit();
+            _password = Array.Empty<int>();
+        }
+
         public override bool CheckNode(NodeContainer node, int selectedIndex, Vector2 touchPosition)
         {
             if (BitmaskHelper.CheckContainsInBitmask(SelectedNodesMask, selectedIndex))
@@ -59,12 +65,9 @@ namespace UI.Views
 
             return true;
         }
-        
-        protected override void Reset()
-        {
-            base.Reset();
-            _password = Array.Empty<int>();
-        }
+
+        public override void OnEndInput() 
+            => StateMachine.EnterState<ErrorPasswordState>(SelectedNodes);
 
         private bool ValidatePass(int offset, int index)
         {

@@ -103,10 +103,11 @@ namespace Game.MiniGames
             if (!_miniGamesStartActions.TryGetValue(miniGameType, out Func<IMiniGameViewController> miniGameStartAction))
                 throw new KeyNotFoundException("Unknown mini game type");
 
-            var controller = miniGameStartAction();
-            _timer = controller.CreateTimer(TimeForMiniGame, OnTimeLeft);
+            _miniGameViewController = miniGameStartAction();
+            _timer = _miniGameViewController.CreateTimer(TimeForMiniGame, OnTimeLeft);
+            _timer.Start();
             
-            _miniGameDisposable = SubscribeController(controller);
+            _miniGameDisposable = SubscribeController(_miniGameViewController);
             OnEnterMiniGame?.Invoke(miniGameType);
         }
 
@@ -134,7 +135,6 @@ namespace Game.MiniGames
         {
             var subtractValue = EarnedCoinsBeforeMiniGame / 2;
             _walletService.Coins.Subtract(subtractValue);
-            
             _timer.Stop();
             
             OnCompleteMiniGame?.Invoke(false);
@@ -143,9 +143,9 @@ namespace Game.MiniGames
 
         private void OnMiniGameComplete()
         {
-            OnCompleteMiniGame?.Invoke(true);
-            
             _timer.Stop();
+            
+            OnCompleteMiniGame?.Invoke(true);
             ResetMiniGame();
         }
 
