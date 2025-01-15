@@ -18,8 +18,10 @@ namespace Game.Environment
         [SerializeField] private Transform _lowerLevel;
         
         [SerializeField] private float _animationDuration = 1f;
-
         [SerializeField] private PlayerAnimation _player;
+        
+        [Header("MiniGames parameters")]
+        [SerializeField] private Quadrocopter _quadrocopter;
         
         private Vector3 _defaultSitGroupPosition;
         private Vector3 _defaultClimbGroupPosition;
@@ -34,6 +36,8 @@ namespace Game.Environment
         public ParticleSystem CoinsParticle => _coinsParticle;
 
         public bool Animated { get; private set; }
+
+        public Quadrocopter Quadrocopter => _quadrocopter;
 
         private void Start()
         {

@@ -21,8 +21,6 @@ namespace UI.Views
 
         [Header("Background settings")]
         [SerializeField] private Image _backgroundImage;
-
-        [SerializeField] private Image _saveAreaImage;
         [SerializeField] private float minAlpha = 0.2f;
         [SerializeField] private float maxAlpha = 0.4f;
         [SerializeField] private float duration = 1f;
@@ -99,7 +97,6 @@ namespace UI.Views
             
             if (GetTouchDown())
                 ResetPattern();
-              
 
             if (!GetTouch(out Vector2 touchPosition))
                 return;
@@ -170,13 +167,11 @@ namespace UI.Views
         public void CompletePass(Action onAnimationEnd)
         {
             _backgroundImage.color = _successColor;
-            _saveAreaImage.enabled = true;
 
             AnimateAlpha(1, OnComplete);
             
             void OnComplete()
             {
-                _saveAreaImage.enabled = false;
                 ResetPattern();
                 onAnimationEnd();
             }
@@ -194,6 +189,18 @@ namespace UI.Views
             }
         }
 
+        public void FailPass(Action animationEnd)
+        {
+            _backgroundImage.color = _errorColor;
+            AnimateAlpha(1, OnComplete);
+            
+            void OnComplete()
+            {
+                ResetPattern();
+                animationEnd?.Invoke();
+            }
+        }
+        
         private void AnimateAlpha(int loops, Action onComplete)
         {
             _backgroundImage.enabled = true;

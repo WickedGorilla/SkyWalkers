@@ -5,10 +5,14 @@ namespace Infrastructure.Data.Game.MiniGames
     [CreateAssetMenu(fileName = "MiniGamesData", menuName = "ScriptableObjects/Minigames/MiniGamesData", order = 0)]
     public class MiniGamesData  : ScriptableObject
     { 
-        [SerializeField] private PasswordMiniGameData _passwordMiniGame;
+        [SerializeField] private float _delayToStartMiniGame = 1.5f;
         [SerializeField] private Vector2Int _rangeTapsToStartMiniGame = new(90, 140);
+        
+        [Header("Mini games data")]
+        [SerializeField] private PasswordMiniGameData _passwordMiniGame;
 
         public PasswordMiniGameData PasswordMiniGame => _passwordMiniGame;
         public Vector2Int RangeTapsToStartMiniGame => _rangeTapsToStartMiniGame;
+        public float DelayToStartMiniGame => _delayToStartMiniGame;
     }
 }

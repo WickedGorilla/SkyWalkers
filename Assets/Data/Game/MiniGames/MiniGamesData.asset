@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91d7ff546e674604b2161f7afcb10df7, type: 3}
   m_Name: MiniGamesData
   m_EditorClassIdentifier: 
-  _passwordMiniGame: {fileID: 11400000, guid: fa9b7e7691b3af546a89bfc128a22eb6, type: 2}
+  _delayToStartMiniGame: 1.5
   _rangeTapsToStartMiniGame: {x: 1, y: 2}
+  _passwordMiniGame: {fileID: 11400000, guid: fa9b7e7691b3af546a89bfc128a22eb6, type: 2}

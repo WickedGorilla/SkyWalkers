@@ -9,9 +9,11 @@ namespace Infrastructure.Data.Game.MiniGames
         [SerializeField] private PasswordVariable[] _passwords;
         [SerializeField] private int _countRounds = 3;
         [SerializeField] private int _countMistakes = 3;
+        [SerializeField] private int _timeForMiniGame = 15;
 
         public int CountRounds => _countRounds;
         public int CountMistakes => _countMistakes;
+        public int TimeForMiniGame => _timeForMiniGame;
 
         public PasswordVariable GetRandomPassword()
         {

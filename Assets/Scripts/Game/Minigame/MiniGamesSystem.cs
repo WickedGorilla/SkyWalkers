@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Game.Player;
+using Infrastructure.Actions;
 using Infrastructure.Data.Game.MiniGames;
 using Infrastructure.Disposables;
 using Player;
 using UI.Core;
+using UI.Hud;
 using UI.Views;
 using UI.Views.MiniGames;
+using UI.Views.MiniGames.SecurityGuardView;
 using UI.Views.Timer;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -32,8 +35,6 @@ namespace Game.MiniGames
 
         public event Action<MiniGameType> OnEnterMiniGame;
         public event Action<bool> OnCompleteMiniGame;
-
-        private const int TimeForMiniGame = 30; 
         
         public MiniGamesSystem(MiniGamesData miniGamesData,
             WalletService walletService,
@@ -93,8 +94,10 @@ namespace Game.MiniGames
                 StartMiniGame();
         }
 
-        private void StartMiniGame()
+        private async void StartMiniGame()
         {
+            _viewService.HideCurrent();
+            
             var enumType = typeof(MiniGameType);
             var maxIndex = Enum.GetValues(enumType).Length;
             var randomIndex = Random.Range(0, maxIndex);
@@ -103,12 +106,15 @@ namespace Game.MiniGames
             if (!_miniGamesStartActions.TryGetValue(miniGameType, out Func<IMiniGameViewController> miniGameStartAction))
                 throw new KeyNotFoundException("Unknown mini game type");
 
+            OnEnterMiniGame?.Invoke(miniGameType);
+            
+            await Awaitable.WaitForSecondsAsync(_miniGamesData.DelayToStartMiniGame);
+            
             _miniGameViewController = miniGameStartAction();
-            _timer = _miniGameViewController.CreateTimer(TimeForMiniGame, OnTimeLeft);
+            _timer = _miniGameViewController.CreateTimer(OnTimeLeft);
             _timer.Start();
             
             _miniGameDisposable = SubscribeController(_miniGameViewController);
-            OnEnterMiniGame?.Invoke(miniGameType);
         }
 
         private void OnTimeLeft()
@@ -131,22 +137,31 @@ namespace Game.MiniGames
             });
         }
         
-        private void OnMiniGameFail()
+        private void OnMiniGameFail(IEventAwaiter animationAwaiter)
         {
             var subtractValue = EarnedCoinsBeforeMiniGame / 2;
             _walletService.Coins.Subtract(subtractValue);
             _timer.Stop();
             
             OnCompleteMiniGame?.Invoke(false);
-            ResetMiniGame();
+            
+            animationAwaiter.AddAwaiter(() =>
+            {
+                _viewService.Show<HudView, HudController>();
+                ResetMiniGame();
+            });
         }
 
-        private void OnMiniGameComplete()
+        private void OnMiniGameComplete(IEventAwaiter animationAwaiter)
         {
             _timer.Stop();
-            
             OnCompleteMiniGame?.Invoke(true);
-            ResetMiniGame();
+
+            animationAwaiter.AddAwaiter(() =>
+            {
+                _viewService.Show<HudView, HudController>();
+                ResetMiniGame();
+            });
         }
 
         private void ResetMiniGame()
@@ -164,6 +179,7 @@ namespace Game.MiniGames
             return new Dictionary<MiniGameType, Func<IMiniGameViewController>>
             {
                 [MiniGameType.Password] = () => _viewService.Show<PasswordView, PasswordViewController>(),
+                [MiniGameType.SecurityGuard] = () => _viewService.Show<SecurityGuardView, SecurityGuardViewController>(),
             };
         }
 
