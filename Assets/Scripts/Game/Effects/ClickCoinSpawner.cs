@@ -12,8 +12,8 @@ namespace UI.Hud
     {
         private readonly CoinsSpawnerData _data;
         private readonly ViewPrefabsData _viewPrefabsData;
-        private readonly PoolCollection<Image> _poolCoins;
-        private readonly PoolCollection<TMP_Text> _poolTextCount;
+        private  PoolCollection<Image> _poolCoins;
+        private  PoolCollection<TMP_Text> _poolTextCount;
 
         private Transform _uiParent;
 
@@ -22,12 +22,14 @@ namespace UI.Hud
         {
             _data = data;
             _viewPrefabsData = viewPrefabsData;
-            _poolCoins = new PoolCollection<Image>();
-            _poolTextCount = new PoolCollection<TMP_Text>();
         }
 
         public void Initialize()
-            => _uiParent = Object.Instantiate(_viewPrefabsData.Root).transform;
+        {
+            _poolCoins = new PoolCollection<Image>(_uiParent);
+            _poolTextCount = new PoolCollection<TMP_Text>(_uiParent);
+            _uiParent = Object.Instantiate(_viewPrefabsData.Root).transform;
+        }
 
         public void SpawnCoinEffect(int coinAmount, Vector2 centerPosition)
         {
@@ -36,11 +38,11 @@ namespace UI.Hud
             Vector2 target = spawnPosition + direction * _data.MoveDistance;
             float rotation = Random.Range(-30f, 30f);
 
-            var spawnedCoin = _poolCoins.Get(_data.CoinPrefab, spawnPosition, rotation, _uiParent);
+            var spawnedCoin = _poolCoins.Get(_data.CoinPrefab, spawnPosition, rotation);
             AnimateCoin(spawnedCoin, target);
 
             var textPosition = spawnPosition + _data.TextOffset;
-            var spawnedText = _poolTextCount.Get(_data.TextPrefab, textPosition, 0f, _uiParent);
+            var spawnedText = _poolTextCount.Get(_data.TextPrefab, textPosition, 0f);
             spawnedText.text = $"+{coinAmount}";
             AnimateText(spawnedText, target);
             

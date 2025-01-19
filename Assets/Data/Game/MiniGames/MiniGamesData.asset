@@ -15,3 +15,4 @@ MonoBehaviour:
   _delayToStartMiniGame: 1.5
   _rangeTapsToStartMiniGame: {x: 1, y: 2}
   _passwordMiniGame: {fileID: 11400000, guid: fa9b7e7691b3af546a89bfc128a22eb6, type: 2}
+  _securityGuardMiniGame: {fileID: 11400000, guid: 3cf7d610f4c689d4bb2434c3b71d6b7e, type: 2}

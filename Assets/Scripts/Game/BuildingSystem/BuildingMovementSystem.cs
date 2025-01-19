@@ -12,7 +12,7 @@ namespace Game.BuildingSystem
     {
         private readonly BuildingsData _data;
         private readonly IEnvironmentHolder _environmentHolder;
-        private readonly PoolCollection<BuildingConnector> _poolSystem;
+        private PoolCollection<BuildingConnector> _poolSystem;
         private readonly LinkedList<BuildingConnector> _spawnedBuildings;
         private readonly AnimatorBackground _animatorBackground;
         private readonly AnimatorBackground _animatorBackground1;
@@ -25,7 +25,6 @@ namespace Game.BuildingSystem
         {
             _data = data;
             _environmentHolder = environmentHolder;
-            _poolSystem = new PoolCollection<BuildingConnector>();
             _spawnedBuildings = new LinkedList<BuildingConnector>();
             _animatorBackground = new AnimatorBackground();
             _animatorBackground1 = new AnimatorBackground();
@@ -37,6 +36,7 @@ namespace Game.BuildingSystem
 
         public void Initialize()
         {
+            _poolSystem = new PoolCollection<BuildingConnector>();
             SpawnFirst();
             _animatorBackground.Initialize(Environment.DynamicLayer1, true, 0.05f);
             _animatorBackground1.Initialize(Environment.DynamicLayer2);

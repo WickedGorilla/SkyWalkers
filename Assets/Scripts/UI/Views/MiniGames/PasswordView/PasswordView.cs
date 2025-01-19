@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using Infrastructure;
 using TMPro;
 using UI.Core;
 using UI.Views.Timer;
@@ -43,7 +44,6 @@ namespace UI.Views
         public event Action OnCompletePass;
         public event Action OnErrorPass;
         public ViewTimer Timer => _timer;
-
         
         private void Awake()
         {
@@ -92,13 +92,13 @@ namespace UI.Views
 
         private void Update()
         {
-            if (GetTouchUp())
+            if (ScreenInput.GetTouchUp())
                 _currentState?.OnEndInput();
             
-            if (GetTouchDown())
+            if (ScreenInput.GetTouchDown())
                 ResetPattern();
 
-            if (!GetTouch(out Vector2 touchPosition))
+            if (!ScreenInput.GetTouch(out Vector2 touchPosition))
                 return;
 
             RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasTransform, touchPosition, null,
@@ -129,40 +129,7 @@ namespace UI.Views
             _currentState.SelectedNodes.Clear();
             _inputLineRenderer.ClearPoints();
         }
-
-        private bool GetTouchDown()
-        {
-            if (Input.touchCount == 0)
-                return Input.GetMouseButtonDown(0);
-
-            Touch touch = Input.GetTouch(0);
-            return touch.phase == TouchPhase.Began;
-        }
-
-        private bool GetTouchUp()
-        {
-            if (Input.touchCount == 0)
-                return Input.GetMouseButtonUp(0);
-
-            Touch touch = Input.GetTouch(0);
-            return touch.phase == TouchPhase.Ended;
-        }
         
-        private bool GetTouch(out Vector2 position)
-        {
-            if (Input.touchCount == 0)
-            {
-                var isMouseDown = Input.GetMouseButton(0);
-                position = isMouseDown ? Input.mousePosition : Vector2.zero;
-                return isMouseDown;
-            }
-
-            Touch touch = Input.GetTouch(0);
-
-            var isTouch = touch.phase is TouchPhase.Moved or TouchPhase.Stationary;
-            position = isTouch ? touch.position : Vector2.zero;
-            return isTouch;
-        }
 
         public void CompletePass(Action onAnimationEnd)
         {

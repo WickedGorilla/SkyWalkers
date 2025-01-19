@@ -17,8 +17,8 @@ namespace UI.Core
         
         public void Show()
         {
-            View.OnShow();
             View.gameObject.SetActive(true);
+            View.OnShow();
             OnShow();
         }
 

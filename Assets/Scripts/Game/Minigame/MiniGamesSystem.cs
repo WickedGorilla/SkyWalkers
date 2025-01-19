@@ -102,6 +102,8 @@ namespace Game.MiniGames
             var maxIndex = Enum.GetValues(enumType).Length;
             var randomIndex = Random.Range(0, maxIndex);
             var miniGameType = (MiniGameType)randomIndex;
+
+            miniGameType = MiniGameType.SecurityGuard;
             
             if (!_miniGamesStartActions.TryGetValue(miniGameType, out Func<IMiniGameViewController> miniGameStartAction))
                 throw new KeyNotFoundException("Unknown mini game type");

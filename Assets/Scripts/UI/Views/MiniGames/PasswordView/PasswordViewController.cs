@@ -32,9 +32,6 @@ namespace UI.Views
             _environmentHolder = environmentHolder;
         }
 
-        public IUpdateTimer CreateTimer(int time, Action onComplete)
-            => View.Timer.CreateTimer(time, onComplete);
-
         public bool CheckIsComplete()
             => _currentRound == _miniGameData.CountRounds;
 

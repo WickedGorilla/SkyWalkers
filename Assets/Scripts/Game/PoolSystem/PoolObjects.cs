@@ -15,12 +15,13 @@ namespace Game.PoolSystem
 
 		private Transform _parent;
 
-		public PoolObjects(T prefab)
+		public PoolObjects(T prefab,  Transform parent = null)
 		{
 			_prefab = prefab;
-			
-			var parent = new GameObject {name = $"{_prefab.name} pool objects"};
-			_parent = parent.transform;
+
+			_parent = parent == null
+				? new GameObject { name = $"{prefab.name} pool objects" }.transform
+				: parent;
 		}
 
 		public T Get()
@@ -40,6 +41,14 @@ namespace Game.PoolSystem
 			return poolObject;
 		}
 
+		public T Get(Transform parent)
+		{
+			T poolObject = Get();
+			poolObject.transform.SetParent(parent);
+			
+			return poolObject;
+		}
+		
 		public void Return(T returnObject)
 		{
 			if (Instantiated.Remove(returnObject))
@@ -54,7 +63,7 @@ namespace Game.PoolSystem
 		
 		private T Create()
 		{
-			var instantiatedObject = Object.Instantiate(_prefab);
+			var instantiatedObject = Object.Instantiate(_prefab, _parent);
 			instantiatedObject.name = _prefab.name;
 			
 			return instantiatedObject;
