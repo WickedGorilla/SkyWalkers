@@ -1,6 +1,7 @@
 using Infrastructure.Data.Effects;
 using Infrastructure.Data.Game;
 using Infrastructure.Data.Game.MiniGames;
+using Infrastructure.Data.Game.MiniGames.ConstructionMiniGame;
 using Infrastructure.Data.Game.MiniGames.RainMiniGame;
 using Infrastructure.Data.Game.MiniGames.SecurityGuardMiniGame;
 using Infrastructure.Data.Game.Shop;
@@ -31,6 +32,7 @@ namespace Infrastructure.BootSystem.Installers
             Container.Bind<PasswordMiniGameData>().FromInstance(_miniGamesData.PasswordMiniGame).AsSingle();
             Container.Bind<SecurityGuardMiniGameData>().FromInstance(_miniGamesData.SecurityGuardMiniGame).AsSingle();
             Container.Bind<RainMiniGameData>().FromInstance(_miniGamesData.RainMiniGameData).AsSingle();
+            Container.Bind<ConstructionMiniGameData>().FromInstance(_miniGamesData.ConstructionMiniGameData).AsSingle();
         }
     }
 }

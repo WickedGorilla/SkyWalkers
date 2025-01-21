@@ -9,6 +9,7 @@ using UI.Core;
 using UI.Hud;
 using UI.Views;
 using UI.Views.MiniGames;
+using UI.Views.MiniGames.ConstructionView;
 using UI.Views.MiniGames.RainView;
 using UI.Views.MiniGames.SecurityGuardView;
 using UI.Views.Timer;
@@ -184,6 +185,7 @@ namespace Game.MiniGames
                 [MiniGameType.Password] = () => _viewService.Show<PasswordView, PasswordViewController>(),
                 [MiniGameType.SecurityGuard] = () => _viewService.Show<SecurityGuardView, SecurityGuardViewController>(),
                 [MiniGameType.Rain] = () => _viewService.Show<RainView, RainViewController>(),
+                [MiniGameType.Construction] = () => _viewService.Show<ConstructionView, ConstructionViewController>(),
             };
         }
 

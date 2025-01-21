@@ -40,6 +40,7 @@ namespace UI.Views.MiniGames.RainView
         
         public void VisualizeSuccess(Action onComplete)
         {
+            _timer.SetParamText("1/1");
             _backgroundImage.DOColor(Color.green, DurationResultAnimation)
                 .SetEase(Ease.InOutSine)
                 .SetLoops(2, LoopType.Yoyo).OnComplete(() => onComplete());

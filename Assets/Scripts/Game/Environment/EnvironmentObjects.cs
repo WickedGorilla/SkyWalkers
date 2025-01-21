@@ -23,8 +23,10 @@ namespace Game.Environment
         [Header("MiniGames parameters")]
         [SerializeField] private EnvironmentAnimation _quadrocopter;
         [SerializeField] private EnvironmentAnimation _securityGuardMan;
+        [SerializeField] private EnvironmentAnimation _platformConstruction;
         [SerializeField] private SpriteRenderer _stopLine;
         [SerializeField] private ParticleSystem _rainParticle;
+
         
         private Vector3 _defaultSitGroupPosition;
         private Vector3 _defaultClimbGroupPosition;
@@ -44,6 +46,7 @@ namespace Game.Environment
         public EnvironmentAnimation SecurityGuardMan => _securityGuardMan;
         public SpriteRenderer StopLine => _stopLine;
         public ParticleSystem RainParticle => _rainParticle;
+        public EnvironmentAnimation PlatformConstruction => _platformConstruction;
 
         private void Start()
         {
