@@ -12,6 +12,7 @@ namespace Game.Player
         private readonly LinkedList<Action> _onClimbListeners = new();
         
         [SerializeField] private Animator _animator;
+        
         private Coroutine _currentCoroutine;
         
         public void AnimateByClick()
@@ -24,6 +25,20 @@ namespace Game.Player
             _currentCoroutine = StartCoroutine(AnimateCoroutine());
         }
 
+        public void AnimateWhile(Func<bool> predicate)
+        {
+            _animator.SetBool(_climbName, true);
+            StartCoroutine(Routine());
+            
+            IEnumerator Routine()
+            {
+                while (!predicate())
+                    yield return null;
+                
+                _animator.SetBool(_climbName, false);
+            }
+        }
+        
         private void Update()
         {
             AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Environment
 {
-    public class Quadrocopter : MonoBehaviour
+    public class EnvironmentAnimation : MonoBehaviour
     {
         [SerializeField] private Animator _animator;
         

@@ -1,3 +1,4 @@
+using Infrastructure.Data.Game.MiniGames.RainMiniGame;
 using Infrastructure.Data.Game.MiniGames.SecurityGuardMiniGame;
 using UnityEngine;
 
@@ -12,11 +13,13 @@ namespace Infrastructure.Data.Game.MiniGames
         [Header("Mini games data")]
         [SerializeField] private PasswordMiniGameData _passwordMiniGame;
         [SerializeField] private SecurityGuardMiniGameData _securityGuardMiniGame;
+        [SerializeField] private RainMiniGameData _rainMiniGameData;
 
-        public PasswordMiniGameData PasswordMiniGame => _passwordMiniGame;
-        public SecurityGuardMiniGameData SecurityGuardMiniGame => _securityGuardMiniGame;
-        
         public Vector2Int RangeTapsToStartMiniGame => _rangeTapsToStartMiniGame;
         public float DelayToStartMiniGame => _delayToStartMiniGame;
+        
+        public PasswordMiniGameData PasswordMiniGame => _passwordMiniGame;
+        public SecurityGuardMiniGameData SecurityGuardMiniGame => _securityGuardMiniGame;
+        public RainMiniGameData RainMiniGameData => _rainMiniGameData;
     }
 }

@@ -9,6 +9,7 @@ using UI.Core;
 using UI.Hud;
 using UI.Views;
 using UI.Views.MiniGames;
+using UI.Views.MiniGames.RainView;
 using UI.Views.MiniGames.SecurityGuardView;
 using UI.Views.Timer;
 using UnityEngine;
@@ -103,7 +104,7 @@ namespace Game.MiniGames
             var randomIndex = Random.Range(0, maxIndex);
             var miniGameType = (MiniGameType)randomIndex;
 
-            miniGameType = MiniGameType.SecurityGuard;
+            miniGameType = MiniGameType.Rain;
             
             if (!_miniGamesStartActions.TryGetValue(miniGameType, out Func<IMiniGameViewController> miniGameStartAction))
                 throw new KeyNotFoundException("Unknown mini game type");
@@ -182,6 +183,7 @@ namespace Game.MiniGames
             {
                 [MiniGameType.Password] = () => _viewService.Show<PasswordView, PasswordViewController>(),
                 [MiniGameType.SecurityGuard] = () => _viewService.Show<SecurityGuardView, SecurityGuardViewController>(),
+                [MiniGameType.Rain] = () => _viewService.Show<RainView, RainViewController>(),
             };
         }
 

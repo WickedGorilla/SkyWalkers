@@ -20,7 +20,7 @@ namespace UI.Views
         public event Action<IEventAwaiter> OnCompleteMiniGame;
         public event Action<IEventAwaiter> OnFailMiniGame;
 
-        public Quadrocopter Quadrocopter => _environmentHolder.Environment.Quadrocopter;
+        public EnvironmentAnimation Quadrocopter => _environmentHolder.Environment.Quadrocopter;
 
         public PasswordViewController(ViewService viewService,
             PasswordView view,

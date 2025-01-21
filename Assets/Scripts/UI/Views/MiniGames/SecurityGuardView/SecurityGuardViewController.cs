@@ -1,4 +1,5 @@
 using System;
+using Game.Environment;
 using Infrastructure.Actions;
 using Infrastructure.Data.Game.MiniGames.SecurityGuardMiniGame;
 using UI.Core;
@@ -9,29 +10,38 @@ namespace UI.Views.MiniGames.SecurityGuardView
     public class SecurityGuardViewController : ViewController<SecurityGuardView>, IMiniGameViewController
     {
         private readonly SecurityGuardMiniGameData _miniGameData;
+        private readonly IEnvironmentHolder _environmentHolder;
 
         private int _earnCoin;
         private int _mistakes;
         
         public SecurityGuardViewController(SecurityGuardView view, 
-            SecurityGuardMiniGameData miniGameData) : base(view)
+            SecurityGuardMiniGameData miniGameData,
+            IEnvironmentHolder environmentHolder) : base(view)
         {
             _miniGameData = miniGameData;
+            _environmentHolder = environmentHolder;
         }
 
         public event Action<IEventAwaiter> OnCompleteMiniGame;
         public event Action<IEventAwaiter> OnFailMiniGame;
 
+        public EnvironmentAnimation GuardMan => _environmentHolder.Environment.SecurityGuardMan;
+        
         protected override void OnShow()
         {
             View.OnEarnSuccess += OnEarnSuccess;
             View.OnEarnMistake += OnEarnMistake;
+            
+            GuardMan.DoShow();
         }
 
         protected override void OnHide()
         {
             View.OnEarnSuccess -= OnEarnSuccess;
             View.OnEarnMistake -= OnEarnMistake;
+            
+            GuardMan.DoHide();
         }
         
         public bool CheckIsComplete() 

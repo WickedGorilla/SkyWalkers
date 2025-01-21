@@ -21,7 +21,10 @@ namespace Game.Environment
         [SerializeField] private PlayerAnimation _player;
         
         [Header("MiniGames parameters")]
-        [SerializeField] private Quadrocopter _quadrocopter;
+        [SerializeField] private EnvironmentAnimation _quadrocopter;
+        [SerializeField] private EnvironmentAnimation _securityGuardMan;
+        [SerializeField] private SpriteRenderer _stopLine;
+        [SerializeField] private ParticleSystem _rainParticle;
         
         private Vector3 _defaultSitGroupPosition;
         private Vector3 _defaultClimbGroupPosition;
@@ -37,7 +40,10 @@ namespace Game.Environment
 
         public bool Animated { get; private set; }
 
-        public Quadrocopter Quadrocopter => _quadrocopter;
+        public EnvironmentAnimation Quadrocopter => _quadrocopter;
+        public EnvironmentAnimation SecurityGuardMan => _securityGuardMan;
+        public SpriteRenderer StopLine => _stopLine;
+        public ParticleSystem RainParticle => _rainParticle;
 
         private void Start()
         {
