@@ -21,6 +21,7 @@ namespace UI.Views.MiniGames.ConstructionView
         private float _currentPower;
         private CancellationTokenSource _cancellationTokenSource;
         private bool _isComplete;
+        private Vector3 _defaultConstructionPosition;
 
         public ConstructionViewController(ConstructionView view,
             ConstructionMiniGameData miniGameData,
@@ -51,6 +52,8 @@ namespace UI.Views.MiniGames.ConstructionView
 
         protected override void OnShow()
         {
+            _defaultConstructionPosition = Platform.transform.position;
+            
             Initialize();
             Platform.DoShow();
             
@@ -61,6 +64,7 @@ namespace UI.Views.MiniGames.ConstructionView
         protected override void OnHide()
         {
             _directionsForButtons.Clear();
+            Platform.transform.position = _defaultConstructionPosition;
         }
 
         private async void OnUpdate(CancellationTokenSource tokenSource)
@@ -150,7 +154,8 @@ namespace UI.Views.MiniGames.ConstructionView
             var value = _directionsForButtons.First.Value;
             _currentDirection = value.Key;
             _currentPower = value.Value;
-
+            View.HighlightButton(_currentDirection);
+            
             _directionsForButtons.RemoveFirst();
         }
 
@@ -167,9 +172,10 @@ namespace UI.Views.MiniGames.ConstructionView
         private void EndMiniGame()
         {
             _cancellationTokenSource.Cancel();
+            Platform.DoHide();
         }
-        
-        private enum ButtonDirectionType
+
+        public enum ButtonDirectionType
         {
             Right,
             Left

@@ -105,7 +105,7 @@ namespace Game.MiniGames
             var randomIndex = Random.Range(0, maxIndex);
             var miniGameType = (MiniGameType)randomIndex;
 
-            miniGameType = MiniGameType.Rain;
+            miniGameType = MiniGameType.Construction;
             
             if (!_miniGamesStartActions.TryGetValue(miniGameType, out Func<IMiniGameViewController> miniGameStartAction))
                 throw new KeyNotFoundException("Unknown mini game type");
