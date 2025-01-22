@@ -53,10 +53,10 @@ namespace UI.Views.MiniGames.ConstructionView
         protected override void OnShow()
         {
             _defaultConstructionPosition = Platform.transform.position;
-            
+
             Initialize();
             Platform.DoShow();
-            
+
             _cancellationTokenSource = new CancellationTokenSource();
             OnUpdate(_cancellationTokenSource);
         }
@@ -75,7 +75,7 @@ namespace UI.Views.MiniGames.ConstructionView
                 await Awaitable.NextFrameAsync();
             }
         }
-        
+
         private void Initialize()
         {
             float reservePower = _miniGameData.ReservePowerControl;
@@ -150,12 +150,12 @@ namespace UI.Views.MiniGames.ConstructionView
                 DoSuccess();
                 return;
             }
-            
+
             var value = _directionsForButtons.First.Value;
             _currentDirection = value.Key;
             _currentPower = value.Value;
             View.HighlightButton(_currentDirection);
-            
+
             _directionsForButtons.RemoveFirst();
         }
 
@@ -163,12 +163,12 @@ namespace UI.Views.MiniGames.ConstructionView
         {
             _isComplete = true;
             EndMiniGame();
-            
+
             var eventAwaiter = new EventAwaiter();
             OnCompleteMiniGame?.Invoke(eventAwaiter);
-            eventAwaiter.Complete();
+            View.VisualizeSuccess(eventAwaiter.Complete);
         }
-        
+
         private void EndMiniGame()
         {
             _cancellationTokenSource.Cancel();

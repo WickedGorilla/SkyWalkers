@@ -1,3 +1,5 @@
+using System;
+using DG.Tweening;
 using UI.Core;
 using UI.CustomButtons;
 using UI.Views.Timer;
@@ -14,9 +16,10 @@ namespace UI.Views.MiniGames.ConstructionView
         [SerializeField] private Image _leftImage;
         [SerializeField] private Image _rightImage;
         [SerializeField] private Color _disableColor = Color.gray;
+        [SerializeField] private Image _backgroundImage;
 
         private Image _selectedButton;
-        
+
         public ViewTimer Timer => _timer;
         public UIButton LeftButton => _leftButton;
         public UIButton RightButton => _rightButton;
@@ -35,6 +38,21 @@ namespace UI.Views.MiniGames.ConstructionView
             
             _selectedButton = imageButton;
             _selectedButton.color = Color.white;
+        }
+        
+        public void VisualizeFail(Action onComplete)
+        {
+            _backgroundImage.DOColor(Color.green, 1f)
+                .SetEase(Ease.InOutSine)
+                .SetLoops(2, LoopType.Yoyo).OnComplete(() => onComplete());
+        }
+        
+        public void VisualizeSuccess(Action onComplete)
+        {
+            _timer.SetParamText("1/1");
+            _backgroundImage.DOColor(Color.green, 1f)
+                .SetEase(Ease.InOutSine)
+                .SetLoops(2, LoopType.Yoyo).OnComplete(() => onComplete());
         }
     }
 }

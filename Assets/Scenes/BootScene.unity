@@ -629,6 +629,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ConstructionMiniGame
       objectReference: {fileID: 0}
+    - target: {fileID: 7070321083471545427, guid: a891199ff91c0b149a6e4bab22a454e3, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

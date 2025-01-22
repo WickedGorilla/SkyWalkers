@@ -555,6 +555,7 @@ MonoBehaviour:
   _leftImage: {fileID: 8294586112831657738}
   _rightImage: {fileID: 153390409238259108}
   _disableColor: {r: 0.6431373, g: 0.6431373, b: 0.6431373, a: 1}
+  _backgroundImage: {fileID: 7070321083471545427}
 --- !u!1 &3310325163017286840
 GameObject:
   m_ObjectHideFlags: 0
