@@ -17,6 +17,7 @@ namespace UI.Hud
         private readonly IGameStateMachine _gameStateMachine;
         private readonly ViewService _viewService;
         private readonly IEnvironmentHolder _environmentHolder;
+        private readonly ClickCoinSpawner _clickCoinSpawner;
 
         public HudController(HudView view,
             FarmCoinsSystem farmCoinsSystem,
@@ -24,7 +25,8 @@ namespace UI.Hud
             BoostSystem boostSystem,
             IGameStateMachine gameStateMachine,
             ViewService viewService,
-            IEnvironmentHolder environmentHolder) : base(view)
+            IEnvironmentHolder environmentHolder,
+            ClickCoinSpawner clickCoinSpawner) : base(view)
         {
             _farmCoinsSystem = farmCoinsSystem;
             _walletService = walletService;
@@ -32,6 +34,7 @@ namespace UI.Hud
             _gameStateMachine = gameStateMachine;
             _viewService = viewService;
             _environmentHolder = environmentHolder;
+            _clickCoinSpawner = clickCoinSpawner;
         }
 
         protected override void OnShow()
@@ -45,7 +48,8 @@ namespace UI.Hud
             _walletService.Coins.OnChangeValue += View.SetCoinsCount;
             _walletService.Energy.OnChangeValue += SetEnergy;
 
-            View.Initialize(_walletService.Coins, _walletService.Energy, _walletService.PlayPass, _walletService.Boosts);
+            View.Initialize(_walletService.Coins, _walletService.Energy, _walletService.PlayPass,
+                _walletService.Boosts);
         }
 
         protected override void OnHide()
@@ -60,6 +64,13 @@ namespace UI.Hud
             _walletService.Energy.OnChangeValue -= SetEnergy;
         }
 
+        public void SpawnSubtractText(int subtractCoins)
+        {
+            var startPosition = View.CoinsText.transform.position - new Vector3(0f, 300f);
+            var endPosition = startPosition + new Vector3(0f, 100f);
+            _clickCoinSpawner.SpawnText($"-{subtractCoins}", startPosition, endPosition);
+        }
+
         private void OnTap(Vector2 position)
             => _farmCoinsSystem.Tap(position);
 
@@ -68,9 +79,9 @@ namespace UI.Hud
 
         private void OnClickEnergy()
         {
-            if (_boostSystem.UsePlayPass()) 
+            if (_boostSystem.UsePlayPass())
                 return;
-            
+
             _viewService.AddPopupToQueueAndShow<NoEnergyPopup, NoEnergyPopupController>();
         }
 
@@ -81,32 +92,32 @@ namespace UI.Hud
                 _viewService.AddPopupToQueueAndShow<NoEnergyPopup, NoEnergyPopupController>();
                 return;
             }
-            
+
             View.EnableBoost(true);
             View.SetBoostCount(_walletService.Boosts);
         }
-        
+
         private void StartTimer(int time, Action onComplete)
         {
             var timer = View.Timer.CreateTimer(time, OnComplete);
             timer.Start();
-                
+
             void OnComplete()
             {
                 onComplete();
                 View.EnableBoost(false);
             }
         }
-        
+
         private void OnClickBack()
         {
             if (_environmentHolder.Environment.Animated)
                 return;
-            
+
             _gameStateMachine.Enter<MainMenuState>();
         }
-        
-        private void OnClickGear() 
+
+        private void OnClickGear()
             => _viewService.Show<ShopInGameView, ShopInGameController>();
     }
 }

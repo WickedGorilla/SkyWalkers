@@ -104,8 +104,8 @@ namespace Game.MiniGames
             var maxIndex = Enum.GetValues(enumType).Length;
             var randomIndex = Random.Range(0, maxIndex);
             var miniGameType = (MiniGameType)randomIndex;
-
-            miniGameType = MiniGameType.Construction;
+            
+             miniGameType = MiniGameType.SecurityGuard;
             
             if (!_miniGamesStartActions.TryGetValue(miniGameType, out Func<IMiniGameViewController> miniGameStartAction))
                 throw new KeyNotFoundException("Unknown mini game type");
@@ -151,7 +151,7 @@ namespace Game.MiniGames
             
             animationAwaiter.AddAwaiter(() =>
             {
-                _viewService.Show<HudView, HudController>();
+                _viewService.Show<HudView, HudController>().SpawnSubtractText(subtractValue);
                 ResetMiniGame();
             });
         }
@@ -185,7 +185,7 @@ namespace Game.MiniGames
                 [MiniGameType.Password] = () => _viewService.Show<PasswordView, PasswordViewController>(),
                 [MiniGameType.SecurityGuard] = () => _viewService.Show<SecurityGuardView, SecurityGuardViewController>(),
                 [MiniGameType.Rain] = () => _viewService.Show<RainView, RainViewController>(),
-                [MiniGameType.Construction] = () => _viewService.Show<ConstructionView, ConstructionViewController>(),
+                [MiniGameType.Construction] = () => _viewService.Show<ConstructionView, ConstructionViewController>()
             };
         }
 

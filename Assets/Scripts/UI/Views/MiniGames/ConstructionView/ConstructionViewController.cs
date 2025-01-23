@@ -42,8 +42,8 @@ namespace UI.Views.MiniGames.ConstructionView
         public void DoFailMiniGame()
         {
             var eventAwaiter = new EventAwaiter();
+            View.VisualizeFail(eventAwaiter.Complete);
             OnFailMiniGame?.Invoke(eventAwaiter);
-            eventAwaiter.Complete();
             EndMiniGame();
         }
 
@@ -121,7 +121,7 @@ namespace UI.Views.MiniGames.ConstructionView
                 if (!View.LeftButton.IsPressed)
                     return;
 
-                MovePlatform(0.2f);
+                MovePlatform(0.5f);
             }
         }
 
@@ -165,8 +165,8 @@ namespace UI.Views.MiniGames.ConstructionView
             EndMiniGame();
 
             var eventAwaiter = new EventAwaiter();
-            OnCompleteMiniGame?.Invoke(eventAwaiter);
             View.VisualizeSuccess(eventAwaiter.Complete);
+            OnCompleteMiniGame?.Invoke(eventAwaiter);
         }
 
         private void EndMiniGame()

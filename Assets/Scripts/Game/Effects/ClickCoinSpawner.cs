@@ -12,8 +12,9 @@ namespace UI.Hud
     {
         private readonly CoinsSpawnerData _data;
         private readonly ViewPrefabsData _viewPrefabsData;
-        private  PoolCollection<Image> _poolCoins;
-        private  PoolCollection<TMP_Text> _poolTextCount;
+
+        private PoolCollection<Image> _poolCoins;
+        private PoolCollection<TMP_Text> _poolTextCount;
 
         private Transform _uiParent;
 
@@ -26,9 +27,9 @@ namespace UI.Hud
 
         public void Initialize()
         {
+            _uiParent = Object.Instantiate(_viewPrefabsData.Root).transform;
             _poolCoins = new PoolCollection<Image>(_uiParent);
             _poolTextCount = new PoolCollection<TMP_Text>(_uiParent);
-            _uiParent = Object.Instantiate(_viewPrefabsData.Root).transform;
         }
 
         public void SpawnCoinEffect(int coinAmount, Vector2 centerPosition)
@@ -38,18 +39,37 @@ namespace UI.Hud
             Vector2 target = spawnPosition + direction * _data.MoveDistance;
             float rotation = Random.Range(-30f, 30f);
 
-            var spawnedCoin = _poolCoins.Get(_data.CoinPrefab, spawnPosition, rotation);
+            var spawnedCoin = _poolCoins.Get(_data.CoinPrefab, spawnPosition, rotation, _uiParent);
             AnimateCoin(spawnedCoin, target);
+            SpawnText($"+{coinAmount}", spawnPosition, target);
+        }
 
-            var textPosition = spawnPosition + _data.TextOffset;
-            var spawnedText = _poolTextCount.Get(_data.TextPrefab, textPosition, 0f);
-            spawnedText.text = $"+{coinAmount}";
-            AnimateText(spawnedText, target);
-            
-            /*for (int i = 0; i < coinAmount; i++)
+        public void SpawnText(string text, Vector2 position, Vector2 endPosition)
+        {
+            var textPosition = position + _data.TextOffset;
+            var spawnedText = _poolTextCount.Get(_data.TextPrefab, textPosition, 0f, _uiParent);
+            spawnedText.text = text;
+            AnimateText(spawnedText, endPosition);
+        }
+
+        private void AnimateText(TMP_Text spawnedText, Vector2 target)
+        {
+            target += _data.TextOffset;
+
+            Sequence textSequence = DOTween.Sequence();
+            textSequence.Join(spawnedText.transform.DOMove(target, _data.TextAnimationDuration)
+                .SetEase(Ease.OutCubic));
+
+            textSequence.Join(spawnedText.DOFade(0, _data.TextAnimationDuration)
+                .SetEase(Ease.InQuad));
+
+            textSequence.OnComplete(() =>
             {
-                
-            }*/
+                spawnedText.color = GetResetColor(spawnedText.color);
+                _poolTextCount.Return(spawnedText);
+            });
+
+            textSequence.Play();
         }
 
         private Vector3 GetRandomPositionInsideArc(Vector3 center)
@@ -59,26 +79,8 @@ namespace UI.Hud
             float radius = Random.Range(_data.MinRadius, _data.MaxRadius);
             float x = Mathf.Cos(radians) * radius;
             float y = Mathf.Sin(radians) * radius;
-            
-            return new Vector3(center.x + x, center.y + y, center.z);
-        }
-        
-        private void AnimateText(TMP_Text spawnedText, Vector2 target)
-        {
-            target += _data.TextOffset;
-            
-            Sequence textSequence = DOTween.Sequence();
-            textSequence.Join(spawnedText.transform.DOMove(target, _data.TextAnimationDuration)
-                    .SetEase(Ease.OutCubic))
-                .Join(spawnedText.DOFade(0, _data.TextAnimationDuration)
-                    .SetEase(Ease.InQuad))
-                .OnComplete(() =>
-                {
-                    spawnedText.color = GetResetColor(spawnedText.color);
-                    _poolTextCount.Return(spawnedText);
-                });
 
-            textSequence.Play();
+            return new Vector3(center.x + x, center.y + y, center.z);
         }
 
         private void AnimateCoin(Image spawnedCoin, Vector2 target)
@@ -106,7 +108,7 @@ namespace UI.Hud
             {
                 a = 1f
             };
-            
+
             return resetColor;
         }
     }

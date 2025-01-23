@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ConstructionMiniGameData
   m_EditorClassIdentifier: 
   _timeForMiniGame: 30
-  _reservePowerControl: 6
+  _reservePowerControl: 8
   _powerRangeForLeft: {x: 0.5, y: 1.3}
   _powerRangeForRight: {x: 1, y: 2}
   _forceDecayRate: 0.5

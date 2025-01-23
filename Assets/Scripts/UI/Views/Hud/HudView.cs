@@ -51,6 +51,7 @@ namespace UI.Hud
         public Button EnergyButton => _energyButton;
         public Button BackButton => _backButton;
         public ViewTimer Timer => _viewTimer;
+        public TMP_Text CoinsText => _coinsText;
 
         public override void OnShow()
         {

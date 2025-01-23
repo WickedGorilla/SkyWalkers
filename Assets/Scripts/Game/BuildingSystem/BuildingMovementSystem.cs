@@ -12,12 +12,12 @@ namespace Game.BuildingSystem
     {
         private readonly BuildingsData _data;
         private readonly IEnvironmentHolder _environmentHolder;
-        private PoolCollection<BuildingConnector> _poolSystem;
         private readonly LinkedList<BuildingConnector> _spawnedBuildings;
         private readonly AnimatorBackground _animatorBackground;
         private readonly AnimatorBackground _animatorBackground1;
         private readonly AnimatorBackground _animatorBackground2;
-
+        
+        private PoolCollection<BuildingConnector> _poolSystem;
         private Action _onMove;
 
         public BuildingMovementSystem(BuildingsData data,
@@ -36,7 +36,7 @@ namespace Game.BuildingSystem
 
         public void Initialize()
         {
-            _poolSystem = new PoolCollection<BuildingConnector>();
+            _poolSystem = new PoolCollection<BuildingConnector>(Parent);
             SpawnFirst();
             _animatorBackground.Initialize(Environment.DynamicLayer1, true, 0.05f);
             _animatorBackground1.Initialize(Environment.DynamicLayer2);
@@ -45,16 +45,14 @@ namespace Game.BuildingSystem
 
         private void SpawnFirst()
         {
-            BuildingConnector lastBuilding = _poolSystem.Get(GetRandomPrefab());
-            lastBuilding.transform.SetParent(Parent);
+            BuildingConnector lastBuilding = _poolSystem.Get(GetRandomPrefab(), Parent);
             lastBuilding.transform.localPosition = new Vector3(0f, _data.StartSpawnPosition);
             _spawnedBuildings.AddFirst(lastBuilding);
 
             while (lastBuilding.transform.position.y > _data.MinimumPosition)
             {
-                BuildingConnector building = _poolSystem.Get(GetRandomPrefab());
+                BuildingConnector building = _poolSystem.Get(GetRandomPrefab(), Parent);
                 building.ConnectUpperTo(lastBuilding.Border.BorderDown);
-                building.transform.SetParent(Parent);
                 _spawnedBuildings.AddLast(building);
                 lastBuilding = building;
             }
@@ -118,10 +116,8 @@ namespace Game.BuildingSystem
             _spawnedBuildings.RemoveLast();
 
             BuildingConnector first = _spawnedBuildings.First.Value;
-            BuildingConnector building = _poolSystem.Get(GetRandomPrefab());
+            BuildingConnector building = _poolSystem.Get(GetRandomPrefab(), Parent);
             building.ConnectDownTo(first.Border.BorderUp);
-
-            building.transform.SetParent(Parent);
             _spawnedBuildings.AddFirst(building);
         }
 

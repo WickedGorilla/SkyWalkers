@@ -16,6 +16,8 @@ namespace UI.Views.MiniGames.ConstructionView
         [SerializeField] private Image _leftImage;
         [SerializeField] private Image _rightImage;
         [SerializeField] private Color _disableColor = Color.gray;
+        [SerializeField] private Color _successColor = Color.green;
+        [SerializeField] private Color _failColor = Color.red;
         [SerializeField] private Image _backgroundImage;
 
         private Image _selectedButton;
@@ -42,7 +44,7 @@ namespace UI.Views.MiniGames.ConstructionView
         
         public void VisualizeFail(Action onComplete)
         {
-            _backgroundImage.DOColor(Color.green, 1f)
+            _backgroundImage.DOColor(_failColor, 1f)
                 .SetEase(Ease.InOutSine)
                 .SetLoops(2, LoopType.Yoyo).OnComplete(() => onComplete());
         }
@@ -50,7 +52,7 @@ namespace UI.Views.MiniGames.ConstructionView
         public void VisualizeSuccess(Action onComplete)
         {
             _timer.SetParamText("1/1");
-            _backgroundImage.DOColor(Color.green, 1f)
+            _backgroundImage.DOColor(_successColor, 1f)
                 .SetEase(Ease.InOutSine)
                 .SetLoops(2, LoopType.Yoyo).OnComplete(() => onComplete());
         }

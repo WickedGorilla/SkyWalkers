@@ -13,15 +13,15 @@ namespace Game.PoolSystem
 		private readonly LinkedList<T> Instantiated = new();
 		private readonly LinkedList<T> FreeObjects = new();
 
-		private Transform _parent;
+		private Transform _disableParent;
 
-		public PoolObjects(T prefab,  Transform parent = null)
+		public PoolObjects(T prefab, Transform disableParent = null)
 		{
 			_prefab = prefab;
 
-			_parent = parent == null
+			_disableParent = disableParent == null
 				? new GameObject { name = $"{prefab.name} pool objects" }.transform
-				: parent;
+				: disableParent;
 		}
 
 		public T Get()
@@ -54,7 +54,7 @@ namespace Game.PoolSystem
 			if (Instantiated.Remove(returnObject))
 			{
 				returnObject.gameObject.SetActive(false);
-				returnObject.transform.SetParent(_parent);
+				returnObject.transform.SetParent(_disableParent);
 				FreeObjects.AddLast(returnObject);
 			}
 			else
@@ -63,7 +63,7 @@ namespace Game.PoolSystem
 		
 		private T Create()
 		{
-			var instantiatedObject = Object.Instantiate(_prefab, _parent);
+			var instantiatedObject = Object.Instantiate(_prefab, _disableParent);
 			instantiatedObject.name = _prefab.name;
 			
 			return instantiatedObject;

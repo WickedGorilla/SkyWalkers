@@ -395,7 +395,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -0.000091552734, y: 35.43593}
+  m_AnchoredPosition: {x: -0.00012207031, y: 35.43593}
   m_SizeDelta: {x: -366.45, y: 87.30005}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8183455777352654185
@@ -555,6 +555,8 @@ MonoBehaviour:
   _leftImage: {fileID: 8294586112831657738}
   _rightImage: {fileID: 153390409238259108}
   _disableColor: {r: 0.6431373, g: 0.6431373, b: 0.6431373, a: 1}
+  _successColor: {r: 0, g: 1, b: 0, a: 0.50980395}
+  _failColor: {r: 1, g: 0, b: 0, a: 0.50980395}
   _backgroundImage: {fileID: 7070321083471545427}
 --- !u!1 &3310325163017286840
 GameObject:
@@ -878,7 +880,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000061035156, y: -148.70282}
+  m_AnchoredPosition: {x: 0, y: -148.70282}
   m_SizeDelta: {x: -108.95001, y: 209.53381}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4344203823375981490
