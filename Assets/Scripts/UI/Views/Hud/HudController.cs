@@ -68,7 +68,7 @@ namespace UI.Hud
         {
             var startPosition = View.CoinsText.transform.position - new Vector3(0f, 300f);
             var endPosition = startPosition + new Vector3(0f, 100f);
-            _clickCoinSpawner.SpawnText($"-{subtractCoins}", startPosition, endPosition);
+            _clickCoinSpawner.SpawnText($"-{subtractCoins}", startPosition, endPosition, 2f);
         }
 
         private void OnTap(Vector2 position)

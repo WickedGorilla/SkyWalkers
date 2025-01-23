@@ -41,26 +41,26 @@ namespace UI.Hud
 
             var spawnedCoin = _poolCoins.Get(_data.CoinPrefab, spawnPosition, rotation, _uiParent);
             AnimateCoin(spawnedCoin, target);
-            SpawnText($"+{coinAmount}", spawnPosition, target);
+            SpawnText($"+{coinAmount}", spawnPosition, target, _data.TextAnimationDuration);
         }
 
-        public void SpawnText(string text, Vector2 position, Vector2 endPosition)
+        public void SpawnText(string text, Vector2 position, Vector2 endPosition, float duration)
         {
             var textPosition = position + _data.TextOffset;
             var spawnedText = _poolTextCount.Get(_data.TextPrefab, textPosition, 0f, _uiParent);
             spawnedText.text = text;
-            AnimateText(spawnedText, endPosition);
+            AnimateText(spawnedText, endPosition, duration);
         }
 
-        private void AnimateText(TMP_Text spawnedText, Vector2 target)
+        private void AnimateText(TMP_Text spawnedText, Vector2 target, float duration)
         {
             target += _data.TextOffset;
 
             Sequence textSequence = DOTween.Sequence();
-            textSequence.Join(spawnedText.transform.DOMove(target, _data.TextAnimationDuration)
+            textSequence.Join(spawnedText.transform.DOMove(target, duration)
                 .SetEase(Ease.OutCubic));
 
-            textSequence.Join(spawnedText.DOFade(0, _data.TextAnimationDuration)
+            textSequence.Join(spawnedText.DOFade(0, duration)
                 .SetEase(Ease.InQuad));
 
             textSequence.OnComplete(() =>
