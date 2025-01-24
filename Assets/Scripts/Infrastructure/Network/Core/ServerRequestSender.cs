@@ -65,7 +65,7 @@ namespace Infrastructure.Network
                 return result;
             }
 
-            _responsesHandler.GetHolder<TResponse>()?.Handle(result.Data);
+            _responsesHandler.GetHolder<TResponse>()?.HandleServerData(result.Data);
             return result;
         }
 

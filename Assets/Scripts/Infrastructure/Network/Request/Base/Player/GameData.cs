@@ -12,6 +12,7 @@ namespace Infrastructure.Network.Request.Base.Player
         public int AutoTapCoins;
         public ReferralInfo ReferralInfo;
         public bool ClaimBonus;
+        public int TappedCoinsBeforeMiniGame;
         
         public GameData(int coins, int energy, int playPass, int boosts)
         {

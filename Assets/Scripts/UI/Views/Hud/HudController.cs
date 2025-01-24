@@ -67,7 +67,7 @@ namespace UI.Hud
         public void SpawnSubtractText(int subtractCoins)
         {
             var startPosition = View.CoinsText.transform.position - new Vector3(0f, 300f);
-            var endPosition = startPosition + new Vector3(0f, 100f);
+            var endPosition = startPosition + new Vector3(0f, 150f);
             _clickCoinSpawner.SpawnText($"-{subtractCoins}", startPosition, endPosition, 2f);
         }
 

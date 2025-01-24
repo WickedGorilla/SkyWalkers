@@ -4,6 +4,8 @@ using Game.Player;
 using Infrastructure.Actions;
 using Infrastructure.Data.Game.MiniGames;
 using Infrastructure.Disposables;
+using Infrastructure.Network.Request.Base.Player;
+using Infrastructure.Network.RequestHandler;
 using Player;
 using UI.Core;
 using UI.Hud;
@@ -18,7 +20,7 @@ using Random = UnityEngine.Random;
 
 namespace Game.MiniGames
 {
-    public class MiniGamesSystem
+    public class MiniGamesSystem : IRequestHandler<GameData>
     {
         private readonly MiniGamesData _miniGamesData;
         private readonly WalletService _walletService;
@@ -101,11 +103,9 @@ namespace Game.MiniGames
             _viewService.HideCurrent();
             
             var enumType = typeof(MiniGameType);
-            var maxIndex = Enum.GetValues(enumType).Length;
-            var randomIndex = Random.Range(0, maxIndex);
+            var maxIndex = Enum.GetValues(enumType).Length + 1;
+            var randomIndex = Random.Range(1, maxIndex);
             var miniGameType = (MiniGameType)randomIndex;
-            
-             miniGameType = MiniGameType.Construction;
             
             if (!_miniGamesStartActions.TryGetValue(miniGameType, out Func<IMiniGameViewController> miniGameStartAction))
                 throw new KeyNotFoundException("Unknown mini game type");
@@ -194,5 +194,8 @@ namespace Game.MiniGames
             Vector2Int value = _miniGamesData.RangeTapsToStartMiniGame;
             return Random.Range(value.x, value.y);
         }
+
+        public void HandleServerData(GameData gameData) 
+            => EarnedCoinsBeforeMiniGame = gameData.TappedCoinsBeforeMiniGame;
     }
 }

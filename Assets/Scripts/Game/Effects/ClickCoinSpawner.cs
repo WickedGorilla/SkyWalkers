@@ -65,7 +65,7 @@ namespace UI.Hud
 
             textSequence.OnComplete(() =>
             {
-                spawnedText.color = GetResetColor(spawnedText.color);
+                spawnedText.color = GetResetAlfa(spawnedText.color);
                 _poolTextCount.Return(spawnedText);
             });
 
@@ -88,28 +88,25 @@ namespace UI.Hud
             Sequence sequence = DOTween.Sequence();
 
             sequence.Join(spawnedCoin.transform.DOMove(target, _data.CoinAnimationDuration)
-                    .SetEase(Ease.OutCubic))
-                .Join(spawnedCoin.transform.DOScale(Vector3.zero, _data.CoinAnimationDuration)
-                    .SetEase(Ease.InOutCubic))
-                .Join(spawnedCoin.DOFade(0, _data.CoinAnimationDuration)
-                    .SetEase(Ease.InQuad))
-                .OnComplete(() =>
-                {
-                    spawnedCoin.color = GetResetColor(spawnedCoin.color);
-                    _poolCoins.Return(spawnedCoin);
-                });
+                .SetEase(Ease.OutCubic));
 
-            sequence.Play();
-        }
+            sequence.Join(spawnedCoin.transform.DOScale(Vector3.zero, _data.CoinAnimationDuration)
+                .SetEase(Ease.InOutCubic));
 
-        private Color GetResetColor(Color color)
-        {
-            var resetColor = new Color(color.r, color.g, color.b)
+            sequence.Join(spawnedCoin.DOFade(0, _data.CoinAnimationDuration)
+                .SetEase(Ease.InQuad));
+
+            sequence.OnComplete(() =>
             {
-                a = 1f
-            };
+                spawnedCoin.transform.localScale = Vector3.one;
+                spawnedCoin.color = GetResetAlfa(spawnedCoin.color);
+                _poolCoins.Return(spawnedCoin);
+            });
 
-            return resetColor;
+            sequence.Play();    
         }
+
+        private Color GetResetAlfa(Color color)
+            => new(color.r, color.g, color.b) { a = 1f };
     }
 }

@@ -18,7 +18,7 @@ MonoBehaviour:
   _coinAnimationDuration: 1.5
   _textAnimationDuration: 1
   _numberOfCoins: 1
-  _textOffset: {x: 100, y: 20}
+  _textOffset: {x: 75, y: 20}
   _minRadius: 0
   _maxRadius: 100
   _startAngle: 45

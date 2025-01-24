@@ -2,9 +2,9 @@ namespace Game.MiniGames
 {
     public enum MiniGameType
     {
-        Password = 0,
-        SecurityGuard = 1,
-        Rain = 2,
-        Construction = 3,
+        Password = 1,
+        SecurityGuard = 2,
+        Rain = 3,
+        Construction = 4
     }
 }

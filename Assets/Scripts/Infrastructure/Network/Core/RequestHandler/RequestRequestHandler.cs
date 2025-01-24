@@ -6,10 +6,10 @@ namespace Infrastructure.Network.RequestHandler
     {
         private HashSet<IRequestHandler<T>> _handlers = new();
         
-        public void Handle(T response)
+        public void HandleServerData(T response)
         {
             foreach (var handler in _handlers) 
-                handler.Handle(response);
+                handler.HandleServerData(response);
         }
 
         public void Add(IRequestHandler<T> requestHandler) 
