@@ -8,8 +8,13 @@ namespace UI.Views.MiniGames
     {
         event Action<IEventAwaiter> OnCompleteMiniGame;
         event Action<IEventAwaiter> OnFailMiniGame;
+
+        IUpdateTimer CreateTimer(Action onTimeLeft);
+
+        virtual void StartWhenReady(Action onStart) 
+            => onStart();
+
         bool CheckIsComplete();
         void DoFailMiniGame();
-        IUpdateTimer CreateTimer(Action onTimeLeft);
     }
 }

@@ -25,30 +25,43 @@ namespace UI.Views.MiniGames.ConstructionView
         public ViewTimer Timer => _timer;
         public UIButton LeftButton => _leftButton;
         public UIButton RightButton => _rightButton;
-        
+
         public void HighlightButton(ConstructionViewController.ButtonDirectionType buttonDirectionType)
         {
             HighlightButton(buttonDirectionType == ConstructionViewController.ButtonDirectionType.Right
-                ? _rightImage
-                : _leftImage);
+                ? (_rightImage, _rightButton)
+                : (_leftImage, _leftButton));
         }
 
-        private void HighlightButton(Image imageButton)
+        private void HighlightButton((Image, UIButton) uiButton)
         {
             if (_selectedButton != null)
                 _selectedButton.color = _disableColor;
-            
-            _selectedButton = imageButton;
+
+            _selectedButton.DOKill();
+            _selectedButton = uiButton.Item1;
             _selectedButton.color = Color.white;
+            
+            Color originalColor = _selectedButton.color;
+            var tweener = _selectedButton.DOFade(0.5f, 0.5f)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetEase(Ease.InOutSine)
+                .OnKill(() => _selectedButton.color = originalColor);
+
+            tweener.OnUpdate(() =>
+            {
+                if (uiButton.Item2.IsPressed)
+                    tweener.Kill();
+            });
         }
-        
+
         public void VisualizeFail(Action onComplete)
         {
             _backgroundImage.DOColor(_failColor, 1f)
                 .SetEase(Ease.InOutSine)
                 .SetLoops(2, LoopType.Yoyo).OnComplete(() => onComplete());
         }
-        
+
         public void VisualizeSuccess(Action onComplete)
         {
             _timer.SetParamText("1/1");

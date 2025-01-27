@@ -1,5 +1,6 @@
 using System;
 using Game.Environment;
+using Game.Player;
 using Infrastructure.Actions;
 using Infrastructure.Data.Game.MiniGames.SecurityGuardMiniGame;
 using UI.Core;
@@ -27,6 +28,7 @@ namespace UI.Views.MiniGames.SecurityGuardView
         public event Action<IEventAwaiter> OnFailMiniGame;
 
         public EnvironmentAnimation GuardMan => _environmentHolder.Environment.SecurityGuardMan;
+        public PlayerAnimation PlayerAnimation => _environmentHolder.Environment.Player;
         
         protected override void OnShow()
         {
@@ -34,6 +36,7 @@ namespace UI.Views.MiniGames.SecurityGuardView
             View.OnEarnMistake += OnEarnMistake;
             
             GuardMan.DoShow();
+            PlayerAnimation.SetSpeedMultiplier(PlayerAnimation.DefaultSpeedMultiplier / 2);
         }
 
         protected override void OnHide()
@@ -42,6 +45,7 @@ namespace UI.Views.MiniGames.SecurityGuardView
             View.OnEarnMistake -= OnEarnMistake;
             
             GuardMan.DoHide();
+            PlayerAnimation.ResetSpeedMultiplier();
         }
         
         public bool CheckIsComplete() 
@@ -69,6 +73,8 @@ namespace UI.Views.MiniGames.SecurityGuardView
         {
             _earnCoin++;
             View.Timer.SetParamText($"{_earnCoin}/{_miniGameData.EarnForComplete}");
+            
+            PlayerAnimation.AnimateByClick();
 
             if (_earnCoin != _miniGameData.EarnForComplete)
                 return;

@@ -18,9 +18,7 @@ namespace Game.Player
         private readonly ClickCoinSpawner _clickCoinSpawner;
         private readonly BoostSystem _boostSystem;
         private readonly ViewService _viewService;
-
-        private IDisposable _buildingMovement;
-
+        
         public event Action<int> OnFarmCoinsPerTap;
         
         public FarmCoinsSystem(IPlayerHolder playerHolder,
@@ -40,22 +38,14 @@ namespace Game.Player
             _viewService = viewService;
         }
 
-        public void Initialize()
-        {
-            _clickCoinSpawner.Initialize();
-        }
+        public void Initialize() 
+            => _clickCoinSpawner.Initialize();
 
-        public void Subscribe()
-        {
-            _buildingMovementSystem.Subscribe();
-            _buildingMovement = _playerHolder.Player.AddClimbListener(_buildingMovementSystem.DoMove);
-        }
+        public void Subscribe() 
+            => _buildingMovementSystem.Subscribe();
 
-        public void Unsubscribe()
-        {
-            _buildingMovementSystem.UnSubscribe();
-            _buildingMovement.Dispose();
-        }
+        public void Unsubscribe() 
+            => _buildingMovementSystem.UnSubscribe();
 
         public void Tap(Vector2 tapPosition)
         {

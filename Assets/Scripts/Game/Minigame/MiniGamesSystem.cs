@@ -28,10 +28,10 @@ namespace Game.MiniGames
         private readonly ViewService _viewService;
         private readonly BoostSystem _boostSystem;
         private readonly Dictionary<MiniGameType, Func<IMiniGameViewController>> _miniGamesStartActions;
-        
+
         private int _tapsCount;
         private int _countTapsToStartMiniGame;
-        
+
         private IDisposable _miniGameDisposable;
         private IDisposable _tapCoinListener;
         private IMiniGameViewController _miniGameViewController;
@@ -39,7 +39,7 @@ namespace Game.MiniGames
 
         public event Action<MiniGameType> OnEnterMiniGame;
         public event Action<bool> OnCompleteMiniGame;
-        
+
         public MiniGamesSystem(MiniGamesData miniGamesData,
             WalletService walletService,
             FarmCoinsSystem farmCoinsSystem,
@@ -54,13 +54,13 @@ namespace Game.MiniGames
             _miniGamesStartActions = CreateMiniGamesStartActions();
             _countTapsToStartMiniGame = GetUpdateTapsToStartMiniGame();
         }
-        
+
         public int EarnedCoinsBeforeMiniGame { get; private set; }
-        
+
         public void OnStart()
         {
             _tapCoinListener = EnableMiniGameCounter();
-            
+
             _boostSystem.OnUseBoost += OnBoostActivated;
             _boostSystem.OnEndBoost += OnBoostDeactivated;
         }
@@ -68,27 +68,27 @@ namespace Game.MiniGames
         public void OnStop()
         {
             _tapCoinListener.Dispose();
-            
+
             _boostSystem.OnUseBoost -= OnBoostActivated;
             _boostSystem.OnEndBoost -= OnBoostDeactivated;
         }
 
-        private void OnBoostActivated() 
+        private void OnBoostActivated()
             => _tapCoinListener.Dispose();
 
-        private void OnBoostDeactivated() 
+        private void OnBoostDeactivated()
             => _tapCoinListener = EnableMiniGameCounter();
-        
+
         private IDisposable EnableMiniGameCounter()
         {
             _farmCoinsSystem.OnFarmCoinsPerTap += OnFarmCoins;
-            
+
             return DisposableContainer.Create(Disable);
 
-            void Disable() 
+            void Disable()
                 => _farmCoinsSystem.OnFarmCoinsPerTap -= OnFarmCoins;
         }
-        
+
         private void OnFarmCoins(int coins)
         {
             EarnedCoinsBeforeMiniGame += coins;
@@ -101,24 +101,27 @@ namespace Game.MiniGames
         private async void StartMiniGame()
         {
             _viewService.HideCurrent();
-            
+
             var enumType = typeof(MiniGameType);
             var maxIndex = Enum.GetValues(enumType).Length + 1;
             var randomIndex = Random.Range(1, maxIndex);
             var miniGameType = (MiniGameType)randomIndex;
-            
-            if (!_miniGamesStartActions.TryGetValue(miniGameType, out Func<IMiniGameViewController> miniGameStartAction))
+
+            //miniGameType = MiniGameType.Construction;
+
+            if (!_miniGamesStartActions.TryGetValue(miniGameType,
+                    out Func<IMiniGameViewController> miniGameStartAction))
                 throw new KeyNotFoundException("Unknown mini game type");
 
             OnEnterMiniGame?.Invoke(miniGameType);
-            
+
             await Awaitable.WaitForSecondsAsync(_miniGamesData.DelayToStartMiniGame);
-            
+
             _miniGameViewController = miniGameStartAction();
-            _timer = _miniGameViewController.CreateTimer(OnTimeLeft);
-            _timer.Start();
-            
+           
             _miniGameDisposable = SubscribeController(_miniGameViewController);
+            _timer = _miniGameViewController.CreateTimer(OnTimeLeft);
+            _miniGameViewController.StartWhenReady(_timer.Start);
         }
 
         private void OnTimeLeft()
@@ -133,22 +136,22 @@ namespace Game.MiniGames
         {
             controller.OnCompleteMiniGame += OnMiniGameComplete;
             controller.OnFailMiniGame += OnMiniGameFail;
-            
+
             return DisposableContainer.Create(() =>
             {
                 controller.OnCompleteMiniGame -= OnMiniGameComplete;
                 controller.OnFailMiniGame -= OnMiniGameFail;
             });
         }
-        
+
         private void OnMiniGameFail(IEventAwaiter animationAwaiter)
         {
             var subtractValue = EarnedCoinsBeforeMiniGame / 2;
             _walletService.Coins.Subtract(subtractValue);
             _timer.Stop();
-            
+
             OnCompleteMiniGame?.Invoke(false);
-            
+
             animationAwaiter.AddAwaiter(() =>
             {
                 _viewService.Show<HudView, HudController>().SpawnSubtractText(subtractValue);
@@ -183,7 +186,8 @@ namespace Game.MiniGames
             return new Dictionary<MiniGameType, Func<IMiniGameViewController>>
             {
                 [MiniGameType.Password] = () => _viewService.Show<PasswordView, PasswordViewController>(),
-                [MiniGameType.SecurityGuard] = () => _viewService.Show<SecurityGuardView, SecurityGuardViewController>(),
+                [MiniGameType.SecurityGuard] =
+                    () => _viewService.Show<SecurityGuardView, SecurityGuardViewController>(),
                 [MiniGameType.Rain] = () => _viewService.Show<RainView, RainViewController>(),
                 [MiniGameType.Construction] = () => _viewService.Show<ConstructionView, ConstructionViewController>()
             };
@@ -195,7 +199,7 @@ namespace Game.MiniGames
             return Random.Range(value.x, value.y);
         }
 
-        public void HandleServerData(GameData gameData) 
+        public void HandleServerData(GameData gameData)
             => EarnedCoinsBeforeMiniGame = gameData.TappedCoinsBeforeMiniGame;
     }
 }

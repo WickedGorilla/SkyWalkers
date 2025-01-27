@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Game.Environment;
+using Game.Player;
 using Game.PoolSystem;
 using Infrastructure.Data.Game;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace Game.BuildingSystem
         
         private PoolCollection<BuildingConnector> _poolSystem;
         private Action _onMove;
+        private IDisposable _buildingMovement;
 
         public BuildingMovementSystem(BuildingsData data,
             IEnvironmentHolder environmentHolder)
@@ -33,6 +35,7 @@ namespace Game.BuildingSystem
 
         private Transform Parent => _environmentHolder.Environment.BuildingRoot;
         private EnvironmentObjects Environment => _environmentHolder.Environment;
+        private PlayerAnimation PlayerAnimation => _environmentHolder.Environment.Player;
 
         public void Initialize()
         {
@@ -60,20 +63,22 @@ namespace Game.BuildingSystem
 
         public void Subscribe()
         {
+            _buildingMovement = PlayerAnimation.AddClimbListener(DoMove);
             _onMove += DoHideLowerEnvironment;
         }
 
         public void UnSubscribe()
         {
             // refactor to IDisposable
+            _buildingMovement.Dispose();
             _onMove -= DoHideLowerEnvironment;
         }
 
-        public void DoMove()
+        private void DoMove()
         {
             foreach (var building in _spawnedBuildings)
             {
-                float value = _data.SpeedBuildings * Time.deltaTime;
+                float value = _data.SpeedBuildings * Time.deltaTime * PlayerAnimation.SpeedMultiplier;
                 building.MoveY(value);
             }
 

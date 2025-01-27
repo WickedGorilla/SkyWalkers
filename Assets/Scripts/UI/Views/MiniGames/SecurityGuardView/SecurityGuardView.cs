@@ -84,7 +84,7 @@ namespace UI.Views.MiniGames.SecurityGuardView
 
         private IEnumerator MovementRoutine()
         {
-            while (true)
+            while (_isMovementRoutine)
             {
                 MoveObjects();
                 CastCircle();

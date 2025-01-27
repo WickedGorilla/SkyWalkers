@@ -52,7 +52,17 @@ namespace UI.Views.MiniGames.RainView
             DoFadeStopLine(1f);
 
             _cancellationTokenSource = new CancellationTokenSource();
-            OnUpdate(_cancellationTokenSource);
+        }
+
+        public IUpdateTimer CreateTimer(Action onTimeLeft)
+        {
+            return View.Timer.CreateTimer(_miniGameData.TimeForMiniGame, OnTimeLeft);
+
+            void OnTimeLeft()
+            {
+                SuccessMiniGame();
+                onTimeLeft();
+            }
         }
 
         protected override void OnHide()
@@ -64,6 +74,15 @@ namespace UI.Views.MiniGames.RainView
         {
             _player.AnimateByClick();
             _forceUp += _miniGameData.ForceByClick;
+        }
+
+        public void StartWhenReady(Action onStart)
+        {
+            View.WaitForStart(() =>
+            {
+                onStart();
+                OnUpdate(_cancellationTokenSource);
+            });
         }
 
         private async void OnUpdate(CancellationTokenSource tokenSource)
@@ -138,16 +157,5 @@ namespace UI.Views.MiniGames.RainView
             => StopLine.DOFade(endValue, 1f)
                 .SetEase(Ease.InOutSine)
                 .OnComplete(() => onComplete?.Invoke());
-
-        public IUpdateTimer CreateTimer(Action onTimeLeft)
-        {
-            return View.Timer.CreateTimer(_miniGameData.TimeForMiniGame, OnTimeLeft);
-
-            void OnTimeLeft()
-            {
-                SuccessMiniGame();
-                onTimeLeft();
-            }
-        }
     }
 }
