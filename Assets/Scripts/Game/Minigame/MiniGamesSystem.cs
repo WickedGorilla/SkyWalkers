@@ -107,7 +107,7 @@ namespace Game.MiniGames
             var randomIndex = Random.Range(1, maxIndex);
             var miniGameType = (MiniGameType)randomIndex;
 
-            //miniGameType = MiniGameType.Construction;
+            miniGameType = MiniGameType.Rain;
 
             if (!_miniGamesStartActions.TryGetValue(miniGameType,
                     out Func<IMiniGameViewController> miniGameStartAction))
@@ -186,8 +186,7 @@ namespace Game.MiniGames
             return new Dictionary<MiniGameType, Func<IMiniGameViewController>>
             {
                 [MiniGameType.Password] = () => _viewService.Show<PasswordView, PasswordViewController>(),
-                [MiniGameType.SecurityGuard] =
-                    () => _viewService.Show<SecurityGuardView, SecurityGuardViewController>(),
+                [MiniGameType.SecurityGuard] = () => _viewService.Show<SecurityGuardView, SecurityGuardViewController>(),
                 [MiniGameType.Rain] = () => _viewService.Show<RainView, RainViewController>(),
                 [MiniGameType.Construction] = () => _viewService.Show<ConstructionView, ConstructionViewController>()
             };

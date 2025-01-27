@@ -46,6 +46,9 @@ namespace UI.Views.MiniGames.SecurityGuardView
             
             GuardMan.DoHide();
             PlayerAnimation.ResetSpeedMultiplier();
+            
+            _earnCoin = default;
+            _mistakes = default;
         }
         
         public bool CheckIsComplete() 

@@ -28,13 +28,6 @@ namespace UI.Views.MiniGames.RainView
         public Button TapButton => _tapButton;
 
         public float DurationResultAnimation => _durationResultAnimation;
-        
-        public override void OnShow()
-        {
-        }
-
-        public override void OnHide()
-            => _backgroundImage.color = Color.white;
 
         public void WaitForStart(Action onComplete)
         {
@@ -59,17 +52,28 @@ namespace UI.Views.MiniGames.RainView
 
         public void VisualizeFail(Action onComplete)
         {
+            var defaultColor = _backgroundImage.color; 
             _backgroundImage.DOColor(_failLineColor, DurationResultAnimation)
                 .SetEase(Ease.InOutSine)
-                .SetLoops(2, LoopType.Yoyo).OnComplete(() => onComplete());
+                .SetLoops(2, LoopType.Yoyo)
+                .OnComplete(() =>
+                {
+                    _backgroundImage.color = defaultColor;
+                    onComplete();
+                });
         }
 
         public void VisualizeSuccess(Action onComplete)
         {
             _timer.SetParamText("1/1");
+            var defaultColor = _backgroundImage.color; 
             _backgroundImage.DOColor(Color.green, DurationResultAnimation)
                 .SetEase(Ease.InOutSine)
-                .SetLoops(2, LoopType.Yoyo).OnComplete(() => onComplete());
+                .SetLoops(2, LoopType.Yoyo).OnComplete(() =>
+                {
+                    _backgroundImage.color = defaultColor;
+                    onComplete();
+                });
         }
     }
 }
