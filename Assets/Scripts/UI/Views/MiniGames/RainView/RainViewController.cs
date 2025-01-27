@@ -68,7 +68,6 @@ namespace UI.Views.MiniGames.RainView
         protected override void OnHide()
         {
             StopLine.gameObject.SetActive(false);
-            RainParticle.Stop();
         }
 
         private void OnTapButton()

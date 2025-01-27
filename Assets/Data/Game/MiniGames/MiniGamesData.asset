@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MiniGamesData
   m_EditorClassIdentifier: 
   _delayToStartMiniGame: 1.5
-  _rangeTapsToStartMiniGame: {x: 90, y: 150}
+  _rangeTapsToStartMiniGame: {x: 1, y: 2}
   _passwordMiniGame: {fileID: 11400000, guid: fa9b7e7691b3af546a89bfc128a22eb6, type: 2}
   _securityGuardMiniGame: {fileID: 11400000, guid: 3cf7d610f4c689d4bb2434c3b71d6b7e, type: 2}
   _rainMiniGameData: {fileID: 11400000, guid: 2bab56844e33d1f4c8d6200558372717, type: 2}

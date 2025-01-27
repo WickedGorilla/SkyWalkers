@@ -29,6 +29,9 @@ namespace UI.Views.MiniGames.RainView
 
         public float DurationResultAnimation => _durationResultAnimation;
 
+        public override void OnShow() 
+            => _timer.SetParamText("0/1");
+
         public void WaitForStart(Action onComplete)
         {
             StartCoroutine(StartGame());
