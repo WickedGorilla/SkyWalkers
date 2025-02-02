@@ -107,7 +107,7 @@ namespace Game.MiniGames
             var randomIndex = Random.Range(1, maxIndex);
             var miniGameType = (MiniGameType)randomIndex;
 
-            miniGameType = MiniGameType.Rain;
+            // miniGameType = MiniGameType.Rain;
 
             if (!_miniGamesStartActions.TryGetValue(miniGameType,
                     out Func<IMiniGameViewController> miniGameStartAction))
