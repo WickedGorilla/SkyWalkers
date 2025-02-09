@@ -15,7 +15,7 @@ namespace Game.Environment
         private void Awake()
         {
             _showAnimationHash = Animator.StringToHash(ShowAnimation);
-            _emptyStateChecker =  _animator.GetBehaviour<AnimatorEntryStateChecker>();
+            _emptyStateChecker = _animator.GetBehaviour<AnimatorEntryStateChecker>();
 
             _animator.SetBool(_showAnimationHash, false);
         }
@@ -29,7 +29,8 @@ namespace Game.Environment
         public void DoHide()
         {
             _animator.SetBool(_showAnimationHash, false);
-            _emptyStateChecker.SubscribeForEntry(() => gameObject.SetActive(false));
+            _emptyStateChecker.SubscribeForEntry((
+                ) => gameObject.SetActive(false));
         }
     }
 }

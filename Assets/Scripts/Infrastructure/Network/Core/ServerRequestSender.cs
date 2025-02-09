@@ -23,7 +23,7 @@ namespace Infrastructure.Network
 #if DEV_BUILD
                 "https://similarly-mutual-gobbler.ngrok-free.app/";
 #elif DEV_BUILD_LOCAL
-   "http://localhost:5000/";   
+   "http://localhost:5000/";
 #else
                 "https://app.skywalkersgame.com/";
 #endif
@@ -85,7 +85,9 @@ namespace Infrastructure.Network
             string jsonData = JsonConvert.SerializeObject(message);
             string authUrl = $"{_baseUrl}{address}";
 
+#if DEV_BUILD
             Debug.Log($"Send: {jsonData}");
+#endif
 
             var request = new UnityWebRequest(authUrl, "POST");
             request.SetRequestHeader("Content-Type", "application/json");

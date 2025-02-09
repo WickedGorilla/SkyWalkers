@@ -6,23 +6,25 @@ namespace Infrastructure.Animations
     public class AnimatorEntryStateChecker : StateMachineBehaviour
     {
         private Action _onEntry;
-        
-        public bool IsEntry { get; private set; }
+        private bool _isEntry;
         
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            IsEntry = true;
-
+            _isEntry = true;
+            
             _onEntry?.Invoke();
             _onEntry = null;
         }
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) 
-            => IsEntry = false;
+            => _isEntry = false;
+
+        private void OnDisable()
+            => _isEntry = false;
 
         public void SubscribeForEntry(Action onEntry)
         {
-            if (IsEntry)
+            if (_isEntry)
             {
                 onEntry();
                 return;

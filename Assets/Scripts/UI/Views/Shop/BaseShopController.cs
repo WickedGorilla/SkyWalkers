@@ -76,7 +76,7 @@ namespace UI.Views
         private void OpenUpgradeCard(PerkType perkType)
         {
             var perk = _perksService.GetPerkByType(perkType);
-
+            
             if (perk.CurrentLevel > 0)
             {
                 View.UpgradesPerkMenu.Open(_perksData[perkType], _walletService.Coins, perk,
