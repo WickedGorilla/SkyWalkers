@@ -33,6 +33,7 @@ namespace Game.Infrastructure
             _environmentHolder.Environment.ShowBuildingGroup();
             _farmCoinsSystem.Subscribe();
             _viewService.Show<HudView, HudController>();
+            
             _coinValidationService.Start();
             _miniGamesSystem.OnStart();
         }

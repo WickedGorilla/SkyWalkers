@@ -22,7 +22,6 @@ namespace Game.Validation
         private readonly LinkedList<IPlayerActionData> _stackActions = new();
 
         private float _nextTimeUpdate;
-        private float _lastTimeUpdate;
         private int _lastUpdateBalance;
         private bool _boostState;
 
@@ -30,9 +29,9 @@ namespace Game.Validation
         private const long ConflictErrorCode = 409;
 
         private CancellationTokenSource _cancellationTokenSource;
-        
-        public CoinValidationService(WalletService walletService, 
-            IServerRequestSender serverRequestSender, 
+
+        public CoinValidationService(WalletService walletService,
+            IServerRequestSender serverRequestSender,
             BoostSystem boostSystem,
             FarmCoinsSystem farmCoinsSystem,
             MiniGamesSystem miniGamesSystem)
@@ -43,16 +42,19 @@ namespace Game.Validation
             _farmCoinsSystem = farmCoinsSystem;
             _miniGamesSystem = miniGamesSystem;
         }
-        
+
         public void Start()
         {
             _farmCoinsSystem.OnFarmCoinsPerTap += OnChangeCoins;
+            
             _boostSystem.OnUseBoost += OnBoostActivated;
             _boostSystem.OnEndBoost += OnBoostEnd;
+            
             _boostSystem.OnUsePlayPass += OnPlayPassActivated;
+            
             _miniGamesSystem.OnEnterMiniGame += OnEnterMiniGame;
             _miniGamesSystem.OnCompleteMiniGame += OnEndMiniGame;
-            
+
             _cancellationTokenSource = new CancellationTokenSource();
             SendTask(_cancellationTokenSource);
         }
@@ -60,11 +62,15 @@ namespace Game.Validation
         public void Stop()
         {
             _farmCoinsSystem.OnFarmCoinsPerTap -= OnChangeCoins;
+            
             _boostSystem.OnUseBoost -= OnBoostActivated;
             _boostSystem.OnEndBoost -= OnBoostEnd;
-            _boostSystem.OnUsePlayPass -= OnPlayPassActivated;
-            _miniGamesSystem.OnEnterMiniGame -= OnEnterMiniGame;
             
+            _boostSystem.OnUsePlayPass -= OnPlayPassActivated;
+            
+            _miniGamesSystem.OnEnterMiniGame -= OnEnterMiniGame;
+            _miniGamesSystem.OnCompleteMiniGame -= OnEndMiniGame;
+
             _cancellationTokenSource.Cancel();
             SendValidationRequest();
         }
@@ -73,38 +79,34 @@ namespace Game.Validation
         {
             _nextTimeUpdate = Time.time + TimeIntervalUpdate;
             _lastUpdateBalance = _walletService.Coins.Count;
-            
+
             while (true)
             {
                 await Awaitable.NextFrameAsync();
 
                 if (token.IsCancellationRequested)
                     break;
-                
+
                 if (Time.time < _nextTimeUpdate || _stackActions.Count == 0)
                     continue;
-                
+
                 SendValidationRequest();
-                _nextTimeUpdate =  Time.time + TimeIntervalUpdate;
+                _nextTimeUpdate = Time.time + TimeIntervalUpdate;
             }
         }
-        
+
         private void OnChangeCoins(int farmedCoins)
         {
             var coins = _walletService.Coins.Count;
             var tapedCoins = coins - _lastUpdateBalance;
             _lastUpdateBalance = coins;
-             
+
             if (!_boostSystem.IsBoost)
-            {
                 AddToStack(new CoinPlayerActionData(tapedCoins, _walletService.Energy.Count));
-            }
             else
-            {
                 AddToStack(new CoinWithBoostActionData(tapedCoins));
-            }
         }
-        
+
         private void AddToStack<TCoinValidation>(TCoinValidation action) where TCoinValidation : ICoinPlayerActionData
         {
             if (_stackActions.Count > 0 && _stackActions.Last.Value is TCoinValidation coinValidationData)
@@ -116,35 +118,54 @@ namespace Game.Validation
             else
                 _stackActions.AddLast(action);
         }
-        
-        private void OnPlayPassActivated() 
+
+        private void OnPlayPassActivated()
             => _stackActions.AddLast(new ActivatePlayPassActionData());
 
-        private void OnBoostActivated() 
-            => _stackActions.AddLast(new ActivateBoostActionData());
+        private void OnBoostActivated()
+        {
+            _stackActions.AddLast(new ActivateBoostActionData());
+            Stop();
+        }
 
-        private void OnBoostEnd() 
-            => _stackActions.AddLast(new BoostEndActionData());
+        private void OnBoostEnd()
+        {
+            _stackActions.AddLast(new BoostEndActionData());
+            SendValidationRequest();
+            Start();
+        }
 
         private void OnEnterMiniGame(MiniGameType miniGame)
-            => _stackActions.AddLast(new EnterMiniGameActionData(miniGame, _miniGamesSystem.EarnedCoinsBeforeMiniGame));
+        {
+            _stackActions.AddLast(new EnterMiniGameActionData(miniGame, _miniGamesSystem.EarnedCoinsBeforeMiniGame));
+            Stop();
+        }
 
         private void OnEndMiniGame(bool isComplete)
         {
             _stackActions.AddLast(new EndMiniGameActionData(isComplete));
+            SendValidationRequest();
+            Start();
         }
 
         private void SendValidationRequest()
         {
-            if (_stackActions.Count == 0 || _lastTimeUpdate + TimeIntervalUpdate / 3 > Time.time)
+            if (_stackActions.Count == 0)
                 return;
 
-            _lastTimeUpdate = Time.time;
             _lastUpdateBalance = _walletService.Coins.Count;
-            
-            Debug.Log("Sending validation request");
+
+#if DEV_BUILD
+               Debug.Log("Sending validation request");
+#endif
+         
             var message = new ValidationCoinsRequest(_stackActions.ToArray());
-            _serverRequestSender.SendToServerAndHandle<ValidationCoinsRequest, ValidationCoinsResponse>(message, ServerAddress.TapCoinsValidation, OnValidationError);
+            
+            _serverRequestSender
+                .SendToServerAndHandle<ValidationCoinsRequest, ValidationCoinsResponse>(message,
+                    ServerAddress.TapCoinsValidation,
+                    OnValidationError);
+            
             _stackActions.Clear();
         }
 
@@ -154,7 +175,7 @@ namespace Game.Validation
 
             if (data == Empty)
                 return;
-            
+
             switch (code)
             {
                 case ConflictErrorCode:

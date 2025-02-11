@@ -5,7 +5,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>SkyWalkers</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
 </head>
 <body>
@@ -53,17 +52,18 @@ if (tg != 'indefined')
             updateBannerVisibility();
         }
 
-var buildUrl = "%UNITY_WEBGL_TEMPLATE_DATA_PATH%";
-        var loaderUrl = buildUrl + "/Build.loader.js";
+        var buildUrl = "Build";
+        var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
+
         var config = {
-        dataUrl: buildUrl + "/Build.data.br",
-        frameworkUrl: buildUrl + "/Build.framework.js.br",
-        codeUrl: buildUrl + "/Build.wasm.br",
-            streamingAssetsUrl: "StreamingAssets",
-companyName: "%UNITY_WEBGL_TEMPLATE_COMPANY_NAME%",
-productName: "%UNITY_WEBGL_TEMPLATE_PRODUCT_NAME%",
-productVersion: "%UNITY_WEBGL_TEMPLATE_PRODUCT_VERSION%",
-            showBanner: unityShowBanner,
+        dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+        frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+        codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "{{{ COMPANY_NAME }}}",
+        productName: "{{{ PRODUCT_NAME }}}",
+        productVersion: "{{{ PRODUCT_VERSION }}}"
         };
 
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {

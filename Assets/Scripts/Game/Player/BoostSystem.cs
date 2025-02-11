@@ -1,5 +1,6 @@
 using System;
 using Game.Environment;
+using Game.Validation;
 using Game.Wallet;
 using Player;
 using UI.Views.Timer;
@@ -27,6 +28,7 @@ namespace Game.Player
         public event Action OnUseBoost;
         public event Action OnEndBoost;
         public event Action OnUsePlayPass;
+        
         public bool IsBoost { get; private set; }
 
         public bool UsePlayPass()
@@ -59,6 +61,7 @@ namespace Game.Player
             onCreateTimer(BoostingTime, EndBoost);
 
             StartBoost();
+            
             return true;
         }
 
