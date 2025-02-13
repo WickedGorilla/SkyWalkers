@@ -114,6 +114,10 @@ namespace UI.Core
             controller.Show();
             
             var concreteController = controller as TController;
+
+            if (concreteController is null)
+                throw new NullReferenceException("Error: null view");
+            
             concreteController.AddOnCloseEvent(OnClosePopup);
             return concreteController;
         }

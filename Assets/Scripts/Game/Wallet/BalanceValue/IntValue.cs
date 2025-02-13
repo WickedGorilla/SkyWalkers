@@ -28,6 +28,12 @@ namespace Game.Wallet
             return Count;
         }
 
+        public void Update(int value)
+        {
+            Count = value;
+            OnChangeValue?.Invoke(Count);
+        }
+
         public static implicit operator IntValue(int value) => new(value);
         public static implicit operator int(IntValue addableInt) => addableInt.Count;
 

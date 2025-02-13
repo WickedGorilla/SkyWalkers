@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Game.Perks;
 using Game.Player;
+using Game.Wallet;
 using Infrastructure.Actions;
 using Infrastructure.Data.Game.MiniGames;
 using Infrastructure.Disposables;
-using Infrastructure.Network.Request.Base.Player;
-using Infrastructure.Network.RequestHandler;
 using Player;
 using UI.Core;
 using UI.Hud;
@@ -20,13 +20,14 @@ using Random = UnityEngine.Random;
 
 namespace Game.MiniGames
 {
-    public class MiniGamesSystem : IRequestHandler<GameData>
+    public class MiniGamesSystem 
     {
         private readonly MiniGamesData _miniGamesData;
         private readonly WalletService _walletService;
         private readonly FarmCoinsSystem _farmCoinsSystem;
         private readonly ViewService _viewService;
         private readonly BoostSystem _boostSystem;
+        private readonly CoinsCalculatorService _coinsCalculatorService;
         private readonly Dictionary<MiniGameType, Func<IMiniGameViewController>> _miniGamesStartActions;
 
         private int _tapsCount;
@@ -44,13 +45,16 @@ namespace Game.MiniGames
             WalletService walletService,
             FarmCoinsSystem farmCoinsSystem,
             ViewService viewService,
-            BoostSystem boostSystem)
+            BoostSystem boostSystem,
+            CoinsCalculatorService coinsCalculatorService)
         {
             _miniGamesData = miniGamesData;
             _walletService = walletService;
             _farmCoinsSystem = farmCoinsSystem;
             _viewService = viewService;
             _boostSystem = boostSystem;
+            _coinsCalculatorService = coinsCalculatorService;
+            
             _miniGamesStartActions = CreateMiniGamesStartActions();
             _countTapsToStartMiniGame = GetUpdateTapsToStartMiniGame();
         }
@@ -198,7 +202,15 @@ namespace Game.MiniGames
             return Random.Range(value.x, value.y);
         }
 
-        public void HandleServerData(GameData gameData)
-            => EarnedCoinsBeforeMiniGame = gameData.TappedCoinsBeforeMiniGame;
+        public void HandleServerData(int tappedCoinsBeforeMiniGame)
+        {
+            EarnedCoinsBeforeMiniGame = tappedCoinsBeforeMiniGame;
+
+            var tapsHave = tappedCoinsBeforeMiniGame / _coinsCalculatorService.DefaultCoinPerTap;
+            
+            _tapsCount = tapsHave > _countTapsToStartMiniGame 
+                ? _countTapsToStartMiniGame 
+                : tapsHave;
+        }
     }
 }

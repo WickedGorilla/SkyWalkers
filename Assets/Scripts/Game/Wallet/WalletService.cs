@@ -14,30 +14,30 @@ namespace Player
 
         public void UpdateValues(BalanceUpdate update)
         {
-            Coins = new IntValue(update.Coins);
-            PlayPass = new IntValue(update.PlayPass);
-            Boosts = new IntValue(update.Boosts);
-            Energy = new IntRangeValue(update.Energy, Energy.Max);
+            Coins.Update(update.Coins);
+            PlayPass.Update(update.PlayPass);
+            Boosts.Update(update.Boosts);
+            Energy.Update(update.Energy);
         }
 
         public void UpdateValues(BalanceUpdate update, PerksResponse perks)
         {
-            Coins = new IntValue(update.Coins);
-            PlayPass = new IntValue(update.PlayPass);
-            Boosts = new IntValue(update.Boosts);
+            Coins.Update(update.Coins);
+            PlayPass.Update(update.PlayPass);
+            Boosts.Update(update.Boosts);
             
             var energyPerk = perks.Perks.FirstOrDefault(x => x.Id == (int)PerkType.EnergyLimit);
             var maxEnergy = energyPerk?.CurrentValue ?? 0;
-            Energy = new IntRangeValue(update.Energy, maxEnergy);
+            Energy.Update(update.Energy, maxEnergy);
         }
         
         public void UpdateValues(BalanceUpdate update, PerkInfo perkInfo)
         {
-            Coins = new IntValue(update.Coins);
-            PlayPass = new IntValue(update.PlayPass);
-            Boosts = new IntValue(update.Boosts);
+            Coins.Update(update.Coins);
+            PlayPass.Update(update.PlayPass);
+            Boosts.Update(update.Boosts);
             var maxEnergy = perkInfo.Id == (int)PerkType.EnergyLimit ? perkInfo.CurrentValue : Energy.Max;
-            Energy = new IntRangeValue(update.Energy, maxEnergy);
+            Energy.Update(update.Energy, maxEnergy);
         }
     }
 }

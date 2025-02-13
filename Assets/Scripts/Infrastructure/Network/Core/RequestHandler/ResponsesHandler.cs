@@ -25,7 +25,7 @@ namespace Infrastructure.Network.RequestHandler
 
             if (handlersHolders is null)
             {
-                handlersHolders = new RequestRequestHandler<T>();
+                handlersHolders = new RequestHandler<T>();
                 AddHolder(handlersHolders);
             }
             

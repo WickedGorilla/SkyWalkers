@@ -103,7 +103,7 @@ namespace UI.Views
             View.ShowLoader();
 
             var request = new PayItemRequest((int)itemEntity.Type, itemEntity.Amount);
-            var response = await _serverRequestSender.SendToServer<PayItemRequest, PaymentItemResult>(request,
+            var response = await _serverRequestSender.SendToServerAndHandle<PayItemRequest, PaymentItemResult>(request,
                 ServerAddress.PaymentItem);
 
             if (!response.Success)

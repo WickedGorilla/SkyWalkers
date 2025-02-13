@@ -2,6 +2,7 @@ using Game.MiniGames;
 using Game.Perks;
 using Infrastructure.Network;
 using Infrastructure.Network.Request.Base.Player;
+using Infrastructure.Network.Request.UpdateGameData;
 using Infrastructure.Network.Request.ValidationPayment;
 using Infrastructure.Network.RequestHandler;
 using Infrastructure.Network.Response;
@@ -13,7 +14,8 @@ namespace Game.UpdateResponseServices
         IRequestHandler<GameData>,
         IRequestHandler<ValidationPaymentResponse>,
         IRequestHandler<PaymentUpgradePerkResult>,
-        IRequestHandler<PaymentItemResult>
+        IRequestHandler<PaymentItemResult>,
+        IRequestHandler<UpdateGameDataResponse>
     {
         private readonly WalletService _walletService;
         private readonly PerksService _perksService;
@@ -36,6 +38,7 @@ namespace Game.UpdateResponseServices
             ServerRequestSender.AddHandler(new IRequestHandler<ValidationPaymentResponse>[] { this });
             ServerRequestSender.AddHandler(new IRequestHandler<PaymentItemResult>[] { this });
             ServerRequestSender.AddHandler(new IRequestHandler<PaymentUpgradePerkResult>[] { this });
+            ServerRequestSender.AddHandler(new IRequestHandler<UpdateGameDataResponse>[] { this });
         }
 
         public override void StopListening()
@@ -44,13 +47,14 @@ namespace Game.UpdateResponseServices
             ServerRequestSender.RemoveHandler(new IRequestHandler<ValidationPaymentResponse>[] { this });
             ServerRequestSender.RemoveHandler(new IRequestHandler<PaymentItemResult>[] { this });
             ServerRequestSender.RemoveHandler(new IRequestHandler<PaymentUpgradePerkResult>[] { this });
+            ServerRequestSender.RemoveHandler(new IRequestHandler<UpdateGameDataResponse>[] { this });
         }
 
         public void HandleServerData(GameData response)
         {
             _walletService.UpdateValues(response.BalanceUpdate, response.Perks);
             _perksService.HandlePerks(response.Perks);
-            _miniGamesSystem.HandleServerData(response);
+            _miniGamesSystem.HandleServerData(response.TappedCoinsBeforeMiniGame);
         }
 
         public void HandleServerData(ValidationPaymentResponse response)
@@ -68,6 +72,13 @@ namespace Game.UpdateResponseServices
         public void HandleServerData(PaymentItemResult response)
         {
             _walletService.UpdateValues(response.BalanceUpdate);
+        }
+
+        public void HandleServerData(UpdateGameDataResponse response)
+        {
+            _walletService.UpdateValues(response.BalanceUpdate, response.PerksUser);
+            _perksService.HandlePerks(response.PerksUser);
+            _miniGamesSystem.HandleServerData(response.TappedCoinsBeforeMiniGame);
         }
     }
 }

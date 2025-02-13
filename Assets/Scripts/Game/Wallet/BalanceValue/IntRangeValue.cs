@@ -42,7 +42,19 @@ namespace Game.Wallet
             
             return Count;
         }
+
+        public void Update(int value, int max)
+        {
+            _value = new RangeValue(value, max);
+            OnChangeValue?.Invoke(Count);
+        }
         
+        public void Update(int value)
+        {
+            _value = new RangeValue(value, Max);
+            OnChangeValue?.Invoke(Count);
+        }
+
         public int Subtract(int value) 
             => Add(-value);
 

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Infrastructure.Network.RequestHandler
 {
-    public class RequestRequestHandler<T> : IRequestHandlersHolder<T>
+    public class RequestHandler<T> : IRequestHandlersHolder<T>
     {
         private HashSet<IRequestHandler<T>> _handlers = new();
         

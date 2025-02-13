@@ -4,11 +4,8 @@ using System.Threading;
 using Game.MiniGames;
 using Game.Player;
 using Infrastructure.Network;
-using Infrastructure.Network.Response.Player;
-using Newtonsoft.Json;
 using Player;
 using UnityEngine;
-using static System.String;
 
 namespace Game.Validation
 {
@@ -25,8 +22,7 @@ namespace Game.Validation
         private int _lastUpdateBalance;
         private bool _boostState;
 
-        private const float TimeIntervalUpdate = 10f;
-        private const long ConflictErrorCode = 409;
+        private const float TimeIntervalUpdate = 5f;
 
         private CancellationTokenSource _cancellationTokenSource;
 
@@ -46,31 +42,42 @@ namespace Game.Validation
         public void Start()
         {
             _farmCoinsSystem.OnFarmCoinsPerTap += OnChangeCoins;
-            
+
             _boostSystem.OnUseBoost += OnBoostActivated;
             _boostSystem.OnEndBoost += OnBoostEnd;
-            
+
             _boostSystem.OnUsePlayPass += OnPlayPassActivated;
-            
+
             _miniGamesSystem.OnEnterMiniGame += OnEnterMiniGame;
             _miniGamesSystem.OnCompleteMiniGame += OnEndMiniGame;
 
-            _cancellationTokenSource = new CancellationTokenSource();
-            SendTask(_cancellationTokenSource);
+            StartTimerValidation();
         }
 
         public void Stop()
         {
             _farmCoinsSystem.OnFarmCoinsPerTap -= OnChangeCoins;
-            
+
             _boostSystem.OnUseBoost -= OnBoostActivated;
             _boostSystem.OnEndBoost -= OnBoostEnd;
-            
+
             _boostSystem.OnUsePlayPass -= OnPlayPassActivated;
-            
+
             _miniGamesSystem.OnEnterMiniGame -= OnEnterMiniGame;
             _miniGamesSystem.OnCompleteMiniGame -= OnEndMiniGame;
 
+            _cancellationTokenSource.Cancel();
+            SendValidationRequest();
+        }
+
+        private void StartTimerValidation()
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+            SendTask(_cancellationTokenSource);
+        }
+
+        private void StopTimerValidation()
+        {
             _cancellationTokenSource.Cancel();
             SendValidationRequest();
         }
@@ -80,12 +87,9 @@ namespace Game.Validation
             _nextTimeUpdate = Time.time + TimeIntervalUpdate;
             _lastUpdateBalance = _walletService.Coins.Count;
 
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 await Awaitable.NextFrameAsync();
-
-                if (token.IsCancellationRequested)
-                    break;
 
                 if (Time.time < _nextTimeUpdate || _stackActions.Count == 0)
                     continue;
@@ -125,27 +129,27 @@ namespace Game.Validation
         private void OnBoostActivated()
         {
             _stackActions.AddLast(new ActivateBoostActionData());
-            Stop();
+            StopTimerValidation();
         }
 
         private void OnBoostEnd()
         {
             _stackActions.AddLast(new BoostEndActionData());
             SendValidationRequest();
-            Start();
+            StartTimerValidation();
         }
 
         private void OnEnterMiniGame(MiniGameType miniGame)
         {
             _stackActions.AddLast(new EnterMiniGameActionData(miniGame, _miniGamesSystem.EarnedCoinsBeforeMiniGame));
-            Stop();
+            StopTimerValidation();
         }
 
         private void OnEndMiniGame(bool isComplete)
         {
             _stackActions.AddLast(new EndMiniGameActionData(isComplete));
             SendValidationRequest();
-            Start();
+            StartTimerValidation();
         }
 
         private void SendValidationRequest()
@@ -156,33 +160,17 @@ namespace Game.Validation
             _lastUpdateBalance = _walletService.Coins.Count;
 
 #if DEV_BUILD
-               Debug.Log("Sending validation request");
+            Debug.Log("Sending validation request");
 #endif
-         
+
             var message = new ValidationCoinsRequest(_stackActions.ToArray());
-            
+
             _serverRequestSender
-                .SendToServerAndHandle<ValidationCoinsRequest, ValidationCoinsResponse>(message,
-                    ServerAddress.TapCoinsValidation,
-                    OnValidationError);
-            
+                .SendToServerAndHandle<ValidationCoinsRequest, ValidationCoinsResponse>(message, ServerAddress.TapCoinsValidation);
+
             _stackActions.Clear();
         }
 
-        private void OnValidationError(long code, string data)
-        {
-            Debug.LogError($"Response with error: {code}");
-
-            if (data == Empty)
-                return;
-
-            switch (code)
-            {
-                case ConflictErrorCode:
-                    _walletService.UpdateValues(JsonConvert.DeserializeObject<BalanceUpdate>(data));
-                    _stackActions.Clear();
-                    return;
-            }
-        }
+     
     }
 }

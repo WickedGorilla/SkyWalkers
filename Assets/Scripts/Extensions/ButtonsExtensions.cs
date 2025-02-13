@@ -7,13 +7,13 @@ namespace SkyExtensions
 {
     public static class ButtonsExtensions 
     {
-        public static IDisposable SubscribeListener(this Button button, UnityAction onClick)
+        public static IDisposable SubscribeListener(this Button button, Action onClick)
         {
-            button.onClick.AddListener(onClick);
-            return DisposableContainer.Create(Remove);
-
-            void Remove() 
-                => button.onClick.RemoveListener(onClick);
+            button.onClick.AddListener(Do);
+            return DisposableContainer.Create(() => button.onClick.RemoveListener(Do));
+            
+            void Do()
+                => onClick();
         }
         
         public static void AddClickAction(this Button button, UnityAction onClick) 

@@ -13,19 +13,23 @@ namespace Infrastructure.Network
         public void AddHandler<T>(params IRequestHandler<T>[] handlers);
         public void RemoveHandler<T>(params IRequestHandler<T>[] handlers);
 
+        void SendToServer<TRequest, TResponse>(TRequest message,
+            string address,
+            Action<ServerResponse<TResponse>> onComplete = null, Action<long, string> onError = null)
+            where TRequest : ServerRequest;
+        
         Awaitable<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
             string address,
+            Action<long, string> onError = null) where TRequest : ServerRequest;
+        
+        void SendToServerAndHandle<TRequest, TResponse>
+        (TRequest message, string address, Action<ServerResponse<TResponse>> onComplete,
             Action<long, string> onError = null) where TRequest : ServerRequest;
 
         Awaitable<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>(TRequest message,
             string address,
             Action<long, string> onError = null) where TRequest : ServerRequest;
-
-        void SendToServer<TRequest, TResponse>(TRequest message,
-            string address,
-            Action<ServerResponse<TResponse>> onComplete, Action<long, string> onError = null)
-            where TRequest : ServerRequest;
-
+        
         Awaitable<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(TRequest message,
             string address, Action<long, string> onError = null);
     }

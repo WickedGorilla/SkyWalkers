@@ -8,7 +8,7 @@ namespace Game.Wallet
         private readonly ICalculatorInstruction _defaultInstruction;
         
         private ICalculatorInstruction _calculatorInstruction;
-
+        
         public CoinsCalculatorService(PerksService perksService)
         {
             _perksService = perksService;
@@ -16,9 +16,12 @@ namespace Game.Wallet
             _calculatorInstruction = _defaultInstruction;
         }
         
+        public int DefaultCoinPerTap
+            => _defaultInstruction.Calculate();
+        
         public int CalculateCoinsByTap()
             => _calculatorInstruction.Calculate();
-
+        
         public void UpdateInstruction(int boostMultiplier)
             => _calculatorInstruction = new BoostMultiplierInstruction(_perksService, boostMultiplier);
         

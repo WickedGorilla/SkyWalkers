@@ -7,5 +7,7 @@ namespace Game.Wallet
         event Action<T> OnChangeValue;
         
         T Add(T value);
+
+        void Update(T value);
     }
 }
