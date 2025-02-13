@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Cysharp.Threading.Tasks;
 using Game.MiniGames;
 using Game.Player;
 using Infrastructure.Network;
@@ -89,7 +90,7 @@ namespace Game.Validation
 
             while (!token.IsCancellationRequested)
             {
-                await Awaitable.NextFrameAsync();
+                await UniTask.NextFrame();
 
                 if (Time.time < _nextTimeUpdate || _stackActions.Count == 0)
                     continue;

@@ -1,9 +1,9 @@
 using System;
 using System.Text;
+using Cysharp.Threading.Tasks;
 using Infrastructure.Network.Request.Base;
 using Infrastructure.Network.RequestHandler;
 using Newtonsoft.Json;
-using SkyExtensions.Awaitable;
 using UI.Core;
 using UI.Views.ServerErrorPopup;
 using UnityEngine;
@@ -57,7 +57,7 @@ namespace Infrastructure.Network
             onComplete?.Invoke(response);
         }
         
-        public async Awaitable<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
+        public async UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
             string address,
             Action<long, string> onError = null) where TRequest : ServerRequest
         {
@@ -74,7 +74,7 @@ namespace Infrastructure.Network
             onComplete?.Invoke(response);
         }
         
-        public async Awaitable<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>
+        public async UniTask<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>
             (TRequest message, string address, Action<long, string> onError = null) where TRequest : ServerRequest
         {
             var result = await SendToServer<TRequest, TResponse>(message, address, onError);
@@ -88,7 +88,7 @@ namespace Infrastructure.Network
             return result;
         }
 
-        public async Awaitable<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(
+        public async UniTask<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(
             TRequest message,
             string address,
             Action<long, string> onError = null)
@@ -108,7 +108,7 @@ namespace Infrastructure.Network
             request.downloadHandler = new DownloadHandlerBuffer();
 
             request.SendWebRequest();
-            await AwaitableExtensions.WaitUntilAsync(() => request.result != UnityWebRequest.Result.InProgress);
+            await UniTask.WaitUntil(() => request.result != UnityWebRequest.Result.InProgress);
 
             var response = new ServerResponse<TResponse>();
 

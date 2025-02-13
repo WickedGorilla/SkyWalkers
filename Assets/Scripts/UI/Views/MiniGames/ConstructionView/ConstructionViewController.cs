@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Cysharp.Threading.Tasks;
 using Game.Environment;
 using Infrastructure.Actions;
 using Infrastructure.Data.Game.MiniGames.ConstructionMiniGame;
@@ -72,7 +73,7 @@ namespace UI.Views.MiniGames.ConstructionView
             while (!tokenSource.IsCancellationRequested)
             {
                 UpdateInput();
-                await Awaitable.NextFrameAsync();
+                await UniTask.NextFrame();
             }
         }
 

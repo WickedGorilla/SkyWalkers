@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Game.Environment;
 using Game.Infrastructure;
 using Infrastructure.Telegram;
@@ -70,13 +71,13 @@ namespace UI.Views
             View.SetPicture(picture);
         }
 
-        private async Awaitable<Sprite> LoadPicture(string url)
+        private async UniTask<Sprite> LoadPicture(string url)
         {
             using UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(url);
             var operation = uwr.SendWebRequest();
 
             while (!operation.isDone)
-                await Awaitable.NextFrameAsync();
+                await UniTask.NextFrame();
 
             if (uwr.result != UnityWebRequest.Result.Success)
             {

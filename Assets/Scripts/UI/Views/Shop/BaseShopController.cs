@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Game.Items;
 using Game.Perks;
 using Infrastructure.Data.Game.Shop;
@@ -166,9 +167,9 @@ namespace UI.Views
         private void OnClickBoostersButton()
             => View.ShowBoosters();
 
-        private async Awaitable SendValidationPayment(string orderCode, MonoBehaviour openedView = null)
+        private async UniTask SendValidationPayment(string orderCode, MonoBehaviour openedView = null)
         {
-            await Awaitable.WaitForSecondsAsync(1.7f);
+            await UniTask.WaitForSeconds(1.7f);
 
             await _serverRequestSender.SendToServerAndHandle<ValidationPaymentRequest, ValidationPaymentResponse>(
                 new ValidationPaymentRequest(orderCode),

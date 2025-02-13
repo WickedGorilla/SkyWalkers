@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Game.BuildingSystem;
 using Game.Environment;
 using Game.Invite;
@@ -10,7 +11,6 @@ using Infrastructure.Network.Request.Base.Player;
 using Infrastructure.SceneManagement;
 using Infrastructure.Telegram;
 using Newtonsoft.Json;
-using SkyExtensions.Awaitable;
 using UI.Core;
 using UI.Views;
 using UI.Views.EveryDayPopup;
@@ -124,8 +124,8 @@ namespace Game.Infrastructure
         public void Exit()
             => _loadingCurtain.ShowStartButton();
 
-        private async Awaitable WaitLoadTelegramInfo()
-            => await AwaitableExtensions.WaitUntilAsync(() => _telegramLauncher.IsInit);
+        private async UniTask WaitLoadTelegramInfo()
+            => await UniTask.WaitUntil(() => _telegramLauncher.IsInit);
 
         private void InitializeScene()
         {

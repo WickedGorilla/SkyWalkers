@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Game.Environment;
 using Game.Player;
@@ -92,7 +93,7 @@ namespace UI.Views.MiniGames.RainView
                 UpdateMovement();
                 CheckPositionForLine();
 
-                await Awaitable.NextFrameAsync();
+                await UniTask.NextFrame();
             }
         }
 

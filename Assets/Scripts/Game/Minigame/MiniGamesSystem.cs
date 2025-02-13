@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Game.Perks;
 using Game.Player;
 using Game.Wallet;
@@ -119,7 +120,7 @@ namespace Game.MiniGames
 
             OnEnterMiniGame?.Invoke(miniGameType);
 
-            await Awaitable.WaitForSecondsAsync(_miniGamesData.DelayToStartMiniGame);
+            await UniTask.WaitForSeconds(_miniGamesData.DelayToStartMiniGame);
 
             _miniGameViewController = miniGameStartAction();
            

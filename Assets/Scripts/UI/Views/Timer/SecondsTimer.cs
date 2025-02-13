@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace UI.Views.Timer
@@ -30,7 +31,7 @@ namespace UI.Views.Timer
                     return;
 
                 _onUpdate(i);
-                await Awaitable.WaitForSecondsAsync(1f);
+                await UniTask.WaitForSeconds(1f);
             }
 
             if (token.IsCancellationRequested) 

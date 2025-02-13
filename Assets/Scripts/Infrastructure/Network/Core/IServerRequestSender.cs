@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using Infrastructure.Network.Request.Base;
 using Infrastructure.Network.RequestHandler;
 using UnityEngine;
@@ -18,7 +19,7 @@ namespace Infrastructure.Network
             Action<ServerResponse<TResponse>> onComplete = null, Action<long, string> onError = null)
             where TRequest : ServerRequest;
         
-        Awaitable<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
+        UniTask<ServerResponse<TResponse>> SendToServer<TRequest, TResponse>(TRequest message,
             string address,
             Action<long, string> onError = null) where TRequest : ServerRequest;
         
@@ -26,11 +27,11 @@ namespace Infrastructure.Network
         (TRequest message, string address, Action<ServerResponse<TResponse>> onComplete,
             Action<long, string> onError = null) where TRequest : ServerRequest;
 
-        Awaitable<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>(TRequest message,
+        UniTask<ServerResponse<TResponse>> SendToServerAndHandle<TRequest, TResponse>(TRequest message,
             string address,
             Action<long, string> onError = null) where TRequest : ServerRequest;
         
-        Awaitable<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(TRequest message,
+        UniTask<ServerResponse<TResponse>> SendToServerBase<TRequest, TResponse>(TRequest message,
             string address, Action<long, string> onError = null);
     }
 }

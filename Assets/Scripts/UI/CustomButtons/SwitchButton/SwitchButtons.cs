@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Infrastructure.Disposables;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace UI.CustomButtons
 
         private async void Start()
         {
-            await Awaitable.NextFrameAsync();
+            await UniTask.NextFrame();
             
             var position = _selectableLabel.transform.position;
             var firstButton = _buttons[0];
